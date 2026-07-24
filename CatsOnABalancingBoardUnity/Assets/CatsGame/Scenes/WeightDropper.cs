@@ -4,17 +4,31 @@ using UnityEngine.InputSystem;
 public class WeightDropper : MonoBehaviour
 {
     public GameObject weightPrefab;
+    public GameObject shadowPrefab;
+    public Transform board;
+    public float moveSpeed = 5f;
+    public float surfaceOffset = 0.01f;
+    public float dropHeight = 5f;
+
+    GameObject shadow;
 
     void Start()
     {
-        
+        shadow = Instantiate(shadowPrefab, board.position + board.up * surfaceOffset, board.rotation);
+        shadow.transform.SetParent(board);
     }
 
     void Update()
     {
-        if (Keyboard.current.anyKey.wasPressedThisFrame){
-            Debug.Log("Hi");
-            Instantiate(weightPrefab, transform.position, Quaternion.identity);
-        }
+        Vector2 input = Vector2.zero;
+        if (Keyboard.current.wKey.isPressed) input.y += 1f;
+        if (Keyboard.current.sKey.isPressed) input.y -= 1f;
+        if (Keyboard.current.dKey.isPressed) input.x += 1f; 
+        if (Keyboard.current.aKey.isPressed) input.x -= 1f;
+        if (input.sqrMagnitude > 0f)
+            shadow.transform.localPosition += new Vector3(input.x, 0f, input.y).normalized * moveSpeed * Time.deltaTime;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            Instantiate(weightPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
     }
 }
