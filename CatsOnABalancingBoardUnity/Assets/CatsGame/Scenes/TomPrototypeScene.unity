@@ -409,7 +409,7 @@ Transform:
   m_GameObject: {fileID: 473563218}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 4, z: 0}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -509,7 +509,7 @@ MonoBehaviour:
   catPrefab: {fileID: 9190946420964210434, guid: 3a411b59ae39a3149b695655204c5e94, type: 3}
   catCount: 200
   dropHeight: 0.1
-  batchSize: 5
+  batchSize: 10
   batchInterval: 0.1
   edgeMargin: 0.5
 --- !u!4 &1716254376
@@ -642,7 +642,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
-  m_LocalScale: {x: 6, y: 0.02, z: 3}
+  m_LocalScale: {x: 6, y: 0.05, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

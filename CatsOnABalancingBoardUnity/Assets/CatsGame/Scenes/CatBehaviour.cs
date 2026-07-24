@@ -2,43 +2,58 @@ using UnityEngine;
 
 public class CatBehaviour : MonoBehaviour
 {
-    public float climbForce = 5f;
-
-    public float lookAheadDist = 0.3f;
-    public float edgeCheckDist =  1f;
-
+    public float moveForce = 1f;
+    public float ejectDistance = 0.01f;
+    
     Rigidbody body;
-    Transform board;
+    float catRadius;
+    int overlapMask;
 
     void Start()
     {
         body = GetComponent<Rigidbody>();
-        board = GameObject.FindGameObjectWithTag("Board").transform;
+        catRadius = GetComponent<Collider>().bounds.extents.y;
+        overlapMask = ~LayerMask.GetMask("Cat");
     }
 
     void FixedUpdate()
     {
-        Vector3 up = board.up;
-        Vector3 uphill = new Vector3(-up.x,0,-up.z);
+        if (CheckCovered()){return;}
 
-        if (WouldRunOffEdge(uphill))
-        {
-            Vector3 vel = body.linearVelocity;
-            body.linearVelocity = new Vector3(0,vel.y,0);
-            return;
-        }
+        Transform target = FindNearestWeight();
+        if (target == null){return;}
 
-        //uphill.Normalize();
-        body.AddForce(uphill * climbForce, ForceMode.Acceleration);
+        Vector3 toTarget = target.position - body.transform.position;
+        toTarget.y = 0;
+        if (toTarget.sqrMagnitude <= 0){return;}
+
+        Vector3 dir = toTarget.normalized;
+
+        body.AddForce(dir * moveForce, ForceMode.Acceleration);
     }
 
-    bool WouldRunOffEdge(Vector3 dir)
+    Transform FindNearestWeight()
     {
-        if (dir.sqrMagnitude <= 0) { return false;}
+        GameObject[] weights = GameObject.FindGameObjectsWithTag("Catnip");
+        if (weights.Length == 0){return null;}
 
-        Vector3 checkpoint = body.transform.position + dir.normalized * lookAheadDist;
-        checkpoint.y += 0.5f;
+        Transform nearest = null;
+        float winner = Mathf.Infinity;
+        
+        foreach (GameObject w in weights)
+        {
+            float dist = Vector3.Distance(body.transform.position,w.transform.position);
+            if (dist < winner)
+            {
+                winner = dist;
+                nearest = w.transform;
+            }
+        }
+        return nearest;
+    }
 
-        return !Physics.Raycast(checkpoint, Vector3.down,edgeCheckDist);
+    bool CheckCovered()
+    {
+        return false;
     }
 }
