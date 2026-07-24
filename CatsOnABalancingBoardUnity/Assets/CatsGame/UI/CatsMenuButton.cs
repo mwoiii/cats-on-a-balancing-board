@@ -16,6 +16,7 @@ public class CatsMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnPointerEnter(PointerEventData eventData) {
         if (pointerEnterNoise) {
             pointerEnterNoise.Play();
+            MainMenuController.instance.PlaceRandomPaw();
         }
     }
 
