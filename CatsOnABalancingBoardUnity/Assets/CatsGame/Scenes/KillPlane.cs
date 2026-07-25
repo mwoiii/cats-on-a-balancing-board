@@ -1,16 +1,27 @@
+using System.Collections;
 using UnityEngine;
 
 public class KillPlane : MonoBehaviour
 {
     public CatManagerScript catManager;
+
+    public float deletionDelay = 1;
     
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        //check if object is in cat layer
-        if (other.gameObject.CompareTag("Cat"))
+        StartCoroutine(Wait(collision.collider));
+    }
+
+    IEnumerator Wait(Collider other)
+    {
+        yield return new WaitForSeconds(deletionDelay);
+        if (other != null)
+        {
+            if (other.gameObject.CompareTag("Cat"))
         {
             catManager.RemoveCat(other.gameObject);
         }
         Destroy(other.gameObject);
+        }
     }
 }

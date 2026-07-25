@@ -90,19 +90,22 @@ public class CatBehaviour : MonoBehaviour
     bool canGrip = true;
     void SurvivalInstinct()
     {
-        if (boardMath.slope > slopeTolerance && canGrip)
+        if (boardMath.slope > slopeTolerance)
         {
-            body.linearDamping = gripDamping;
-            if (!gripping)
+            if (canGrip && !gripping)
             {
+                body.linearDamping = gripDamping;
                 gripping = true;
+                canGrip = false;
                 StartCoroutine(Grip());
             }
         }
         else
         {
+            body.linearDamping = baseDamping;
             gripping = false;
             canGrip = true;
+            StopCoroutine(Grip());
         }
     }
 
@@ -111,6 +114,13 @@ public class CatBehaviour : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(gripTimeMin,gripTimeMax));
         body.linearDamping = baseDamping;
         gripping = false;
-        canGrip = false;
+    }
+
+    void OnCollisionExit(Collision collision) // fall off the board without damping
+    {
+        if (collision.collider.CompareTag("Board"))
+        {
+            body.linearDamping = 0;
+        }
     }
 }
