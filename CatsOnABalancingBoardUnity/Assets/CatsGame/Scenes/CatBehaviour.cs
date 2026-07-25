@@ -86,10 +86,12 @@ public class CatBehaviour : MonoBehaviour
     }
 
 
+    bool PLEASESTOP = false;
     bool gripping = false;
     bool canGrip = true;
     void SurvivalInstinct()
     {
+        if (PLEASESTOP){return;}
         if (boardMath.slope > slopeTolerance)
         {
             if (canGrip && !gripping)
@@ -120,6 +122,7 @@ public class CatBehaviour : MonoBehaviour
     {
         if (collision.collider.CompareTag("Board"))
         {
+            PLEASESTOP = true;
             body.linearDamping = 0;
         }
     }
