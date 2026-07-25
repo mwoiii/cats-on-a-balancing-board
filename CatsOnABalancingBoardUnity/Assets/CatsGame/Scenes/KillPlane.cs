@@ -18,6 +18,7 @@ public class KillPlane : MonoBehaviour
             Vector3 norm = collision.GetContact(0).normal;
             float impactSpeed = collision.relativeVelocity.magnitude;
             b.linearVelocity += -bounceMultiplier * impactSpeed * norm;
+            b.linearVelocity += bounceMultiplier * 0.1f * b.position; // Sorry
         }
         StartCoroutine(Wait(collision.collider));
     }
@@ -27,6 +28,7 @@ public class KillPlane : MonoBehaviour
         yield return new WaitForSeconds(deletionDelay);
         if (other != null)
         {
+            ExplosionEffect.Instance.PlayAt(other.transform.position);
             if (other.gameObject.CompareTag("Cat"))
             {
                 catManager.RemoveCat(other.gameObject);
