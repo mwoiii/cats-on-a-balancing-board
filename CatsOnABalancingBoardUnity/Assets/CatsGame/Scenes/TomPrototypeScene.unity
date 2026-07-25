@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 135196800}
   m_Layer: 0
   m_Name: Outline
-  m_TagString: Board
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -884,6 +884,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 299602906886364155, guid: ef19fc3f6a9a0ed4c988b64392dbbafa, type: 3}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 299602906886364155, guid: ef19fc3f6a9a0ed4c988b64392dbbafa, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 788941900188985710, guid: ef19fc3f6a9a0ed4c988b64392dbbafa, type: 3}
