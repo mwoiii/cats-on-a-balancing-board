@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CatManagerScript : MonoBehaviour
 {
+    public GameLogicScript logic;
     private List<GameObject> cats = new List<GameObject>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,6 +27,10 @@ public class CatManagerScript : MonoBehaviour
     {
         cats.Remove(cat);
         // Debug.Log("Cats count: " + cats.Count);
+        if (cats.Count == 0)
+        {
+            logic.gameOver();
+        }
     }
 
     public void ClearAllCats()

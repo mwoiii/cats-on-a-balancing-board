@@ -427,16 +427,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e11699af810e0948ab200f7a7130377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightDropper
-  weightPrefabs:
-  - {fileID: 6982464574026435089, guid: 148f5b15533b0d54baf61a7888fd0a5e, type: 3}
-  - {fileID: 6982464574026435089, guid: a6dc775685b13d74fae67d752c1f8f50, type: 3}
-  - {fileID: 6982464574026435089, guid: 2a2d324e2343dda4c90cbcf473d3b69b, type: 3}
-  - {fileID: 6982464574026435089, guid: f50edc274d3242a4da58c20e68009b61, type: 3}
-  shadowPrefab: {fileID: 7170908775925695675, guid: 863b2fb0a5153d14ab34ad5c4d894a2b, type: 3}
+  weightPrefab: {fileID: 6982464574026435089, guid: 148f5b15533b0d54baf61a7888fd0a5e, type: 3}
+  shadowPrefab: {fileID: 7780811838851100883, guid: 7b985053e1319574b91ece88847d71d3, type: 3}
   board: {fileID: 1964132669}
-  moveSpeed: 1
+  moveSpeed: 0.5
   surfaceOffset: 0.1
   dropHeight: 3
+  shadowBoundRadius: 0.5
+  spinSpeed: 22.1
+  shadowScale: 0.5
+--- !u!1 &478497808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 478497810}
+  - component: {fileID: 478497809}
+  m_Layer: 0
+  m_Name: GameLogic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &478497809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478497808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53fb0390b47729d4db17b19973baeada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  gameTime: 0
+  gameRunning: 1
+--- !u!4 &478497810
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478497808}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,6 +991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ba49d729183224e9ed76685614c62b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatManagerScript
+  logic: {fileID: 478497809}
 --- !u!4 &2082813595
 Transform:
   m_ObjectHideFlags: 0
@@ -974,3 +1020,4 @@ SceneRoots:
   - {fileID: 1241083940}
   - {fileID: 2082813595}
   - {fileID: 1192401676}
+  - {fileID: 478497810}
