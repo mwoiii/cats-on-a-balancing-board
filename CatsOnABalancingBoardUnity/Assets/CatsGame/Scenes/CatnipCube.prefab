@@ -154,3 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightBehaviour
   Type: 1
+  shrinkAmount: 0.05
+  minScale: 0.1
+  catTag: Cat
+  shrinkInterval: 0.1
