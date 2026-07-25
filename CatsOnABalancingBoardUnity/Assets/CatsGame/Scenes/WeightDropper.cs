@@ -19,6 +19,8 @@ public class WeightDropper : MonoBehaviour
     float spinAngle;
     GameObject shadow;
 
+    public System.Action<GameObject> OnNextPrefab;
+
     void Start()
     {
         shadow = Instantiate(shadowPrefab, board.position + board.up * surfaceOffset, board.rotation);
@@ -27,6 +29,7 @@ public class WeightDropper : MonoBehaviour
         shadow.transform.SetParent(board);
 
         nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
+        OnNextPrefab?.Invoke(nextPrefab);
         spinAngle = 0f;
     }
 
@@ -52,8 +55,11 @@ public class WeightDropper : MonoBehaviour
         shadow.transform.localRotation = Quaternion.Euler(90f, spinAngle, 0f);
         
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
             Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
             nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
+            OnNextPrefab?.Invoke(nextPrefab);
+        }  
     }
     
 }
