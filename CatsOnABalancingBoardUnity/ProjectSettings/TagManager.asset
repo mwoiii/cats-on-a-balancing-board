@@ -5,15 +5,15 @@ TagManager:
   serializedVersion: 3
   tags:
   - Board
-  - Catnip
+  - Weight
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Cat
   - Water
   - UI
-  - Cat
+  - 
   - 
   - 
   - 
