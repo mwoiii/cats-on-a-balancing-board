@@ -39,10 +39,13 @@ public class WeightDropper : MonoBehaviour
         if (Keyboard.current.aKey.isPressed) input.x -= 1f;
         if (input.sqrMagnitude > 0f)
             shadow.transform.localPosition += new Vector3(input.x, 0f, input.y).normalized * moveSpeed * Time.deltaTime;
-
+        
+        // clamp to board radius
         Vector3 pos = shadow.transform.localPosition;
-        pos.x = Mathf.Clamp(pos.x, -shadowBoundRadius, shadowBoundRadius);
-        pos.z = Mathf.Clamp(pos.z, -shadowBoundRadius, shadowBoundRadius);
+        Vector2 posXZ = new Vector2(pos.x, pos.z);
+        posXZ = Vector2.ClampMagnitude(posXZ, shadowBoundRadius);
+        pos.x = posXZ.x;
+        pos.z = posXZ.y;
         shadow.transform.localPosition = pos;
         
         spinAngle += spinSpeed * Time.deltaTime;
@@ -52,4 +55,5 @@ public class WeightDropper : MonoBehaviour
             Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
             nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
     }
+    
 }
