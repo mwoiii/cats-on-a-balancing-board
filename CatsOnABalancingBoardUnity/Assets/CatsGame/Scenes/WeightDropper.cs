@@ -14,6 +14,8 @@ public class WeightDropper : MonoBehaviour
     
     public float spinSpeed = 180f; // degrees/sec
     public float shadowScale = 0.5f;
+    public GameObject nextPrefab {get; private set;}
+
     float spinAngle;
     GameObject shadow;
 
