@@ -5,16 +5,6 @@ public class CatManagerScript : MonoBehaviour
 {
     public GameLogicScript logic;
     private List<GameObject> cats = new List<GameObject>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 
     public void RegisterCat(GameObject cat)
     {
