@@ -9,13 +9,20 @@ public class WeightDropper : MonoBehaviour
     public float moveSpeed = 5f;
     public float surfaceOffset = 0.01f;
     public float dropHeight = 5f;
-
+    
+    public float spinSpeed = 180f; // degrees/sec
+    public float shadowScale = 0.5f;
+    float spinAngle;
     GameObject shadow;
 
     void Start()
     {
+        Debug.Log("I exist");
         shadow = Instantiate(shadowPrefab, board.position + board.up * surfaceOffset, board.rotation);
+        shadow.transform.localScale = Vector3.one * shadowScale;
+        shadow.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         shadow.transform.SetParent(board);
+        spinAngle = 0f;
     }
 
     void Update()
@@ -27,7 +34,10 @@ public class WeightDropper : MonoBehaviour
         if (Keyboard.current.aKey.isPressed) input.x -= 1f;
         if (input.sqrMagnitude > 0f)
             shadow.transform.localPosition += new Vector3(input.x, 0f, input.y).normalized * moveSpeed * Time.deltaTime;
-
+        
+        spinAngle += spinSpeed * Time.deltaTime;
+        shadow.transform.localRotation = Quaternion.Euler(90f, spinAngle, 0f);
+        
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
             Instantiate(weightPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
     }
