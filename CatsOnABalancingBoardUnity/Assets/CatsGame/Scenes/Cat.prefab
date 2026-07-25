@@ -153,5 +153,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6faa3835efac8b54b88c1cf2fd71db74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatBehaviour
-  moveForce: 5
-  ejectDistance: 0.5
+  moveForce: 1
+  reactDistance: 1.5
