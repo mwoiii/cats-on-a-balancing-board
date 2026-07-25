@@ -5,14 +5,19 @@ using UnityEngine.SceneManagement;
 public class GameLogicScript : MonoBehaviour
 {
     public float gameTime = 0.0f;
+    public bool gameRunning = true;
 
     private void Update()
     {
-        gameTime += Time.deltaTime;
+        if (gameRunning)
+        {
+            gameTime += Time.deltaTime;
+        }
     }
 
     public void gameOver()
     {
+        gameRunning = false;
         Debug.Log("Game Over");
         Debug.Log(gameTime);
     }
