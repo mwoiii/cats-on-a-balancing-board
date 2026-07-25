@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class SpriteFlicker : MonoBehaviour {
 
     public Sprite[] sprites;
 
-    public Image targetGraphic;
+    private Image targetGraphic;
 
     private const float spriteSwapWait = 0.3f;
 
@@ -13,7 +14,15 @@ public class SpriteFlicker : MonoBehaviour {
 
     private int spriteIndex;
 
+    public void Awake() {
+        targetGraphic = GetComponent<Image>();
+    }
+
     public void Update() {
+        if (!targetGraphic) {
+            return;
+        }
+
         spriteStopwatch += Time.deltaTime;
         if (spriteStopwatch > spriteSwapWait) {
             spriteIndex = (spriteIndex + 1) % sprites.Length;
