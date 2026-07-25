@@ -1,9 +1,10 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class WeightDropper : MonoBehaviour
 {
-    public GameObject weightPrefab;
+    public GameObject[] weightPrefabs;
     public GameObject shadowPrefab;
     public Transform board;
     public float moveSpeed = 5f;
@@ -29,6 +30,6 @@ public class WeightDropper : MonoBehaviour
             shadow.transform.localPosition += new Vector3(input.x, 0f, input.y).normalized * moveSpeed * Time.deltaTime;
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
-            Instantiate(weightPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+            Instantiate(weightPrefabs[Random.Range(0,weightPrefabs.Length)], shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
     }
 }

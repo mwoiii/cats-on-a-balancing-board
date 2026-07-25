@@ -427,7 +427,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e11699af810e0948ab200f7a7130377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightDropper
-  weightPrefab: {fileID: 6982464574026435089, guid: 148f5b15533b0d54baf61a7888fd0a5e, type: 3}
+  weightPrefabs:
+  - {fileID: 6982464574026435089, guid: 148f5b15533b0d54baf61a7888fd0a5e, type: 3}
+  - {fileID: 6982464574026435089, guid: a6dc775685b13d74fae67d752c1f8f50, type: 3}
+  - {fileID: 6982464574026435089, guid: 2a2d324e2343dda4c90cbcf473d3b69b, type: 3}
+  - {fileID: 6982464574026435089, guid: f50edc274d3242a4da58c20e68009b61, type: 3}
   shadowPrefab: {fileID: 7170908775925695675, guid: 863b2fb0a5153d14ab34ad5c4d894a2b, type: 3}
   board: {fileID: 1964132669}
   moveSpeed: 1
@@ -632,7 +636,7 @@ Rigidbody:
   serializedVersion: 5
   m_Mass: 500
   m_LinearDamping: 0
-  m_AngularDamping: 3
+  m_AngularDamping: 5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -844,7 +848,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0be0b650ef9841c4aa9c1e91265b35dc, type: 2}
+  - {fileID: 2100000, guid: 00ccbeedf660c0942a91b0715ba6e226, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

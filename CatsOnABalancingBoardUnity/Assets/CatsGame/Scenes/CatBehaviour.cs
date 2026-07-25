@@ -99,7 +99,11 @@ public class CatBehaviour : MonoBehaviour
                 StartCoroutine(Grip());
             }
         }
-        else{ gripping = false; }
+        else
+        {
+            gripping = false;
+            canGrip = true;
+        }
     }
 
     IEnumerator Grip()
@@ -108,7 +112,5 @@ public class CatBehaviour : MonoBehaviour
         body.linearDamping = baseDamping;
         gripping = false;
         canGrip = false;
-        yield return new WaitForSeconds(gripCooldown);
-        canGrip = true;
     }
 }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5300005081292084640}
   - component: {fileID: 8847935656710571486}
   m_Layer: 0
-  m_Name: Weight
+  m_Name: CatnipCube
   m_TagString: Weight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 662198dafaef0634aa1cb7fdc6bed73d, type: 2}
+  - {fileID: 2100000, guid: 0be0b650ef9841c4aa9c1e91265b35dc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
