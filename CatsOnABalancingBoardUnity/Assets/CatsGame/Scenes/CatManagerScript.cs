@@ -1,10 +1,19 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class CatManagerScript : MonoBehaviour
 {
     public GameLogicScript logic;
     private List<GameObject> cats = new List<GameObject>();
+
+    public AudioClip meow;
+    public float minAmbientMeowInterval = 3;
+    public float maxAmbientMeowInterval = 20;
+    public float volume = 0.3f;
+    public float minPitch = 0.5f;
+    public float maxPitch = 1.5f;
 
     public void RegisterCat(GameObject cat)
     {
@@ -42,5 +51,26 @@ public class CatManagerScript : MonoBehaviour
     public int GetCatCount()
     {
         return cats.Count;
+    }
+
+    void Start()
+    {
+        StartCoroutine(AmbientMeow());
+    }
+
+    IEnumerator AmbientMeow()
+    {
+        yield return new WaitForSeconds(Random.Range(minAmbientMeowInterval,maxAmbientMeowInterval));
+        while (cats.Count > 0)
+        {
+            GameObject luckyWinner = cats[Random.Range(0,cats.Count)];
+            AudioSource player = luckyWinner.AddComponent<AudioSource>();
+            player.clip = meow;
+            player.volume = volume;
+            player.pitch = Random.Range(minPitch,maxPitch);
+            player.spatialBlend = 1;
+            player.Play();
+            yield return new WaitForSeconds(Random.Range(minAmbientMeowInterval,maxAmbientMeowInterval));
+        }
     }
 }
