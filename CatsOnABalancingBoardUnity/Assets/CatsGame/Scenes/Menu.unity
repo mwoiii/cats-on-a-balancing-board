@@ -189,7 +189,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4a998864d6ab96947a40b170a4a08647, type: 3}
   - {fileID: 21300000, guid: fb02429d00a8ee6489e82c3a78b7688b, type: 3}
   - {fileID: 21300000, guid: 2c62b4dda17ff2044b698af4b9201464, type: 3}
-  targetGraphic: {fileID: 196136302}
 --- !u!114 &196136301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1142,7 +1141,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 04ddae78567201e4e88951f9ba8a8e6e, type: 3}
   - {fileID: 21300000, guid: 51f2f6d7934a290459d0c4657d3ccc0a, type: 3}
   - {fileID: 21300000, guid: 786e9272458beed40be18f089d11f996, type: 3}
-  targetGraphic: {fileID: 1200893666}
 --- !u!114 &1200893670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1331,7 +1329,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 7223dc870906ad74381bd17bed6efaba, type: 3}
   - {fileID: 21300000, guid: 49f4e357a784f3d4fb5c4673cd77aa26, type: 3}
   - {fileID: 21300000, guid: 552960324a09e2c4d83d9a90c0802f71, type: 3}
-  targetGraphic: {fileID: 1620393490}
 --- !u!114 &1620393489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1605,7 +1602,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 577bd00e2545b7a48bd5554d0212bb25, type: 3}
   - {fileID: 21300000, guid: 6ce6a1a691b845d47b5decb4139fcbec, type: 3}
   - {fileID: 21300000, guid: db700b6d82c3217439dfaa916eab8ca8, type: 3}
-  targetGraphic: {fileID: 1823530635}
 --- !u!114 &1823530635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1842,10 +1838,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1152, y: 648}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
