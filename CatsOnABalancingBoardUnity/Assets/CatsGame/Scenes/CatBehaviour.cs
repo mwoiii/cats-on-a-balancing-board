@@ -1,19 +1,17 @@
+using System.Linq;
 using UnityEngine;
 
 public class CatBehaviour : MonoBehaviour
 {
-    public float moveForce = 1f;
-    public float ejectDistance = 0.01f;
+    public float moveForce = 1;
+
+    public float reactDistance = 1;
     
     Rigidbody body;
-    float catRadius;
-    int overlapMask;
 
     void Start()
     {
         body = GetComponent<Rigidbody>();
-        catRadius = GetComponent<Collider>().bounds.extents.y;
-        overlapMask = ~LayerMask.GetMask("Cat");
     }
 
     void FixedUpdate()
@@ -29,20 +27,29 @@ public class CatBehaviour : MonoBehaviour
 
         Vector3 dir = toTarget.normalized;
 
-        body.AddForce(dir * moveForce, ForceMode.Acceleration);
+        WeightBehaviour ba = target.GetComponent<WeightBehaviour>();
+        if (ba.State == WeightBehaviour.WeightState.Falling) // repelled by falling weights
+        {
+            body.AddForce(dir * -moveForce, ForceMode.Acceleration);
+        }
+        else if (ba.Type == WeightBehaviour.WeightType.Catnip) // attracted to catnip weights
+        {
+            body.AddForce(dir * moveForce, ForceMode.Acceleration);
+        }
+        
     }
 
-    Transform FindNearestWeight()
+    Transform FindNearestWeight() // does not account for y distance
     {
-        GameObject[] weights = GameObject.FindGameObjectsWithTag("Catnip");
+        GameObject[] weights = GameObject.FindGameObjectsWithTag("Weight");
         if (weights.Length == 0){return null;}
 
         Transform nearest = null;
-        float winner = Mathf.Infinity;
+        float winner = reactDistance;
         
         foreach (GameObject w in weights)
         {
-            float dist = Vector3.Distance(body.transform.position,w.transform.position);
+            float dist = Vector2.Distance(new Vector2(transform.position.x,transform.position.z),new Vector2(w.transform.position.x,w.transform.position.z));
             if (dist < winner)
             {
                 winner = dist;
