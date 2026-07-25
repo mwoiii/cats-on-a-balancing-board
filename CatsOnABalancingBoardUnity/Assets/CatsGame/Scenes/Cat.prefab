@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 284340234776981951}
   - component: {fileID: 5392874952738216179}
   - component: {fileID: 858895313526704615}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cat
   m_TagString: Cat
   m_Icon: {fileID: 0}
@@ -154,4 +154,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatBehaviour
   moveForce: 1
+  centerBiasForce: 0.05
   reactDistance: 1.5
+  slopeTolerance: 0.08
+  baseDamping: 1
+  gripDamping: 8
+  gripTimeMin: 4
+  gripTimeMax: 10
+  gripCooldown: 5
