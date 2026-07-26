@@ -19,6 +19,9 @@ public class WeightDropper : MonoBehaviour
     private float lastSpawned;
     public GameObject nextPrefab {get; private set;}
 
+    public static System.Action FirstWeightDropped;
+    bool firstWeightDropped = false;
+
     float spinAngle;
     GameObject shadow;
 
@@ -81,6 +84,8 @@ public class WeightDropper : MonoBehaviour
                 nextPrefab = weightPrefabs[GetNextIndex()];
                 OnNextPrefab?.Invoke(nextPrefab);
                 lastSpawned = Time.time;
+
+                if (!firstWeightDropped){firstWeightDropped = true;FirstWeightDropped.Invoke();}
             }
         }  
     }

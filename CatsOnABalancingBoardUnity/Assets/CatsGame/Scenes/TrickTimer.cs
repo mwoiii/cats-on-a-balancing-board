@@ -23,11 +23,16 @@ public class TrickTimer : MonoBehaviour {
     }
 
     void Start() {
-        StartCoroutine(Timer());
+        WeightDropper.FirstWeightDropped += GetStartedWithIt;
         CatManagerScript.LostCat += ResetTimerAndCombo;
 
         countdownSource.volume = volume / 1.5f;
         completeSource.volume = volume;
+    }
+
+    void GetStartedWithIt()
+    {
+        StartCoroutine(Timer());
     }
 
     public static int currentSecond { get; private set; }
