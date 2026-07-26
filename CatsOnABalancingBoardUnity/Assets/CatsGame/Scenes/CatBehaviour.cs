@@ -34,24 +34,42 @@ public class CatBehaviour : MonoBehaviour
     {
         SurvivalInstinct();
 
-        Transform target = FindNearestWeight();
-        if (target == null){CenterBias(); return;}
+        GameObject[] weights = FindNearestWeights(); // 0 basic, 1 catnip, 2 lemon
+        
+        //if (target == null){CenterBias(); return;}
 
-        Vector3 toTarget = target.position - body.transform.position;
-        toTarget.y = 0;
-        if (toTarget.sqrMagnitude <= 0){CenterBias(); return;}
+        //Vector3 toTarget = target.position - body.transform.position;
+        //toTarget.y = 0;
+        //if (toTarget.sqrMagnitude <= 0){CenterBias(); return;}
 
-        Vector3 dir = toTarget.normalized;
+        //Vector3 dir = toTarget.normalized;
 
-        WeightBehaviour ba = target.GetComponent<WeightBehaviour>();
-        // THIS IS BEHAVIOUR PRIORITY ORDER FOR OBJECTS
-        if (ba.State == WeightBehaviour.WeightState.Falling) // repelled by falling weights
+        if (weights[0] != null)
         {
-            body.AddForce(dir * -moveForce, ForceMode.Acceleration);
+            Vector3 toTarget = weights[0].transform.position - transform.position;
+            toTarget.y = 0;
+            if (toTarget.sqrMagnitude <= 0){CenterBias(); return;}
+            
+            if (WeightDropper.weightBehaviourDict[weights[0]].State == WeightBehaviour.WeightState.Falling) // repelled by falling weights
+            {
+                body.AddForce(toTarget.normalized * -moveForce, ForceMode.Acceleration);
+            }
         }
-        else if (ba.Type == WeightBehaviour.WeightType.Catnip) // attracted to catnip weights
+        if (weights[1] != null)
         {
-            body.AddForce(dir * moveForce, ForceMode.Acceleration);
+            Vector3 toTarget = weights[1].transform.position - transform.position;
+            toTarget.y = 0;
+            if (toTarget.sqrMagnitude <= 0){CenterBias(); return;}
+
+            body.AddForce(toTarget.normalized * moveForce, ForceMode.Acceleration);
+        }
+        if (weights[2] != null)
+        {
+            Vector3 toTarget = weights[2].transform.position - transform.position;
+            toTarget.y = 0;
+            if (toTarget.sqrMagnitude <= 0){CenterBias(); return;}
+
+            body.AddForce(toTarget.normalized * -moveForce, ForceMode.Acceleration);
         }
     }
 
@@ -65,24 +83,35 @@ public class CatBehaviour : MonoBehaviour
 
     }
 
-    Transform FindNearestWeight() // does not account for y distance
+    GameObject[] FindNearestWeights() // does not account for y distance
     {
-        GameObject[] weights = GameObject.FindGameObjectsWithTag("Weight");
-        if (weights.Length == 0){return null;}
-
-        Transform nearest = null;
-        float winner = reactDistance;
+        GameObject nearestWeight = null;
+        float weightWinner = reactDistance;
+        GameObject nearestCatnip = null;
+        float catnipWinner = Mathf.Infinity;
+        GameObject nearestLemon = null;
+        float lemonWinner = reactDistance;
         
-        foreach (GameObject w in weights)
+        foreach (GameObject w in WeightDropper.weightBehaviourDict.Keys)
         {
             float dist = Vector2.Distance(new Vector2(transform.position.x,transform.position.z),new Vector2(w.transform.position.x,w.transform.position.z));
-            if (dist < winner)
+            if (dist < weightWinner && WeightDropper.weightBehaviourDict[w].Type == WeightBehaviour.WeightType.None)
             {
-                winner = dist;
-                nearest = w.transform;
+                nearestWeight = w;
+                weightWinner = dist;
+            }
+            if (dist < catnipWinner && WeightDropper.weightBehaviourDict[w].Type == WeightBehaviour.WeightType.Catnip)
+            {
+                nearestCatnip = w;
+                catnipWinner = dist;
+            }
+            if (dist < lemonWinner && WeightDropper.weightBehaviourDict[w].Type == WeightBehaviour.WeightType.Lemon)
+            {
+                nearestLemon = w;
+                lemonWinner = dist;
             }
         }
-        return nearest;
+        return new GameObject[3]{nearestWeight,nearestCatnip,nearestLemon};
     }
 
 

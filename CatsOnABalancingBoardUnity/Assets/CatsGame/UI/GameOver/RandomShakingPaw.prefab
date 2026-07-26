@@ -89,8 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 366c12893f5ba6e49a1b2469bb2c4144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
-  magnitude: 0
-  _frequency: 0
+  magnitude: 1
+  _frequency: 1
   maxMagSpike: 500
   maxFreqSpike: 1000
   spikeIncFrac: 0.05

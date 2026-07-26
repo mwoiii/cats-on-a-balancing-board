@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,6 +20,10 @@ public class WeightDropper : MonoBehaviour
     float spinAngle;
     GameObject shadow;
 
+    public System.Action<GameObject> OnNextPrefab;
+
+    public static Dictionary<GameObject,WeightBehaviour> weightBehaviourDict = new();
+
     void Start()
     {
         shadow = Instantiate(shadowPrefab, board.position + board.up * surfaceOffset, board.rotation);
@@ -27,6 +32,7 @@ public class WeightDropper : MonoBehaviour
         shadow.transform.SetParent(board);
 
         nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
+        OnNextPrefab?.Invoke(nextPrefab);
         spinAngle = 0f;
     }
 
@@ -39,17 +45,24 @@ public class WeightDropper : MonoBehaviour
         if (Keyboard.current.aKey.isPressed) input.x -= 1f;
         if (input.sqrMagnitude > 0f)
             shadow.transform.localPosition += new Vector3(input.x, 0f, input.y).normalized * moveSpeed * Time.deltaTime;
-
+        
+        // clamp to board radius
         Vector3 pos = shadow.transform.localPosition;
-        pos.x = Mathf.Clamp(pos.x, -shadowBoundRadius, shadowBoundRadius);
-        pos.z = Mathf.Clamp(pos.z, -shadowBoundRadius, shadowBoundRadius);
+        Vector2 posXZ = new Vector2(pos.x, pos.z);
+        posXZ = Vector2.ClampMagnitude(posXZ, shadowBoundRadius);
+        pos.x = posXZ.x;
+        pos.z = posXZ.y;
         shadow.transform.localPosition = pos;
         
         spinAngle += spinSpeed * Time.deltaTime;
         shadow.transform.localRotation = Quaternion.Euler(90f, spinAngle, 0f);
         
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
-            Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+        {
+            GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+            weightBehaviourDict[obj] = obj.GetComponent<WeightBehaviour>();
             nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
+            OnNextPrefab?.Invoke(nextPrefab);
+        }  
     }
 }

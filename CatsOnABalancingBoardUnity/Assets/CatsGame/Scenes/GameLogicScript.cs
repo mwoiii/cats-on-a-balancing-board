@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameLogicScript : MonoBehaviour
 {
     public float gameTime = 0.0f;
-    public bool gameRunning = true;
+    public static bool gameRunning = true;
 
     private void Update()
     {
@@ -15,15 +15,16 @@ public class GameLogicScript : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        gameRunning = true;
+    }
+
     public void gameOver()
     {
         gameRunning = false;
+        HUDController.instance.InitiateGameOver();
         Debug.Log("Game Over");
         Debug.Log(gameTime);
-    }
-    
-    public void restartGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

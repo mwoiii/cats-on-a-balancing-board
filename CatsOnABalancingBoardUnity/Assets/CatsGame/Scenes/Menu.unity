@@ -1186,8 +1186,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8005131510029494630}
-        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: StartGame
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
+        m_MethodName: OpenGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1907,9 +1907,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae039f31fffc894f8a58d2cd92d30b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-  loadGameDelay: 0.2
+  selectOptionDelay: 0.2
   pawPrefab: {fileID: 6459084679369098912, guid: 42b8d2e4640268f4eafc25e800afdf2a, type: 3}
-  gameSceneName: CircleBoardScene
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,8 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class MenuThemeSyncPaws : MonoBehaviour
-{
+public class MenuThemeSyncPaws : MonoBehaviour {
     public AudioSource song;
     public float[] meowTimestamps;
     float lastTimestamp;
@@ -11,26 +10,21 @@ public class MenuThemeSyncPaws : MonoBehaviour
 
     bool lastMeow = false;
 
-    void Start()
-    {
+    void Start() {
         lastTimestamp = meowTimestamps.Last();
     }
 
-    void Update()
-    {
-        if (song == null || !song.isPlaying){return;}
+    void Update() {
+        if (song == null || !song.isPlaying) { return; }
 
-        if (lastMeow && song.time < lastTimestamp)
-        {
+        if (lastMeow && song.time < lastTimestamp) {
             lastMeow = false;
         }
 
-        if (!lastMeow && song.time >= meowTimestamps[next])
-        {
-            MainMenuController.instance.PlaceRandomPaw();
+        if (!lastMeow && song.time >= meowTimestamps[next]) {
+            MenuController.instance.PlaceRandomPaw();
             next++;
-            if (next == meowTimestamps.Length)
-            {
+            if (next == meowTimestamps.Length) {
                 lastMeow = true;
                 next = 0;
             }

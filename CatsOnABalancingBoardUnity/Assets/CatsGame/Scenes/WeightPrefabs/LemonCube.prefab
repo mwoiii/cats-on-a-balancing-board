@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5300005081292084640}
   - component: {fileID: 8847935656710571486}
   m_Layer: 0
-  m_Name: BasicWeightCube
+  m_Name: LemonCube
   m_TagString: Weight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 00ccbeedf660c0942a91b0715ba6e226, type: 2}
+  - {fileID: 2100000, guid: 873bac4a9bbb3e94c8d446d877baed52, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,4 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9bc78931afd1f4db8f0a428593b9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightBehaviour
-  Type: 0
+  Type: 2
+  shrinkAmount: 0.05
+  minScale: 0.1
+  catTag: Cat
+  shrinkInterval: 0.1
