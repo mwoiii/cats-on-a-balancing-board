@@ -7,14 +7,18 @@ public class Vibrate : MonoBehaviour {
     public float magnitude;
 
     [SerializeField]
-    private float _frequency;
+    private float _frequency = 1f;
 
     public float frequency {
         get {
             return _frequency;
         }
         set {
-            period = 1f / value;
+            if (value == 0f) {
+                period = float.MaxValue;
+            } else {
+                period = 1f / value;
+            }
             _frequency = value;
         }
     }
@@ -36,12 +40,16 @@ public class Vibrate : MonoBehaviour {
     private float stopwatch;
 
     public void Awake() {
-        period = 1f / _frequency;
-        activeMagnitude = magnitude;
-        activePeriod = period;
+        if (frequency == 0f) {
+            period = float.MaxValue;
+        } else {
+            period = 1f / frequency;
+        }
     }
 
     public void Start() {
+        activeMagnitude = magnitude;
+        activePeriod = period;
         localStartPos = transform.localPosition;
     }
 

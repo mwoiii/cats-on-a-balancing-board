@@ -9,6 +9,8 @@ public class HUDController : MonoBehaviour {
 
     public TextMeshProUGUI counterText;
 
+    public GameObject gameOverScreen;
+
     private int catCount;
 
     public void Awake() {
@@ -20,6 +22,12 @@ public class HUDController : MonoBehaviour {
         counterText.text = catCount.ToString();
         if (doSpikeVibrate) {
             counterVibrate.IncrementSpike(Mathf.Abs(difference));
+        }
+    }
+
+    public void InitiateGameOver() {
+        if (gameOverScreen) {
+            gameOverScreen.SetActive(true);
         }
     }
 }
