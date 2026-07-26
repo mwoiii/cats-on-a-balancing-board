@@ -670,6 +670,8 @@ MonoBehaviour:
   - {fileID: 6982464574026435089, guid: a6dc775685b13d74fae67d752c1f8f50, type: 3}
   - {fileID: 6982464574026435089, guid: 148f5b15533b0d54baf61a7888fd0a5e, type: 3}
   - {fileID: 6982464574026435089, guid: e25890aaaa17fe94b9074218842e443c, type: 3}
+  - {fileID: 6982464574026435089, guid: f0662369ed4e6204ba39d3c6766968b0, type: 3}
+  - {fileID: 6982464574026435089, guid: 5757ece8752aa7040896971bacaad9a2, type: 3}
   - {fileID: 6982464574026435089, guid: 21e86da228ce44d4e9d182ca33e7f7b5, type: 3}
   shadowPrefab: {fileID: 7780811838851100883, guid: 7b985053e1319574b91ece88847d71d3, type: 3}
   board: {fileID: 1964132669}
@@ -2190,6 +2192,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionEffect
   explosionTexture: {fileID: 2800000, guid: 0ca48e1ebb2fd0b4793fcf16fa52a075, type: 3}
   explosionSound: {fileID: 8300000, guid: 118c32becc36d61419b87bcab29123a7, type: 3}
+  supernovaTexture: {fileID: 2800000, guid: 906ea6c727c85ec41a3161f91caf3096, type: 3}
+  supernovaSound: {fileID: 8300000, guid: e6b40b65071d25948875568673a339bc, type: 3}
   lifetime: 0.8
   spriteScale: 0.2
   volume: 0.3

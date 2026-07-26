@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8847935656710571486}
   - component: {fileID: 5313187150561501633}
   m_Layer: 0
-  m_Name: LemonSphere
+  m_Name: AntimatterSphere
   m_TagString: Weight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 873bac4a9bbb3e94c8d446d877baed52, type: 2}
+  - {fileID: 2100000, guid: 962954a29b56fe847a6c837e34faee08, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,7 +101,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6982464574026435089}
   serializedVersion: 5
-  m_Mass: 10
+  m_Mass: 0.0000001
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9bc78931afd1f4db8f0a428593b9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightBehaviour
-  Type: 2
+  Type: 3
   shrinkAmount: 0.05
   minScale: 0.1
   catTag: Cat
