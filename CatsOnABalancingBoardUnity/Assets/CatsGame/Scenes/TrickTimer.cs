@@ -1,47 +1,45 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class TrickTimer : MonoBehaviour
-{
+public class TrickTimer : MonoBehaviour {
     public int trickLength;
     public int initialBonus;
 
-    WaitForSeconds second = new(1);
-    
-    void Start()
-    {
+    void Start() {
         ResetTimerAndCombo();
         StartCoroutine(Timer());
         CatManagerScript.LostCat += ResetTimerAndCombo;
     }
 
-    public static int currentSecond {get; private set;}
+    public static int currentSecond { get; private set; }
 
-    public static int litterBonus {get; private set;}
+    public static int litterBonus { get; private set; }
 
-    IEnumerator Timer()
-    {
-        while (true)
-        {
-            yield return second;
+    public static event Action<int> onTimerChanged;
+
+    public static event Action<int> onLitterBonusChanged;
+
+    IEnumerator Timer() {
+        while (true) {
+            yield return new WaitForSeconds(1);
             currentSecond--;
-            if (currentSecond == 0)
-            {
+            onTimerChanged?.Invoke(currentSecond);
+            if (currentSecond == 0) {
                 StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
                 litterBonus *= 2;
+                onLitterBonusChanged?.Invoke(litterBonus);
                 currentSecond = trickLength;
-            }   
+            }
         }
     }
 
-    void ResetTimerAndCombo()
-    {
+    void ResetTimerAndCombo() {
         currentSecond = trickLength;
         litterBonus = initialBonus;
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         CatManagerScript.LostCat -= ResetTimerAndCombo;
     }
 }
