@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WeightBehaviour : MonoBehaviour
 {
-    public enum WeightType { None, Catnip }
+    public enum WeightType { None, Catnip, Lemon }
     public WeightType Type = WeightType.None;
 
     public enum WeightState { Falling, Landed }
@@ -52,5 +52,10 @@ public class WeightBehaviour : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void OnDestroy()
+    {
+        WeightDropper.weightBehaviourDict.Remove(transform.gameObject);
     }
 }
