@@ -15,6 +15,8 @@ public class CatManagerScript : MonoBehaviour
     public float minPitch = 0.5f;
     public float maxPitch = 1.5f;
 
+    public static System.Action LostCat;
+
     public void RegisterCat(GameObject cat)
     {
         cats.Add(cat);
@@ -28,7 +30,8 @@ public class CatManagerScript : MonoBehaviour
     {
         cats.Remove(cat);
         if (HUDController.instance) { 
-            HUDController.instance.UpdateRemainingCats(-1); 
+            HUDController.instance.UpdateRemainingCats(-1);
+            LostCat.Invoke();
         }
         // Debug.Log("Cats count: " + cats.Count);
         if (cats.Count == 0)

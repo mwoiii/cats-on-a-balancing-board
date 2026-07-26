@@ -1,8 +1,11 @@
 using System.Collections;
+using UnityEditor.UI;
 using UnityEngine;
 
 public class CatSpawnerScript : MonoBehaviour
 {
+    public static CatSpawnerScript instance;
+
     public GameObject catPrefab;
     public CatManagerScript catManager;
     
@@ -18,6 +21,8 @@ public class CatSpawnerScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        instance = this;
+
         GameObject board = GameObject.FindGameObjectWithTag("Board");
         Bounds bounds = board.GetComponent<Renderer>().bounds;
 
@@ -26,15 +31,15 @@ public class CatSpawnerScript : MonoBehaviour
         spawnY = bounds.max.y + dropHeight;
         boardCenter = bounds.center;
 
-        StartCoroutine(PopulateBoard());
+        StartCoroutine(PopulateBoard(startingCatCount));
     }
 
-    IEnumerator PopulateBoard()
+    public IEnumerator PopulateBoard(int catCount)
     {
         int spawned = 0;
-        while (spawned < startingCatCount)
+        while (spawned < catCount)
         {
-            int batchCount = Mathf.Min(batchSize,startingCatCount-spawned);
+            int batchCount = Mathf.Min(batchSize,catCount-spawned);
             for (int i = 0; i < batchCount; i++)
             {
                 Vector2 boardPos = RandomBoardPosition();
