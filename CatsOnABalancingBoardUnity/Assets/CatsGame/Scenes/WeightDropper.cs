@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class WeightDropper : MonoBehaviour
 {
     public GameObject[] weightPrefabs;
+    public float[] weightBiases;
     public GameObject shadowPrefab;
     public Transform board;
     public float moveSpeed = 1f;
@@ -33,10 +33,15 @@ public class WeightDropper : MonoBehaviour
         shadow.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         shadow.transform.SetParent(board);
 
-        nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
+        nextPrefab = weightPrefabs[GetNextIndex()];
         OnNextPrefab?.Invoke(nextPrefab);
         spinAngle = 0f;
         lastSpawned = Time.time;
+
+        if (weightBiases.Length != weightPrefabs.Length)
+        {
+            Debug.LogError("prefab list and biases list should be same length!!");
+        }
     }
 
     void Update()
@@ -66,10 +71,38 @@ public class WeightDropper : MonoBehaviour
             {
                 GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
                 weightBehaviourDict[obj] = obj.GetComponent<WeightBehaviour>();
-                nextPrefab = weightPrefabs[Random.Range(0, weightPrefabs.Length)];
+                nextPrefab = weightPrefabs[GetNextIndex()];
                 OnNextPrefab?.Invoke(nextPrefab);
                 lastSpawned = Time.time;
             }
         }  
+    }
+
+
+    int prevIndex;
+    int GetNextIndex()
+    {
+        float total = 0;
+        foreach (float w in weightBiases){total += w;}
+
+        float roll = Random.Range(0,total);
+        float cumulative = 0;
+
+        for (int i = 0; i < weightPrefabs.Length; i++)
+        {
+            cumulative += weightBiases[i];
+            if (roll < cumulative && i != prevIndex)
+            {
+                prevIndex = i;
+                return i;
+            }
+            else if (roll < cumulative && i == prevIndex)
+            {
+                return GetNextIndex();
+            }
+        }
+        Debug.LogWarning("failed to pick random next index...");
+        prevIndex = 0;
+        return 0;
     }
 }

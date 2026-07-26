@@ -673,13 +673,22 @@ MonoBehaviour:
   - {fileID: 6982464574026435089, guid: f0662369ed4e6204ba39d3c6766968b0, type: 3}
   - {fileID: 6982464574026435089, guid: 5757ece8752aa7040896971bacaad9a2, type: 3}
   - {fileID: 6982464574026435089, guid: 21e86da228ce44d4e9d182ca33e7f7b5, type: 3}
+  weightBiases:
+  - 1.5
+  - 1.5
+  - 2
+  - 2
+  - 1
+  - 1
+  - 1
+  - 1
   shadowPrefab: {fileID: 7780811838851100883, guid: 7b985053e1319574b91ece88847d71d3, type: 3}
   board: {fileID: 1964132669}
   moveSpeed: 0.5
   surfaceOffset: 0.1
   dropHeight: 3
   shadowBoundRadius: 0.5
-  timeBetween: 1
+  timeBetween: 0
   spinSpeed: 22.1
   shadowScale: 0.5
 --- !u!1 &477761099
@@ -1796,7 +1805,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CatSpawnerScript
   catPrefab: {fileID: 9190946420964210434, guid: 3a411b59ae39a3149b695655204c5e94, type: 3}
   catManager: {fileID: 2082813594}
-  startingCatCount: 10
+  startingCatCount: 100
   dropHeight: 0.5
   batchSize: 20
   batchInterval: 0.05
