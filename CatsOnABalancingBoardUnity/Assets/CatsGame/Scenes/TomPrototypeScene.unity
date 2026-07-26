@@ -1796,7 +1796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CatSpawnerScript
   catPrefab: {fileID: 9190946420964210434, guid: 3a411b59ae39a3149b695655204c5e94, type: 3}
   catManager: {fileID: 2082813594}
-  startingCatCount: 100
+  startingCatCount: 10
   dropHeight: 0.5
   batchSize: 20
   batchInterval: 0.05
@@ -2990,9 +2990,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CatManagerScript
   logic: {fileID: 478497809}
   meow: {fileID: 8300000, guid: bd61314219c94b8409f36938f69d586d, type: 3}
-  minAmbientMeowInterval: 0.5
-  maxAmbientMeowInterval: 1
-  volume: 0.3
+  minAmbientMeowInterval: 1
+  maxAmbientMeowInterval: 2
+  initialCatCount: 100
+  volume: 0.2
   minPitch: 0.2
   maxPitch: 1.8
 --- !u!4 &2082813595
