@@ -1,27 +1,21 @@
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameLogicScript : MonoBehaviour
-{
-    public float gameTime = 0.0f;
+public class GameLogicScript : MonoBehaviour {
+    public static float gameTime = 0.0f;
+
     public static bool gameRunning = true;
 
-    private void Update()
-    {
-        if (gameRunning)
-        {
+    private void Update() {
+        if (gameRunning) {
             gameTime += Time.deltaTime;
         }
     }
 
-    void Start()
-    {
+    void Start() {
         gameRunning = true;
     }
 
-    public void gameOver()
-    {
+    public void GameOver() {
         gameRunning = false;
         HUDController.instance.InitiateGameOver();
         Debug.Log("Game Over");

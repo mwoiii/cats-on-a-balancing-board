@@ -19,6 +19,10 @@ public class HUDController : MonoBehaviour {
 
     public TextMeshProUGUI litterTimerText;
 
+    public Vibrate scoreVibrate;
+
+    public TextMeshProUGUI scoreText;
+
     private int catCount;
 
     public void Awake() {
@@ -54,6 +58,16 @@ public class HUDController : MonoBehaviour {
     }
 
     public void InitiateGameOver() {
+        int score = (int)CatManagerScript.score;
+
+        if (scoreText) {
+            scoreText.text = score.ToString();
+        }
+
+        if (scoreVibrate) {
+            scoreVibrate.magnitude = Mathf.Clamp(score * 0.005f, 0f, 25f);
+        }
+
         if (gameOverScreen) {
             gameOverScreen.SetActive(true);
         }

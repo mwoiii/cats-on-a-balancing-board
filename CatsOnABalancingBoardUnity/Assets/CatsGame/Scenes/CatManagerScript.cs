@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class CatManagerScript : MonoBehaviour
-{
+public class CatManagerScript : MonoBehaviour {
     public GameLogicScript logic;
+
     private List<GameObject> cats = new List<GameObject>();
+
+    public static double score;
+
+    private const double scoreScaleFactor = 0.05d;
 
     public AudioClip meow;
     public float minAmbientMeowInterval = 3;
@@ -18,33 +21,32 @@ public class CatManagerScript : MonoBehaviour
 
     public static System.Action LostCat;
 
-    public void RegisterCat(GameObject cat)
-    {
+    public void Awake() {
+        score = 0d;
+    }
+
+    public void RegisterCat(GameObject cat) {
         cats.Add(cat);
-        if (HUDController.instance) { 
-            HUDController.instance.UpdateRemainingCats(1); 
+        if (HUDController.instance) {
+            HUDController.instance.UpdateRemainingCats(1);
         }
         // Debug.Log("Cats count: " + cats.Count);
     }
 
-    public void RemoveCat(GameObject cat)
-    {
+    public void RemoveCat(GameObject cat) {
         cats.Remove(cat);
-        if (HUDController.instance) { 
+        if (HUDController.instance) {
             HUDController.instance.UpdateRemainingCats(-1);
-            LostCat.Invoke();
+            LostCat?.Invoke();
         }
         // Debug.Log("Cats count: " + cats.Count);
-        if (cats.Count == 0)
-        {
-            logic.gameOver();
+        if (cats.Count == 0) {
+            logic.GameOver();
         }
     }
 
-    public void ClearAllCats()
-    {
-        foreach (GameObject cat in cats)
-        {
+    public void ClearAllCats() {
+        foreach (GameObject cat in cats) {
             if (cat != null)
                 Destroy(cat);
         }
@@ -52,31 +54,33 @@ public class CatManagerScript : MonoBehaviour
         cats.Clear();
     }
 
-    public int GetCatCount()
-    {
+    public int GetCatCount() {
         return cats.Count;
     }
 
-    void Start()
-    {
+    void Start() {
         StartCoroutine(AmbientMeow());
     }
 
-    IEnumerator AmbientMeow()
-    {
-        yield return new WaitForSeconds(Random.Range(minAmbientMeowInterval,maxAmbientMeowInterval));
-        while (cats.Count > 0)
-        {
-            GameObject luckyWinner = cats[Random.Range(0,cats.Count)];
+    public void FixedUpdate() {
+        if (GameLogicScript.gameRunning) {
+            score += cats.Count * Time.deltaTime * scoreScaleFactor;
+        }
+    }
+
+    IEnumerator AmbientMeow() {
+        yield return new WaitForSeconds(Random.Range(minAmbientMeowInterval, maxAmbientMeowInterval));
+        while (cats.Count > 0) {
+            GameObject luckyWinner = cats[Random.Range(0, cats.Count)];
             AudioSource player = luckyWinner.AddComponent<AudioSource>();
             player.clip = meow;
             player.volume = volume;
-            player.pitch = Random.Range(minPitch,maxPitch);
+            player.pitch = Random.Range(minPitch, maxPitch);
             player.spatialBlend = 1;
             player.Play();
 
-            float populationCoeff = initialCatCount/cats.Count;
-            yield return new WaitForSeconds(Random.Range(populationCoeff*minAmbientMeowInterval,populationCoeff*maxAmbientMeowInterval));
+            float populationCoeff = initialCatCount / cats.Count;
+            yield return new WaitForSeconds(Random.Range(populationCoeff * minAmbientMeowInterval, populationCoeff * maxAmbientMeowInterval));
         }
     }
 }
