@@ -262,11 +262,11 @@ MonoBehaviour:
   moveForce: 1.2
   centerBiasForce: 0.05
   reactDistance: 1.5
-  slopeTolerance: 0.08
+  slopeTolerance: 0.05
   baseDamping: 1
-  gripDamping: 9
-  gripTimeMin: 4
-  gripTimeMax: 10
+  gripDamping: 5
+  gripTimeMin: 15
+  gripTimeMax: 60
   gripCooldown: 5
 --- !u!114 &1428413798151147893
 MonoBehaviour:

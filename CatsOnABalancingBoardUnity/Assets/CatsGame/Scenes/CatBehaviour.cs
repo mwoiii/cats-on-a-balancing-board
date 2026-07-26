@@ -45,7 +45,7 @@ public class CatBehaviour : MonoBehaviour
 
         WeightBehaviour ba = target.GetComponent<WeightBehaviour>();
         // THIS IS BEHAVIOUR PRIORITY ORDER FOR OBJECTS
-        if (ba.State == WeightBehaviour.WeightState.Falling) // repelled by falling weights
+        if (ba.State == WeightBehaviour.WeightState.Falling && toTarget.sqrMagnitude <= reactDistance) // repelled by falling weights
         {
             body.AddForce(dir * -moveForce, ForceMode.Acceleration);
         }
@@ -71,7 +71,7 @@ public class CatBehaviour : MonoBehaviour
         if (weights.Length == 0){return null;}
 
         Transform nearest = null;
-        float winner = reactDistance;
+        float winner = Mathf.Infinity;
         
         foreach (GameObject w in weights)
         {

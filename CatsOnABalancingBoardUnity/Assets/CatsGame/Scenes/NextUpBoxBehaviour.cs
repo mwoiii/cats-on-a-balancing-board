@@ -41,6 +41,7 @@ public class NextUpBoxBehaviour : MonoBehaviour
         currentPreview = Instantiate(prefab,previewPivot.position,Quaternion.identity, previewPivot);
         currentPreview.transform.localPosition = Vector3.zero;
         currentPreview.transform.localRotation = Quaternion.identity;
+        currentPreview.GetComponent<WeightBehaviour>().Type = WeightBehaviour.WeightType.None;
 
         foreach (var a in currentPreview.GetComponentsInChildren<Rigidbody>()){Destroy(a);}
         foreach (var a in currentPreview.GetComponentsInChildren<Collider>()){Destroy(a);}
