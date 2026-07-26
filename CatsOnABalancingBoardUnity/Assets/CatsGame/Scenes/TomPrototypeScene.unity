@@ -1367,7 +1367,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8400000, guid: 16cf426f142a4174dbb8a80069febed1, type: 2}
+  m_Texture: {fileID: 8400000, guid: 1ca406dda48c14349b386c681413c883, type: 2}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -4483,6 +4483,8 @@ MonoBehaviour:
   counterText: {fileID: 30135101295798707}
   litterVibrate: {fileID: 1285713212}
   litterText: {fileID: 1723187207}
+  litterTimerVibrate: {fileID: 1101926636}
+  litterTimerText: {fileID: 948410040}
 --- !u!222 &6702575588353012590
 CanvasRenderer:
   m_ObjectHideFlags: 0
