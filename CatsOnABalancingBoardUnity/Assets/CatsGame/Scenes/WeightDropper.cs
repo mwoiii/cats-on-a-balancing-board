@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +21,8 @@ public class WeightDropper : MonoBehaviour
     GameObject shadow;
 
     public System.Action<GameObject> OnNextPrefab;
+
+    public static Dictionary<GameObject,WeightBehaviour> weightBehaviourDict = new();
 
     void Start()
     {
@@ -56,10 +59,10 @@ public class WeightDropper : MonoBehaviour
         
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+            GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+            weightBehaviourDict[obj] = nextPrefab.GetComponent<WeightBehaviour>();
             nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
             OnNextPrefab?.Invoke(nextPrefab);
         }  
     }
-    
 }
