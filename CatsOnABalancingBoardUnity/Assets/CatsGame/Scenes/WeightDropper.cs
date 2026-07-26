@@ -60,7 +60,7 @@ public class WeightDropper : MonoBehaviour
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
-            weightBehaviourDict[obj] = nextPrefab.GetComponent<WeightBehaviour>();
+            weightBehaviourDict[obj] = obj.GetComponent<WeightBehaviour>();
             nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
             OnNextPrefab?.Invoke(nextPrefab);
         }  
