@@ -75,6 +75,7 @@ public class TrickTimer : MonoBehaviour {
 
     void OnDestroy() {
         CatManagerScript.LostCat -= ResetTimerAndCombo;
+        WeightDropper.FirstWeightDropped -= GetStartedWithIt;
     }
 
     void PlayCountdown()

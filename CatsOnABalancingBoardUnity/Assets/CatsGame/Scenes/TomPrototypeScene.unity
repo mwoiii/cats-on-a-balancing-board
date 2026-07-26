@@ -1044,7 +1044,7 @@ MonoBehaviour:
   - 1.5
   - 1.5
   - 2
-  - 2
+  - 2.5
   - 1
   - 1
   - 1
@@ -2134,7 +2134,7 @@ MonoBehaviour:
   completeSound: {fileID: 8300000, guid: 1bb61ec32cd38dc48b045f09f60ae3af, type: 3}
   countdownSource: {fileID: 744840449}
   completeSource: {fileID: 744840448}
-  volume: 0.7
+  volume: 0.8
   basePitch: 1
   pitchStep: 0.1
   maxPitch: 2
@@ -4496,7 +4496,7 @@ MonoBehaviour:
   supernovaSound: {fileID: 8300000, guid: e6b40b65071d25948875568673a339bc, type: 3}
   lifetime: 0.8
   spriteScale: 0.2
-  volume: 0.3
+  volume: 0.5
   minPitch: 0.9
   maxPitch: 1.1
 --- !u!1 &1723187204
@@ -5808,7 +5808,7 @@ MonoBehaviour:
   minAmbientMeowInterval: 1
   maxAmbientMeowInterval: 2
   initialCatCount: 100
-  volume: 0.2
+  volume: 0.5
   minPitch: 0.2
   maxPitch: 1.8
 --- !u!4 &2082813595
