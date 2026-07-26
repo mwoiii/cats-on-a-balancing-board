@@ -4,18 +4,21 @@ using UnityEngine;
 public class TrickTimer : MonoBehaviour
 {
     public int trickLength;
-    public int catCount;
+    public int initialBonus;
 
     WaitForSeconds second = new(1);
     
     void Start()
     {
-        currentSecond = trickLength;
+        ResetTimerAndCombo();
         StartCoroutine(Timer());
-        CatManagerScript.LostCat += ResetTimer;
+        CatManagerScript.LostCat += ResetTimerAndCombo;
     }
 
     public static int currentSecond {get; private set;}
+
+    public static int litterBonus {get; private set;}
+
     IEnumerator Timer()
     {
         while (true)
@@ -24,19 +27,21 @@ public class TrickTimer : MonoBehaviour
             currentSecond--;
             if (currentSecond == 0)
             {
-                StartCoroutine(CatSpawnerScript.instance.PopulateBoard(catCount));
+                StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
+                litterBonus *= 2;
                 currentSecond = trickLength;
             }   
         }
     }
 
-    void ResetTimer()
+    void ResetTimerAndCombo()
     {
-        currentSecond = 0;
+        currentSecond = trickLength;
+        litterBonus = initialBonus;
     }
 
     void OnDestroy()
     {
-        CatManagerScript.LostCat -= ResetTimer;
+        CatManagerScript.LostCat -= ResetTimerAndCombo;
     }
 }

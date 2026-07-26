@@ -598,7 +598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrickTimer
   trickLength: 10
-  catCount: 10
+  initialBonus: 10
 --- !u!4 &744840447
 Transform:
   m_ObjectHideFlags: 0
@@ -906,9 +906,9 @@ MonoBehaviour:
   catManager: {fileID: 2082813594}
   startingCatCount: 100
   dropHeight: 0.5
-  batchSize: 5
-  batchInterval: 0.1
-  edgeMargin: 0.5
+  batchSize: 20
+  batchInterval: 0.05
+  edgeMargin: 0.6
 --- !u!4 &1192401676
 Transform:
   m_ObjectHideFlags: 0

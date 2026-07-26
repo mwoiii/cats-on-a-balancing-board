@@ -18,6 +18,7 @@ public class GameLogicScript : MonoBehaviour
     public void gameOver()
     {
         gameRunning = false;
+        HUDController.instance.InitiateGameOver();
         Debug.Log("Game Over");
         Debug.Log(gameTime);
     }
