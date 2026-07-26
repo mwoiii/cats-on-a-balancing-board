@@ -21,7 +21,7 @@ public class TrickTimer : MonoBehaviour {
     public static event Action<int> onLitterBonusChanged;
 
     IEnumerator Timer() {
-        while (true) {
+        while (GameLogicScript.gameRunning) {
             yield return new WaitForSeconds(1);
             currentSecond--;
             onTimerChanged?.Invoke(currentSecond);
@@ -37,6 +37,8 @@ public class TrickTimer : MonoBehaviour {
     void ResetTimerAndCombo() {
         currentSecond = trickLength;
         litterBonus = initialBonus;
+        onTimerChanged?.Invoke(currentSecond);
+        onLitterBonusChanged?.Invoke(litterBonus);
     }
 
     void OnDestroy() {

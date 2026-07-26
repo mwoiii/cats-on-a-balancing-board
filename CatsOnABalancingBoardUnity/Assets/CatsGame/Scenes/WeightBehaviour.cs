@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class WeightBehaviour : MonoBehaviour
@@ -12,6 +13,7 @@ public class WeightBehaviour : MonoBehaviour
     [SerializeField] private float minScale = 0.01f;
     [SerializeField] private string catTag = "Cat";
     [SerializeField] private float shrinkInterval = 0.5f; // seconds between shrink ticks
+    public float shrinkIntervalLemon = 0.8f;
 
     private float shrinkTimer = 0f;
 
@@ -30,7 +32,23 @@ public class WeightBehaviour : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (State == WeightState.Falling) { State = WeightState.Landed; }
+        if (State == WeightState.Falling)
+        { 
+            State = WeightState.Landed;
+            if (Type == WeightType.Lemon)
+            {
+                StartCoroutine(Decay());
+            }
+        }
+    }
+
+    IEnumerator Decay()
+    {
+        while (gameObject != null)
+        {
+            ShrinkAndCheck();
+            yield return new WaitForSeconds(shrinkIntervalLemon);
+        }
     }
 
     void OnCollisionStay(Collision collision)
