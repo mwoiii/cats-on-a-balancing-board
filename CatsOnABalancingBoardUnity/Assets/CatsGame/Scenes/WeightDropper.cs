@@ -9,11 +9,11 @@ public class WeightDropper : MonoBehaviour
     public GameObject shadowPrefab;
     public Transform board;
     public float moveSpeed = 1f;
+    public float sprintModifier = 2f;
     public float surfaceOffset = 0.01f;
     public float dropHeight = 5f;
     public float shadowBoundRadius = 5f;
     public float timeBetween = 0.25f;
-    
     public float spinSpeed = 180f; // degrees/sec
     public float shadowScale = 0.5f;
     private float lastSpawned;
@@ -52,7 +52,14 @@ public class WeightDropper : MonoBehaviour
         if (Keyboard.current.dKey.isPressed) input.x += 1f; 
         if (Keyboard.current.aKey.isPressed) input.x -= 1f;
         if (input.sqrMagnitude > 0f)
-            shadow.transform.localPosition += new Vector3(input.x, 0f, input.y).normalized * moveSpeed * Time.deltaTime;
+        {
+            if (Keyboard.current.shiftKey.isPressed){shadow.transform.localPosition += moveSpeed * sprintModifier * Time.deltaTime * new Vector3(input.x, 0f, input.y).normalized;}
+            else
+            {
+                shadow.transform.localPosition += moveSpeed * Time.deltaTime * new Vector3(input.x, 0f, input.y).normalized;
+            }
+        }
+            
         
         // clamp to board radius
         Vector3 pos = shadow.transform.localPosition;
