@@ -95,7 +95,7 @@ public class CatBehaviour : MonoBehaviour
         foreach (GameObject w in WeightDropper.weightBehaviourDict.Keys)
         {
             float dist = Vector2.Distance(new Vector2(transform.position.x,transform.position.z),new Vector2(w.transform.position.x,w.transform.position.z));
-            if (dist < weightWinner)
+            if (dist < weightWinner && WeightDropper.weightBehaviourDict[w].Type == WeightBehaviour.WeightType.None)
             {
                 nearestWeight = w;
                 weightWinner = dist;

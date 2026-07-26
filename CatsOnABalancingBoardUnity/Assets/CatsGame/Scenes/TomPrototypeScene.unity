@@ -513,6 +513,8 @@ MonoBehaviour:
   - {fileID: 6982464574026435089, guid: f50edc274d3242a4da58c20e68009b61, type: 3}
   - {fileID: 6982464574026435089, guid: a6dc775685b13d74fae67d752c1f8f50, type: 3}
   - {fileID: 6982464574026435089, guid: 148f5b15533b0d54baf61a7888fd0a5e, type: 3}
+  - {fileID: 6982464574026435089, guid: e25890aaaa17fe94b9074218842e443c, type: 3}
+  - {fileID: 6982464574026435089, guid: 21e86da228ce44d4e9d182ca33e7f7b5, type: 3}
   shadowPrefab: {fileID: 7780811838851100883, guid: 7b985053e1319574b91ece88847d71d3, type: 3}
   board: {fileID: 1964132669}
   moveSpeed: 0.5
