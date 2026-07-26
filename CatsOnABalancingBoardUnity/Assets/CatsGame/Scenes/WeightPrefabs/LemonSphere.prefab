@@ -137,6 +137,7 @@ MonoBehaviour:
   minScale: 0.1
   catTag: Cat
   shrinkInterval: 0.1
+  shrinkIntervalLemon: 0.8
 --- !u!135 &5313187150561501633
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ public class CatManagerScript : MonoBehaviour
     public AudioClip meow;
     public float minAmbientMeowInterval = 3;
     public float maxAmbientMeowInterval = 20;
+    public float initialCatCount = 100;
     public float volume = 0.3f;
     public float minPitch = 0.5f;
     public float maxPitch = 1.5f;
@@ -73,7 +74,9 @@ public class CatManagerScript : MonoBehaviour
             player.pitch = Random.Range(minPitch,maxPitch);
             player.spatialBlend = 1;
             player.Play();
-            yield return new WaitForSeconds(Random.Range(minAmbientMeowInterval,maxAmbientMeowInterval));
+
+            float populationCoeff = initialCatCount/cats.Count;
+            yield return new WaitForSeconds(Random.Range(populationCoeff*minAmbientMeowInterval,populationCoeff*maxAmbientMeowInterval));
         }
     }
 }

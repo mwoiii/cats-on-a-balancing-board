@@ -6,8 +6,13 @@ public class TrickTimer : MonoBehaviour {
     public int trickLength;
     public int initialBonus;
 
-    void Start() {
+
+    void Awake()
+    {
         ResetTimerAndCombo();
+    }
+
+    void Start() {
         StartCoroutine(Timer());
         CatManagerScript.LostCat += ResetTimerAndCombo;
     }

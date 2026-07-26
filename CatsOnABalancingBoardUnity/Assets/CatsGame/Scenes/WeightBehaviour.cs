@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WeightBehaviour : MonoBehaviour
 {
-    public enum WeightType { None, Catnip, Lemon }
+    public enum WeightType { None, Catnip, Lemon, Antimatter }
     public WeightType Type = WeightType.None;
 
     public enum WeightState { Falling, Landed }
@@ -38,6 +38,15 @@ public class WeightBehaviour : MonoBehaviour
             if (Type == WeightType.Lemon)
             {
                 StartCoroutine(Decay());
+            }
+        }
+        WeightBehaviour a = collision.collider.gameObject.GetComponent<WeightBehaviour>();
+        if (a != null)
+        {
+            if (a.Type == WeightType.Antimatter && Type != WeightType.Antimatter){
+                Destroy(a.gameObject);
+                Destroy(transform.gameObject);
+                ExplosionEffect.Instance.SuperNovaAt(transform.position);
             }
         }
     }
