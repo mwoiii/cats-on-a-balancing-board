@@ -158,3 +158,4 @@ MonoBehaviour:
   minScale: 0.01
   catTag: Cat
   shrinkInterval: 0.5
+  shrinkIntervalLemon: 0.8

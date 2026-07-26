@@ -28,6 +28,9 @@ public class HUDController : MonoBehaviour {
     public void Start() {
         TrickTimer.onLitterBonusChanged += OnLitterBonusChanged;
         TrickTimer.onTimerChanged += OnLitterTimerChanged;
+
+        OnLitterBonusChanged(TrickTimer.litterBonus);
+        OnLitterTimerChanged(TrickTimer.currentSecond);
     }
 
     private void OnLitterTimerChanged(int time) {
