@@ -677,6 +677,7 @@ MonoBehaviour:
   surfaceOffset: 0.1
   dropHeight: 3
   shadowBoundRadius: 0.5
+  timeBetween: 1
   spinSpeed: 22.1
   shadowScale: 0.5
 --- !u!1 &477761099

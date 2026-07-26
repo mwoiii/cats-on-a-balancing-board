@@ -12,9 +12,11 @@ public class WeightDropper : MonoBehaviour
     public float surfaceOffset = 0.01f;
     public float dropHeight = 5f;
     public float shadowBoundRadius = 5f;
+    public float timeBetween = 0.25f;
     
     public float spinSpeed = 180f; // degrees/sec
     public float shadowScale = 0.5f;
+    private float lastSpawned;
     public GameObject nextPrefab {get; private set;}
 
     float spinAngle;
@@ -34,6 +36,7 @@ public class WeightDropper : MonoBehaviour
         nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
         OnNextPrefab?.Invoke(nextPrefab);
         spinAngle = 0f;
+        lastSpawned = Time.time;
     }
 
     void Update()
@@ -59,10 +62,14 @@ public class WeightDropper : MonoBehaviour
         
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
-            weightBehaviourDict[obj] = obj.GetComponent<WeightBehaviour>();
-            nextPrefab = weightPrefabs[Random.Range(0,weightPrefabs.Length)];
-            OnNextPrefab?.Invoke(nextPrefab);
+            if (Time.time - lastSpawned > timeBetween)
+            {
+                GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+                weightBehaviourDict[obj] = obj.GetComponent<WeightBehaviour>();
+                nextPrefab = weightPrefabs[Random.Range(0, weightPrefabs.Length)];
+                OnNextPrefab?.Invoke(nextPrefab);
+                lastSpawned = Time.time;
+            }
         }  
     }
 }
