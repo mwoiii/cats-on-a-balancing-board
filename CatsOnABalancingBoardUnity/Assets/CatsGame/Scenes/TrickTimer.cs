@@ -54,11 +54,18 @@ public class TrickTimer : MonoBehaviour {
             }
             if (currentSecond == 0) {
                 PlayComplete();
-
-                StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
-                litterBonus *= 2;
-                onLitterBonusChanged?.Invoke(litterBonus);
-                currentSecond = trickLength;
+                
+                if (CatSpawnerScript.instance != null)
+                {
+                    StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
+                    litterBonus *= 2;
+                    onLitterBonusChanged?.Invoke(litterBonus);
+                    currentSecond = trickLength;
+                }
+                else
+                {
+                    Debug.LogWarning("No CatSpawnerScript instance in scene");
+                }
             }
         }
     }
