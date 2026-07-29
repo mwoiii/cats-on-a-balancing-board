@@ -12,7 +12,7 @@ public class MenuController : MonoBehaviour {
     [SerializeField]
     private GameObject pawPrefab;
 
-    public const string gameSceneName = "TomPrototypeScene";
+    public const string gameSceneName = "TomPrototype2";
 
     public const string menuSceneName = "Menu";
 
