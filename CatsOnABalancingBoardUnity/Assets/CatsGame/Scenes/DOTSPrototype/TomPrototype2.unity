@@ -507,14 +507,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150362987}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.004363368, y: 0, z: 0, w: 0.9999905}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 6, y: 0.05, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 612772959}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -0.5, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &150362995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1122,6 +1122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 473563219}
   - component: {fileID: 473563220}
+  - component: {fileID: 473563221}
   m_Layer: 0
   m_Name: WeightSpawner
   m_TagString: Untagged
@@ -1184,6 +1185,19 @@ MonoBehaviour:
   timeBetween: 0
   spinSpeed: 22.1
   shadowScale: 0.5
+--- !u!114 &473563221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473563218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd3d68c90f36d34a99bb30cad916bfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeightBridge
+  board: {fileID: 150362994}
 --- !u!1 &477761099
 GameObject:
   m_ObjectHideFlags: 0
@@ -6524,7 +6538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2891451985242766762
 MonoBehaviour:
   m_ObjectHideFlags: 0

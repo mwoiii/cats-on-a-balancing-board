@@ -45,4 +45,7 @@ public struct CatSpawnerConfig : IComponentData
     public float DropHeight;
     public float Scale;
     public bool Finished;
+
+    public int PendingSpawn;
+    public int SpawnedThisUpdate;
 }

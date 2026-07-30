@@ -85,4 +85,13 @@ public class WeightBehaviour : MonoBehaviour
     {
         WeightDropper.weightBehaviourDict.Remove(transform.gameObject);
     }
+
+    public void NotifyCatContact()
+    {
+        if (Type != WeightType.Catnip){return;}
+        if (shrinkTimer > 0){return;}
+
+        ShrinkAndCheck();
+        shrinkTimer = shrinkInterval;
+    }
 }

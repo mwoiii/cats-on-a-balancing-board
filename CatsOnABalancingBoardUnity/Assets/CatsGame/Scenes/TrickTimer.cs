@@ -25,6 +25,7 @@ public class TrickTimer : MonoBehaviour {
     void Start() {
         WeightDropper.FirstWeightDropped += GetStartedWithIt;
         CatManagerScript.LostCat += ResetTimerAndCombo;
+        CatExplosionSystem.CatLost += ResetTimerAndCombo;
 
         countdownSource.volume = volume / 1.5f;
         completeSource.volume = volume;
@@ -64,7 +65,10 @@ public class TrickTimer : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.LogWarning("No CatSpawnerScript instance in scene");
+                    CatSpawnRequest.Enqueue(litterBonus);
+                    litterBonus *= 2;
+                    onLitterBonusChanged?.Invoke(litterBonus);
+                    currentSecond = trickLength;
                 }
             }
         }
@@ -82,6 +86,7 @@ public class TrickTimer : MonoBehaviour {
 
     void OnDestroy() {
         CatManagerScript.LostCat -= ResetTimerAndCombo;
+        CatExplosionSystem.CatLost -= ResetTimerAndCombo;
         WeightDropper.FirstWeightDropped -= GetStartedWithIt;
     }
 
