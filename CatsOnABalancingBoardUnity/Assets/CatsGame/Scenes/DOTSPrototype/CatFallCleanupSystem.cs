@@ -68,6 +68,8 @@ public partial struct CatExplosionSystem : ISystem
                 if (HUDController.instance != null)
                 {
                     HUDController.instance.UpdateRemainingCats(-1);
+
+                    if (HUDController.instance.catCount <= 0 && GameLogicScript.gameRunning && GameLogicScript.instance != null){GameLogicScript.instance.GameOver();}
                 }
             }
         }

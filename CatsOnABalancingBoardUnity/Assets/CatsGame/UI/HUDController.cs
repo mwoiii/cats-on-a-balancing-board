@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ public class HUDController : MonoBehaviour {
 
     public TextMeshProUGUI scoreText;
 
-    private int catCount;
+    public int catCount {get; private set;}
 
     public void Awake() {
         instance = this;
@@ -58,7 +59,7 @@ public class HUDController : MonoBehaviour {
     }
 
     public void InitiateGameOver() {
-        int score = (int)CatManagerScript.score;
+        int score = Mathf.Max((int)CatManagerScript.score,(int)GameLogicScript.score); // purely so both scenes can continue to work
 
         if (scoreText) {
             scoreText.text = score.ToString();

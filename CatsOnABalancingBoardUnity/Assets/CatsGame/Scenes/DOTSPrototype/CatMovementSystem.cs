@@ -11,9 +11,9 @@ public partial struct CatMovementSystem : ISystem
     const float friction = 2;
     const float moveForce = 1.2f;
     const float reactDistance = 1.5f;
-    const float dispersionPerCat = 0.002f;
-    const float maxDispersion =2f;
-    const float catnipContactRadius = 0.1f;
+    const float dispersionPerCat = 0.0002f;
+    const float maxDispersion = 1f;
+    const float catnipContactRadius = 0.05f;
     
     EntityQuery catQuery;
     uint frameCounter; // new random every frame
@@ -44,10 +44,12 @@ public partial struct CatMovementSystem : ISystem
 
         foreach (var (catData, catVelocity, entity) in SystemAPI.Query<RefRW<CatData>, RefRW<CatVelocity>>().WithEntityAccess())
         {
+            Random randomSauce = Random.CreateFromIndex((uint)entity.Index * 67 + frameCounter * 21); // some Bezout shenanigans going on here
+
             // weight reactive behaviour
             float2 catPos = catData.ValueRO.Position;
             
-            float nearestBasicDist = reactDistance;
+            float nearestBasicDist = reactDistance + randomSauce.NextFloat(-0.2f,0.2f);
             float2 nearestBasicPos = float2.zero;
             bool hasBasic = false;
 
@@ -56,7 +58,7 @@ public partial struct CatMovementSystem : ISystem
             int nearestCatnipIndex = -1;
             bool hasCatnip = false;
 
-            float nearestLemonDist = reactDistance;
+            float nearestLemonDist = reactDistance + randomSauce.NextFloat(-0.2f,0.2f);;
             float2 nearestLemonPos = float2.zero;
             bool hasLemon = false;
 
@@ -94,10 +96,7 @@ public partial struct CatMovementSystem : ISystem
             }
             if (hasCatnip)
             {
-                // random dispersion
-                Random randomSauce = Random.CreateFromIndex((uint)entity.Index * 67 + frameCounter * 21);
-                float2 dispersion = randomSauce.NextFloat2Direction() * dispersionStrength;
-                float2 toTarget = nearestCatnipPos - catPos + dispersion;
+                float2 toTarget = nearestCatnipPos - catPos;
                 if (math.lengthsq(toTarget) > 0){weightForce += math.normalize(toTarget)*moveForce;}
 
                 if (nearestCatnipDist < catnipContactRadius && weights[nearestCatnipIndex].State == WeightBehaviour.WeightState.Landed)
@@ -112,8 +111,11 @@ public partial struct CatMovementSystem : ISystem
                 if (math.lengthsq(toTarget) > 0){weightForce -= math.normalize(toTarget)*moveForce;}
             }
 
+            // random dispersion
+            float2 dispersion = randomSauce.NextFloat2Direction() * dispersionStrength;
+
             // forces applied (gravity and friction also thrown in here)
-            catVelocity.ValueRW.Value += (down + weightForce) * deltaTime;
+            catVelocity.ValueRW.Value += (down + weightForce + dispersion) * deltaTime;
             catVelocity.ValueRW.Value *= math.max(0,1-friction * deltaTime);
             catData.ValueRW.Position += catVelocity.ValueRW.Value * deltaTime;
 
