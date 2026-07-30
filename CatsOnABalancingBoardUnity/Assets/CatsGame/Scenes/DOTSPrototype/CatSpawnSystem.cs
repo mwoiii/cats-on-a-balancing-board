@@ -24,8 +24,14 @@ public partial struct CatSpawnSystem : ISystem
         foreach (Entity cat in cats)
         {
             float2 offset = randomSauce.NextFloat2Direction() * randomSauce.NextFloat(0f, config.Radius);
-            float3 pos = new(offset.x, config.DropHeight, offset.y);
-            state.EntityManager.SetComponentData(cat, LocalTransform.FromPositionRotationScale(pos,quaternion.identity,config.Scale));
+            CatData data = SystemAPI.GetComponent<CatData>(cat);
+            data.Position = offset;
+            state.EntityManager.SetComponentData(cat, data);
+
+            LocalTransform catTransform = LocalTransform.FromPositionRotationScale(
+                new float3(offset.x, config.DropHeight, offset.y), quaternion.identity, config.Scale
+            );
+            state.EntityManager.SetComponentData(cat,catTransform);
         }
 
         config.Finished = true;
