@@ -19,11 +19,14 @@ public class ExplosionEffect : MonoBehaviour
     public float minPitch = 0.9f;
     public float maxPitch = 1.1f;
 
+    Camera mainCamera;
+
     void Awake()
     {
         Instance = this;
         explosionSprite = Sprite.Create(explosionTexture, new Rect(0,0,explosionTexture.width,explosionTexture.height), new Vector2(0.5f,0.5f));
         supernovaSprite = Sprite.Create(supernovaTexture, new Rect(0,0,supernovaTexture.width,supernovaTexture.height), new Vector2(0.5f,0.5f));
+        mainCamera = Camera.main;
     }
 
     public void PlayAt(Vector3 position)
@@ -75,7 +78,7 @@ public class ExplosionEffect : MonoBehaviour
         {
             if (Camera.main != null)
             {
-                hi.transform.rotation = Camera.main.transform.rotation;
+                hi.transform.rotation = mainCamera.transform.rotation;
             }
 
             SpriteRenderer s = hi.AddComponent<SpriteRenderer>();
