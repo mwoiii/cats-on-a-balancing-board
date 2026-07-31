@@ -4487,16 +4487,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1716254374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe35431c3bb9e7546a88b612106548f7, type: 3}
+  m_Script: {fileID: 11500000, guid: 27c3d9d766db24e4d9d6a16966a1e233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionEffect
   explosionTexture: {fileID: 2800000, guid: 0ca48e1ebb2fd0b4793fcf16fa52a075, type: 3}
   explosionSound: {fileID: 8300000, guid: 118c32becc36d61419b87bcab29123a7, type: 3}
   supernovaTexture: {fileID: 2800000, guid: 906ea6c727c85ec41a3161f91caf3096, type: 3}
   supernovaSound: {fileID: 8300000, guid: e6b40b65071d25948875568673a339bc, type: 3}
-  lifetime: 0.8
+  lifetime: 1
   spriteScale: 0.2
-  volume: 0.5
+  volume: 0.3
   minPitch: 0.9
   maxPitch: 1.1
 --- !u!1 &1723187204
