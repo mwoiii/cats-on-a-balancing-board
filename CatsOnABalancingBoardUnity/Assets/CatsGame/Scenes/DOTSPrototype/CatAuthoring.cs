@@ -12,17 +12,8 @@ public class CatAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new CatData{Position = float2.zero, Mass = authoring.mass});
             AddComponent(entity, new CatVelocity {Value = float2.zero});
+            AddComponent(entity, new InitialFallData{ Height = 0, Velocity = 0 });
         }
-    }
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
     }
 }
 

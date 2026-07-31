@@ -38,7 +38,7 @@ public partial struct CatSpawnSystem : ISystem
             spawnCallCount++;
 
             NativeArray<Entity> cats = state.EntityManager.Instantiate(config.Prefab, countToSpawn, Allocator.Temp);
-            
+
             foreach (Entity cat in cats)
             {
                 float2 offset = randomSauce.NextFloat2Direction() * randomSauce.NextFloat(0f, config.Radius);
@@ -48,8 +48,10 @@ public partial struct CatSpawnSystem : ISystem
 
                 LocalTransform catTransform = LocalTransform.FromPositionRotationScale(
                 new float3(offset.x, config.DropHeight, offset.y), quaternion.identity, config.Scale
-            );
-            state.EntityManager.SetComponentData(cat,catTransform);
+                );
+                state.EntityManager.SetComponentData(cat,catTransform);
+
+                state.EntityManager.SetComponentData(cat, new InitialFallData {Height = config.DropHeight, Velocity = 0});
             }
         }
 
