@@ -48,6 +48,11 @@ public class WeightBridge: MonoBehaviour
             activeWeights.Add(behaviour);
         }
     }
+
+    void OnDestroy()
+    {
+        boss.DestroyEntity(weightEntity);
+    }
 }
 
 public struct WeightSnapshot : IBufferElementData

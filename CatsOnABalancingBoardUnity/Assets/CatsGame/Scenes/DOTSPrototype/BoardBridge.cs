@@ -27,6 +27,11 @@ public class BoardBridge: MonoBehaviour
             Radius = boardRadius
         });
     }
+
+    void OnDestroy()
+    {
+        boss.DestroyEntity(boardEntity);
+    }
 }
 
 public struct BoardTransform : IComponentData
