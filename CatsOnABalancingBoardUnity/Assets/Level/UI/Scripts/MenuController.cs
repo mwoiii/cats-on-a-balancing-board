@@ -26,7 +26,11 @@ public class MenuController : MonoBehaviour {
     public void OpenGame() {
         StartCoroutine(BeginSelectOption(() => {
             if (gameSceneName != null) {
-                SceneManager.LoadScene(gameSceneName);
+                if (GameLogicScript.instance != null && GameLogicScript.score > 1000 && Random.Range(0f,1f) > 0.995f){
+                    SceneManager.LoadScene("EggPrototype");
+                } else {
+                    SceneManager.LoadScene(gameSceneName);
+                }
             }
         }));
     }
