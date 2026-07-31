@@ -12,7 +12,8 @@ public class CatAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new CatData{Position = float2.zero, Mass = authoring.mass});
             AddComponent(entity, new CatVelocity {Value = float2.zero});
-            AddComponent(entity, new InitialFallData{ Height = 0, Velocity = 0 });
+            AddComponent(entity, new IsInitialFalling());
+            SetComponentEnabled<IsInitialFalling>(entity,true);
         }
     }
 }
@@ -27,3 +28,5 @@ public struct CatVelocity: IComponentData
 {
     public float2 Value;
 }
+
+public struct IsInitialFalling : IComponentData, IEnableableComponent {}

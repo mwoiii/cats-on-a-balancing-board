@@ -19,22 +19,26 @@ public partial struct CatProjectionSystem : ISystem
     {
         BoardTransform board = SystemAPI.GetSingleton<BoardTransform>();
 
-        foreach (var (catData, localTransform) in SystemAPI.Query<RefRO<CatData>, RefRW<LocalTransform>>().WithNone<InitialFallData>())
+        foreach (var (catData, localTransform) in SystemAPI.Query<RefRO<CatData>, RefRW<LocalTransform>>().WithDisabled<IsInitialFalling>())
         {
             float3 localOffset = new(catData.ValueRO.Position.x, projHeight ,catData.ValueRO.Position.y);
             
             localTransform.ValueRW.Position = board.Position + math.mul(board.Rotation, localOffset);
         }
 
-        foreach (var (catData, dropData, localTransform) in SystemAPI.Query<RefRO<CatData>, RefRO<InitialFallData>, RefRW<LocalTransform>>())
+        if (SystemAPI.HasSingleton<InitialFallData>())
         {
+            float height = SystemAPI.GetSingleton<InitialFallData>().Height;
+
+            foreach (var (catData, localTransform) in SystemAPI.Query<RefRO<CatData>, RefRW<LocalTransform>>().WithAll<IsInitialFalling>())
+            {       
                 float3 landedLocalOffset = new(catData.ValueRO.Position.x, projHeight, catData.ValueRO.Position.y);
                 float3 landedWorldPos = board.Position + math.mul(board.Rotation, landedLocalOffset);
-
                 float3 worldPos = landedWorldPos;
-                worldPos.y += dropData.ValueRO.Height - projHeight;
-
+                
+                worldPos.y += height - projHeight;
                 localTransform.ValueRW.Position = worldPos;
-        }   
+            }
+        }
     }
 }

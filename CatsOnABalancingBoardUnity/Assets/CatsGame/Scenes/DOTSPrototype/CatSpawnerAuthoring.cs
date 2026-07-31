@@ -23,6 +23,7 @@ public class CatSpawnerAuthoring : MonoBehaviour
                 Scale = authoring.scale,
                 Finished = false
             });
+            AddComponent(entity, new InitialFallData{Height = 0, Velocity = 0});
         }
     }
 

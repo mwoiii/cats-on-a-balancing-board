@@ -50,9 +50,8 @@ public partial struct CatSpawnSystem : ISystem
                 new float3(offset.x, config.DropHeight, offset.y), quaternion.identity, config.Scale
                 );
                 state.EntityManager.SetComponentData(cat,catTransform);
-
-                state.EntityManager.SetComponentData(cat, new InitialFallData {Height = config.DropHeight, Velocity = 0});
             }
+            SystemAPI.SetSingleton(new InitialFallData {Height = config.DropHeight, Velocity = 0});
         }
 
         SystemAPI.SetSingleton(config);

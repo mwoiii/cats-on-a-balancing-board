@@ -9,26 +9,30 @@ public partial struct InitialFallSystem : ISystem
 {
     const float landHeight = 0.1f;
 
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<InitialFallData>();
+    }
+
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        InitialFallData fallState = SystemAPI.GetSingleton<InitialFallData>();
+        if (fallState.Height <= landHeight){return;}
+
         float deltaTime = SystemAPI.Time.DeltaTime;
-        float gravity = -9.81f;
+        fallState.Velocity += -9.81f * deltaTime;
+        fallState.Height += fallState.Velocity * deltaTime;
 
-        EntityCommandBuffer ecb = new(Unity.Collections.Allocator.Temp);
-
-        foreach (var (initialFallData, entity) in SystemAPI.Query<RefRW<InitialFallData>>().WithEntityAccess())
+        if (fallState.Height <= landHeight)
         {
-            initialFallData.ValueRW.Velocity += gravity * deltaTime;
-            initialFallData.ValueRW.Height += initialFallData.ValueRW.Velocity * deltaTime;
-
-            if (initialFallData.ValueRO.Height <= landHeight)
+            foreach (var falling in SystemAPI.Query<EnabledRefRW<IsInitialFalling>>())
             {
-                ecb.RemoveComponent<InitialFallData>(entity);
+                falling.ValueRW = false;
             }
         }
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
+
+        SystemAPI.SetSingleton(fallState);
     }
 }
 
