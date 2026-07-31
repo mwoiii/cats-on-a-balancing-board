@@ -42,7 +42,7 @@ public partial struct CatMovementSystem : ISystem
 
         EntityCommandBuffer ecb = new(Allocator.Temp);
 
-        foreach (var (catData, catVelocity, entity) in SystemAPI.Query<RefRW<CatData>, RefRW<CatVelocity>>().WithEntityAccess())
+        foreach (var (catData, catVelocity, entity) in SystemAPI.Query<RefRW<CatData>, RefRW<CatVelocity>>().WithNone<InitialFallData>().WithEntityAccess())
         {
             Random randomSauce = Random.CreateFromIndex((uint)entity.Index * 67 + frameCounter * 21); // some Bezout shenanigans going on here
 
