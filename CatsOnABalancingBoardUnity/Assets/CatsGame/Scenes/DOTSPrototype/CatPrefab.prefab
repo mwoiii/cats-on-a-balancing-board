@@ -103,3 +103,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4ecb88ece99328428dd0c62d3c6824f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatAuthoring
+  mass: 0.01
