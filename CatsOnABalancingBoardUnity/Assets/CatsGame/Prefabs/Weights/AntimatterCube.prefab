@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9bc78931afd1f4db8f0a428593b9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightBehaviour
-  Type: 3
+  type: 3
   shrinkAmount: 0.05
   minScale: 0.1
   catTag: Cat

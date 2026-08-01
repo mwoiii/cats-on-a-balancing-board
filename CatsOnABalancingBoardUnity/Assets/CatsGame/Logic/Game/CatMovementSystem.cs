@@ -32,6 +32,7 @@ public partial struct CatMovementSystem : ISystem {
     public void OnUpdate(ref SystemState state) {
         BoardTransform board = SystemAPI.GetSingleton<BoardTransform>();
         DynamicBuffer<WeightSnapshot> weights = SystemAPI.GetSingletonBuffer<WeightSnapshot>();
+        DynamicBuffer<WeightContactPulse> pulses = SystemAPI.GetSingletonBuffer<WeightContactPulse>();
         float deltaTime = SystemAPI.Time.DeltaTime;
 
         float3 gravityWorld = new(0, -9.81f, 0);
@@ -96,7 +97,6 @@ public partial struct CatMovementSystem : ISystem {
                 if (math.lengthsq(toTarget) > 0) { weightForce += math.normalize(toTarget) * moveForce; }
 
                 if (nearestCatnipDist < catnipContactRadius && weights[nearestCatnipIndex].state == WeightBehaviour.WeightState.Landed) {
-                    DynamicBuffer<WeightContactPulse> pulses = SystemAPI.GetSingletonBuffer<WeightContactPulse>();
                     pulses.ElementAt(nearestCatnipIndex).count++;
                 }
             }
