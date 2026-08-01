@@ -1,68 +1,67 @@
 using System.Collections;
 using UnityEngine;
 
-public class WeightBehaviour : MonoBehaviour
-{
+public class WeightBehaviour : MonoBehaviour {
     public enum WeightType { None, Catnip, Lemon, Antimatter }
-    public WeightType Type = WeightType.None;
+
+    public WeightType type = WeightType.None;
 
     public enum WeightState { Falling, Landed }
+
     public WeightState State { get; private set; } = WeightState.Falling;
 
-    [SerializeField] private float shrinkAmount = 0.01f;
-    [SerializeField] private float minScale = 0.01f;
-    [SerializeField] private string catTag = "Cat";
-    [SerializeField] private float shrinkInterval = 0.5f; // seconds between shrink ticks
+    [SerializeField]
+    private float shrinkAmount = 0.01f;
+
+    [SerializeField]
+    private float minScale = 0.01f;
+
+    [SerializeField]
+    private string catTag = "Cat";
+
+    [SerializeField]
+    private float shrinkInterval = 0.5f; // seconds between shrink ticks
+
     public float shrinkIntervalLemon = 0.8f;
 
     private float shrinkTimer = 0f;
 
-    void Start()
-    {
+    void Start() {
 
     }
 
-    void Update()
-    {
-        if (shrinkTimer > 0f)
-        {
+    void Update() {
+        if (shrinkTimer > 0f) {
             shrinkTimer -= Time.deltaTime;
         }
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (State == WeightState.Falling)
-        { 
+    void OnCollisionEnter(Collision collision) {
+        if (State == WeightState.Falling) {
             State = WeightState.Landed;
-            if (Type == WeightType.Lemon)
-            {
+            if (type == WeightType.Lemon) {
                 StartCoroutine(Decay());
             }
         }
         WeightBehaviour a = collision.collider.gameObject.GetComponent<WeightBehaviour>();
-        if (a != null)
-        {
-            if (a.Type == WeightType.Antimatter && Type != WeightType.Antimatter){
+        if (a != null) {
+            if (a.type == WeightType.Antimatter && type != WeightType.Antimatter) {
                 Destroy(a.gameObject);
                 Destroy(transform.gameObject);
-                ExplosionEffect.Instance.SuperNovaAt(transform.position);
+                ExplosionEffect.instance.SuperNovaAt(transform.position);
             }
         }
     }
 
-    IEnumerator Decay()
-    {
-        while (gameObject != null)
-        {
+    IEnumerator Decay() {
+        while (gameObject != null) {
             ShrinkAndCheck();
             yield return new WaitForSeconds(shrinkIntervalLemon);
         }
     }
 
-    void OnCollisionStay(Collision collision)
-    {
-        if (Type != WeightType.Catnip) return;
+    void OnCollisionStay(Collision collision) {
+        if (type != WeightType.Catnip) return;
         if (!collision.collider.CompareTag(catTag)) return;
         if (shrinkTimer > 0f) return; // still on cooldown
 
@@ -70,26 +69,22 @@ public class WeightBehaviour : MonoBehaviour
         shrinkTimer = shrinkInterval;
     }
 
-    private void ShrinkAndCheck()
-    {
+    private void ShrinkAndCheck() {
         Vector3 newScale = transform.localScale - Vector3.one * shrinkAmount;
         transform.localScale = newScale;
 
-        if (newScale.x < minScale || newScale.y < minScale || newScale.z < minScale)
-        {
+        if (newScale.x < minScale || newScale.y < minScale || newScale.z < minScale) {
             Destroy(gameObject);
         }
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         WeightDropper.weightBehaviourDict.Remove(transform.gameObject);
     }
 
-    public void NotifyCatContact()
-    {
-        if (Type != WeightType.Catnip){return;}
-        if (shrinkTimer > 0){return;}
+    public void NotifyCatContact() {
+        if (type != WeightType.Catnip) { return; }
+        if (shrinkTimer > 0) { return; }
 
         ShrinkAndCheck();
         shrinkTimer = shrinkInterval;

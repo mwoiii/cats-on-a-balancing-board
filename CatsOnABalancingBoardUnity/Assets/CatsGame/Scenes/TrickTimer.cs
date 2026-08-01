@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class TrickTimer : MonoBehaviour {
     public int trickLength;
+
     public int initialBonus;
 
     public AudioClip countdownSound;
+
     public AudioClip completeSound;
 
     public AudioSource countdownSource;
+
     public AudioSource completeSource;
 
     public float volume = 0.7f;
+
     public float basePitch = 1f;
+
     public float pitchStep = 0.1f;
+
     public float maxPitch = 2f;
 
-    void Awake()
-    {
+    void Awake() {
         ResetTimerAndCombo();
     }
 
@@ -31,8 +36,7 @@ public class TrickTimer : MonoBehaviour {
         completeSource.volume = volume;
     }
 
-    void GetStartedWithIt()
-    {
+    void GetStartedWithIt() {
         StartCoroutine(Timer());
     }
 
@@ -40,34 +44,30 @@ public class TrickTimer : MonoBehaviour {
 
     public static int litterBonus { get; private set; }
 
-    public static event Action<int> onTimerChanged;
+    public static event Action<int> OnTimerChanged;
 
-    public static event Action<int> onLitterBonusChanged;
+    public static event Action<int> OnLitterBonusChanged;
 
     IEnumerator Timer() {
         while (GameLogicScript.gameRunning) {
             yield return new WaitForSeconds(1);
             currentSecond--;
-            onTimerChanged?.Invoke(currentSecond);
-            if (currentSecond == 3)
-            {
+            OnTimerChanged?.Invoke(currentSecond);
+            if (currentSecond == 3) {
                 PlayCountdown();
             }
             if (currentSecond == 0) {
                 PlayComplete();
-                
-                if (CatSpawnerScript.instance != null)
-                {
+
+                if (CatSpawnerScript.instance != null) {
                     StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
                     litterBonus *= 2;
-                    onLitterBonusChanged?.Invoke(litterBonus);
+                    OnLitterBonusChanged?.Invoke(litterBonus);
                     currentSecond = trickLength;
-                }
-                else
-                {
+                } else {
                     CatSpawnRequest.Enqueue(litterBonus);
                     litterBonus *= 2;
-                    onLitterBonusChanged?.Invoke(litterBonus);
+                    OnLitterBonusChanged?.Invoke(litterBonus);
                     currentSecond = trickLength;
                 }
             }
@@ -77,8 +77,8 @@ public class TrickTimer : MonoBehaviour {
     void ResetTimerAndCombo() {
         currentSecond = trickLength;
         litterBonus = initialBonus;
-        onTimerChanged?.Invoke(currentSecond);
-        onLitterBonusChanged?.Invoke(litterBonus);
+        OnTimerChanged?.Invoke(currentSecond);
+        OnLitterBonusChanged?.Invoke(litterBonus);
 
         countdownSource.Stop();
         completeSource.pitch = basePitch;
@@ -90,18 +90,14 @@ public class TrickTimer : MonoBehaviour {
         WeightDropper.FirstWeightDropped -= GetStartedWithIt;
     }
 
-    void PlayCountdown()
-    {
-        if (countdownSound != null && countdownSource != null)
-        {
+    void PlayCountdown() {
+        if (countdownSound != null && countdownSource != null) {
             countdownSource.PlayOneShot(countdownSound);
         }
     }
 
-    void PlayComplete()
-    {
-        if (completeSound != null && completeSource != null)
-        {
+    void PlayComplete() {
+        if (completeSound != null && completeSource != null) {
             completeSource.PlayOneShot(completeSound);
             completeSource.pitch = Mathf.Min(completeSource.pitch + pitchStep, maxPitch);
         }

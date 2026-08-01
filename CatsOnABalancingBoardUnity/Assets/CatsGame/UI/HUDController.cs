@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -24,15 +23,15 @@ public class HUDController : MonoBehaviour {
 
     public TextMeshProUGUI scoreText;
 
-    public int catCount {get; private set;}
+    public int catCount { get; private set; }
 
     public void Awake() {
         instance = this;
     }
 
     public void Start() {
-        TrickTimer.onLitterBonusChanged += OnLitterBonusChanged;
-        TrickTimer.onTimerChanged += OnLitterTimerChanged;
+        TrickTimer.OnLitterBonusChanged += OnLitterBonusChanged;
+        TrickTimer.OnTimerChanged += OnLitterTimerChanged;
 
         OnLitterBonusChanged(TrickTimer.litterBonus);
         OnLitterTimerChanged(TrickTimer.currentSecond);
@@ -59,7 +58,7 @@ public class HUDController : MonoBehaviour {
     }
 
     public void InitiateGameOver() {
-        int score = Mathf.Max((int)CatManagerScript.score,(int)GameLogicScript.score); // purely so both scenes can continue to work
+        int score = Mathf.Max((int)CatManagerScript.score, (int)GameLogicScript.score); // purely so both scenes can continue to work
 
         if (scoreText) {
             scoreText.text = score.ToString();

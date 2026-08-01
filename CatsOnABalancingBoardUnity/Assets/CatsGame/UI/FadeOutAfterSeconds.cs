@@ -15,7 +15,6 @@ public class FadeOutAfterSeconds : MonoBehaviour {
 
     private bool startFade;
 
-
     public void Awake() {
         if (!image) {
             image = GetComponent<RawImage>();

@@ -1,19 +1,16 @@
 using System.Collections;
 using UnityEngine;
 
-public class KillPlane : MonoBehaviour
-{
+public class KillPlane : MonoBehaviour {
     public CatManagerScript catManager;
 
     public float deletionDelay = 1;
 
     public float bounceMultiplier = 5;
-    
-    private void OnCollisionEnter(Collision collision)
-    {
+
+    private void OnCollisionEnter(Collision collision) {
         Rigidbody b = collision.rigidbody;
-        if (b != null)
-        {
+        if (b != null) {
             Vector3 norm = collision.GetContact(0).normal;
             float impactSpeed = collision.relativeVelocity.magnitude;
             b.linearVelocity += -bounceMultiplier * impactSpeed * norm;
@@ -22,14 +19,11 @@ public class KillPlane : MonoBehaviour
         StartCoroutine(Wait(collision.collider));
     }
 
-    IEnumerator Wait(Collider other)
-    {
+    IEnumerator Wait(Collider other) {
         yield return new WaitForSeconds(deletionDelay);
-        if (other != null)
-        {
-            ExplosionEffect.Instance.PlayAt(other.transform.position);
-            if (other.gameObject.CompareTag("Cat"))
-            {
+        if (other != null) {
+            ExplosionEffect.instance.PlayAt(other.transform.position);
+            if (other.gameObject.CompareTag("Cat")) {
                 catManager.RemoveCat(other.gameObject);
             }
             Destroy(other.gameObject);

@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class MenuThemeSyncPaws : MonoBehaviour {
     public AudioSource song;
+
     public float[] meowTimestamps;
+
     float lastTimestamp;
 
     int next;

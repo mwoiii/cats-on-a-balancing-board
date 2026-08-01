@@ -1,33 +1,27 @@
-using Unity.Entities;
-using UnityEngine;
 using Unity.Burst;
+using Unity.Entities;
 
 [UpdateAfter(typeof(CatSpawnSystem))]
 [UpdateBefore(typeof(CatProjectionSystem))]
 [BurstCompile]
-public partial struct InitialFallSystem : ISystem
-{
+public partial struct InitialFallSystem : ISystem {
     const float landHeight = 0.1f;
 
-    public void OnCreate(ref SystemState state)
-    {
+    public void OnCreate(ref SystemState state) {
         state.RequireForUpdate<InitialFallData>();
     }
 
     [BurstCompile]
-    public void OnUpdate(ref SystemState state)
-    {
+    public void OnUpdate(ref SystemState state) {
         InitialFallData fallState = SystemAPI.GetSingleton<InitialFallData>();
-        if (fallState.Height <= landHeight){return;}
+        if (fallState.height <= landHeight) { return; }
 
         float deltaTime = SystemAPI.Time.DeltaTime;
-        fallState.Velocity += -9.81f * deltaTime;
-        fallState.Height += fallState.Velocity * deltaTime;
+        fallState.velocity += -9.81f * deltaTime;
+        fallState.height += fallState.velocity * deltaTime;
 
-        if (fallState.Height <= landHeight)
-        {
-            foreach (var falling in SystemAPI.Query<EnabledRefRW<IsInitialFalling>>())
-            {
+        if (fallState.height <= landHeight) {
+            foreach (var falling in SystemAPI.Query<EnabledRefRW<IsInitialFalling>>()) {
                 falling.ValueRW = false;
             }
         }
@@ -36,9 +30,8 @@ public partial struct InitialFallSystem : ISystem
     }
 }
 
-public struct InitialFallData : IComponentData
-{
-    public float Height;
-    public float Velocity;
+public struct InitialFallData : IComponentData {
+    public float height;
+    public float velocity;
 }
 

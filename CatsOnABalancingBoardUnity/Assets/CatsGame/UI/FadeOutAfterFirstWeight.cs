@@ -12,7 +12,6 @@ public class FadeOutAfterFirstWeight : MonoBehaviour {
 
     private bool startFade = false;
 
-
     public void Awake() {
         if (!image) {
             image = GetComponent<RawImage>();
@@ -20,8 +19,7 @@ public class FadeOutAfterFirstWeight : MonoBehaviour {
         WeightDropper.FirstWeightDropped += StartFade;
     }
 
-    void StartFade()
-    {
+    void StartFade() {
         startFade = true;
     }
 

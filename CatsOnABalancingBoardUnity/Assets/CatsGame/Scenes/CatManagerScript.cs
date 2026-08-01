@@ -12,14 +12,20 @@ public class CatManagerScript : MonoBehaviour {
     private const double scoreScaleFactor = 0.05d;
 
     public AudioClip meow;
+
     public float minAmbientMeowInterval = 3;
+
     public float maxAmbientMeowInterval = 20;
+
     public float initialCatCount = 100;
+
     public float volume = 0.3f;
+
     public float minPitch = 0.5f;
+
     public float maxPitch = 1.5f;
 
-    public static System.Action LostCat;
+    public static event System.Action LostCat;
 
     public void Awake() {
         score = 0d;

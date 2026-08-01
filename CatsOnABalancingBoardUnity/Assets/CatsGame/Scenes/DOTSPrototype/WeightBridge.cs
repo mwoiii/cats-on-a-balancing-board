@@ -3,29 +3,26 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class WeightBridge: MonoBehaviour
-{
+public class WeightBridge : MonoBehaviour {
     public Transform board;
 
     Entity weightEntity;
+
     EntityManager boss;
+
     readonly List<WeightBehaviour> activeWeights = new();
 
-    void Start()
-    {
+    void Start() {
         boss = World.DefaultGameObjectInjectionWorld.EntityManager;
         weightEntity = boss.CreateEntity();
         boss.AddBuffer<WeightSnapshot>(weightEntity);
         boss.AddBuffer<WeightContactPulse>(weightEntity);
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         DynamicBuffer<WeightContactPulse> pulses = boss.GetBuffer<WeightContactPulse>(weightEntity);
-        for (int i = 0; i < pulses.Length && i < activeWeights.Count; i++)
-        {
-            if (pulses[i].Count > 0 && activeWeights[i] != null)
-            {
+        for (int i = 0; i < pulses.Length && i < activeWeights.Count; i++) {
+            if (pulses[i].count > 0 && activeWeights[i] != null) {
                 activeWeights[i].NotifyCatContact();
             }
         }
@@ -35,34 +32,30 @@ public class WeightBridge: MonoBehaviour
         pulses.Clear();
         activeWeights.Clear();
 
-        foreach (KeyValuePair<GameObject, WeightBehaviour> entry in WeightDropper.weightBehaviourDict)
-        {
+        foreach (KeyValuePair<GameObject, WeightBehaviour> entry in WeightDropper.weightBehaviourDict) {
             GameObject weightObject = entry.Key;
             WeightBehaviour behaviour = entry.Value;
-            if (weightObject == null || behaviour == null) {continue;} // Guy who only just learnt what continue does
+            if (weightObject == null || behaviour == null) { continue; } // Guy who only just learnt what continue does
 
             Vector3 worldOffset = weightObject.transform.position - board.position;
             Vector3 localPos = Quaternion.Inverse(board.rotation) * worldOffset;
-            buffer.Add(new WeightSnapshot{LocalPosition = new float2(localPos.x,localPos.z), Type = behaviour.Type, State = behaviour.State });
-            pulses.Add(new WeightContactPulse {Count = 0});
+            buffer.Add(new WeightSnapshot { localPosition = new float2(localPos.x, localPos.z), type = behaviour.type, state = behaviour.State });
+            pulses.Add(new WeightContactPulse { count = 0 });
             activeWeights.Add(behaviour);
         }
     }
 
-    void OnDestroy()
-    {
+    void OnDestroy() {
         boss.DestroyEntity(weightEntity);
     }
 }
 
-public struct WeightSnapshot : IBufferElementData
-{
-    public float2 LocalPosition;
-    public WeightBehaviour.WeightType Type;
-    public WeightBehaviour.WeightState State;
+public struct WeightSnapshot : IBufferElementData {
+    public float2 localPosition;
+    public WeightBehaviour.WeightType type;
+    public WeightBehaviour.WeightState state;
 }
 
-public struct WeightContactPulse : IBufferElementData
-{
-    public int Count;
+public struct WeightContactPulse : IBufferElementData {
+    public int count;
 }
