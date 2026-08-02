@@ -8,7 +8,7 @@ public class CatAuthoring : MonoBehaviour {
     class Baker : Baker<CatAuthoring> {
         public override void Bake(CatAuthoring authoring) {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new CatData { position = float2.zero, mass = authoring.mass });
+            AddComponent(entity, new CatData { position = float2.zero, mass = authoring.mass, prevStackIndex = -1 });
             AddComponent(entity, new CatVelocity { value = float2.zero });
             AddComponent(entity, new IsInitialFalling());
             SetComponentEnabled<IsInitialFalling>(entity, true);
@@ -19,6 +19,7 @@ public class CatAuthoring : MonoBehaviour {
 public struct CatData : IComponentData {
     public float2 position;
     public float mass;
+    public int prevStackIndex;
 }
 
 public struct CatVelocity : IComponentData {
