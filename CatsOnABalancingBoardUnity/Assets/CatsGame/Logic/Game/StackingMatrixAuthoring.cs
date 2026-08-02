@@ -1,7 +1,7 @@
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
-using static StackingMatrixSystem;
+using static StackingGridSystem;
 
 public class StackingMatrixAuthoring : MonoBehaviour {
     class Baker : Baker<StackingMatrixAuthoring> {
@@ -14,5 +14,5 @@ public class StackingMatrixAuthoring : MonoBehaviour {
 }
 
 public struct StackingMatrixData : IBufferElementData {
-    public byte value;
+    public ushort value;
 }

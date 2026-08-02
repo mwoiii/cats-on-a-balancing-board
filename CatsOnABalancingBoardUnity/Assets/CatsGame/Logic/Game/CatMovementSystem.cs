@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using static WeightBehaviour;
 
 [UpdateBefore(typeof(CatProjectionSystem))]
 [BurstCompile]
@@ -68,21 +69,29 @@ public partial struct CatMovementSystem : ISystem {
                 WeightSnapshot w = weights[i];
                 float dist = math.distancesq(catPos, w.localPosition); // distance squared saves a square root operation but i maybe should be more precise with variable names
 
-                if (w.type == WeightBehaviour.WeightType.None && w.state == WeightBehaviour.WeightState.Falling && dist < nearestBasicDist) {
-                    nearestBasicDist = dist;
-                    nearestBasicPos = w.localPosition;
-                    hasBasic = true;
-                }
-                if (w.type == WeightBehaviour.WeightType.Catnip && dist < nearestCatnipDist) {
-                    nearestCatnipDist = dist;
-                    nearestCatnipPos = w.localPosition;
-                    nearestCatnipIndex = i;
-                    hasCatnip = true;
-                }
-                if (w.type == WeightBehaviour.WeightType.Lemon && dist < nearestLemonDist) {
-                    nearestLemonDist = dist;
-                    nearestLemonPos = w.localPosition;
-                    hasLemon = true;
+                switch (w.type) {
+                    case WeightType.None:
+                        if (w.state == WeightState.Falling && dist < nearestBasicDist) {
+                            nearestBasicDist = dist;
+                            nearestBasicPos = w.localPosition;
+                            hasBasic = true;
+                        }
+                        break;
+                    case WeightType.Catnip:
+                        if (dist < nearestCatnipDist) {
+                            nearestCatnipDist = dist;
+                            nearestCatnipPos = w.localPosition;
+                            nearestCatnipIndex = i;
+                            hasCatnip = true;
+                        }
+                        break;
+                    case WeightType.Lemon:
+                        if (dist < nearestLemonDist) {
+                            nearestLemonDist = dist;
+                            nearestLemonPos = w.localPosition;
+                            hasLemon = true;
+                        }
+                        break;
                 }
             }
 
@@ -90,13 +99,17 @@ public partial struct CatMovementSystem : ISystem {
             if (hasBasic) // can the cat has basic
             {
                 float2 toTarget = nearestBasicPos - catPos;
-                if (math.lengthsq(toTarget) > 0) { weightForce -= math.normalize(toTarget) * moveForce; }
+                if (math.lengthsq(toTarget) > 0) {
+                    weightForce -= math.normalize(toTarget) * moveForce;
+                }
             }
             if (hasCatnip) {
                 float2 toTarget = nearestCatnipPos - catPos;
-                if (math.lengthsq(toTarget) > 0) { weightForce += math.normalize(toTarget) * moveForce; }
+                if (math.lengthsq(toTarget) > 0) {
+                    weightForce += math.normalize(toTarget) * moveForce;
+                }
 
-                if (nearestCatnipDist < catnipContactRadius && weights[nearestCatnipIndex].state == WeightBehaviour.WeightState.Landed) {
+                if (nearestCatnipDist < catnipContactRadius && weights[nearestCatnipIndex].state == WeightState.Landed) {
                     pulses.ElementAt(nearestCatnipIndex).count++;
                 }
             }
