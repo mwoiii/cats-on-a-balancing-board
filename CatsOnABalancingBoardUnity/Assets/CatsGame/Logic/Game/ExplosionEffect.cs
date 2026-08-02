@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Interactions;
 
 public class ExplosionEffect : MonoBehaviour {
     public static ExplosionEffect instance;
@@ -25,6 +26,10 @@ public class ExplosionEffect : MonoBehaviour {
 
     public float maxPitch = 1.1f;
 
+    public int maxConcurrentSounds = 1000;
+    AudioSource[] sourcePool;
+    int nextSourceIndex;
+
     Camera mainCamera;
 
     void Awake() {
@@ -32,20 +37,44 @@ public class ExplosionEffect : MonoBehaviour {
         explosionSprite = Sprite.Create(explosionTexture, new Rect(0, 0, explosionTexture.width, explosionTexture.height), new Vector2(0.5f, 0.5f));
         supernovaSprite = Sprite.Create(supernovaTexture, new Rect(0, 0, supernovaTexture.width, supernovaTexture.height), new Vector2(0.5f, 0.5f));
         mainCamera = Camera.main;
+
+        sourcePool = new AudioSource[maxConcurrentSounds];
+        for (int i = 0; i < maxConcurrentSounds; i++)
+        {
+            GameObject a = new($"ExplosionSource_{i}");
+            a.transform.SetParent(transform);
+            AudioSource b = a.AddComponent<AudioSource>();
+            b.spatialBlend = 1;
+            b.playOnAwake = false;
+            sourcePool[i]=b;
+        }
+    }
+
+    AudioSource GetNextSource()
+    {
+        AudioSource b = sourcePool[nextSourceIndex];
+        nextSourceIndex = (nextSourceIndex + 1) % maxConcurrentSounds;
+        return b;
+    }
+
+    void PlaySoundAt(AudioClip clip, Vector3 pos)
+    {
+        if (clip == null){return;}
+
+        AudioSource b = GetNextSource();
+        b.Stop();
+        b.transform.position = pos;
+        b.clip = clip;
+        b.volume = volume;
+        b.pitch = Random.Range(minPitch, maxPitch);
+        b.Play();
     }
 
     public void PlayAt(Vector3 position) {
-        GameObject hi = new GameObject("ExplosionSFXandVFX");
+        GameObject hi = new GameObject("ExplosionVFX");
         hi.transform.position = position;
 
-        if (explosionSound != null) {
-            AudioSource a = hi.AddComponent<AudioSource>();
-            a.clip = explosionSound;
-            a.volume = volume;
-            a.pitch = Random.Range(minPitch, maxPitch);
-            a.spatialBlend = 1;
-            a.Play();
-        }
+        PlaySoundAt(explosionSound, position);
 
         if (explosionTexture != null) {
             if (Camera.main != null) {
@@ -61,17 +90,10 @@ public class ExplosionEffect : MonoBehaviour {
     }
 
     public void SuperNovaAt(Vector3 position) {
-        GameObject hi = new GameObject("SupernovaSFXandVFX");
+        GameObject hi = new GameObject("SupernovaVFX");
         hi.transform.position = position;
 
-        if (supernovaSound != null) {
-            AudioSource a = hi.AddComponent<AudioSource>();
-            a.clip = supernovaSound;
-            a.volume = volume;
-            a.pitch = Random.Range(minPitch, maxPitch);
-            a.spatialBlend = 1;
-            a.Play();
-        }
+        PlaySoundAt(supernovaSound, position);
 
         if (supernovaTexture != null) {
             if (Camera.main != null) {

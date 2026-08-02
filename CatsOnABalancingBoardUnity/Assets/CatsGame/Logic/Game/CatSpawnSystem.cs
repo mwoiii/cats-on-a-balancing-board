@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Unity.Rendering;
 
 [BurstCompile]
 public partial struct CatSpawnSystem : ISystem {
@@ -42,11 +43,23 @@ public partial struct CatSpawnSystem : ISystem {
                 new float3(offset.x, config.dropHeight, offset.y), quaternion.identity, config.scale
                 );
                 state.EntityManager.SetComponentData(cat, catTransform);
+
+                // Spribnkes...
+                //float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
+                //state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh,1f)});
+
             }
             SystemAPI.SetSingleton(new InitialFallData { height = config.dropHeight, velocity = 0 });
         }
 
         SystemAPI.SetSingleton(config);
+    }
+
+    static float3 HSVToRGBBurstable(float h, float s, float v)
+    {
+        float3 p = math.abs(math.frac(h + new float3(1f,2f/3f,1f/3f)) * 6f - 3f);
+        float3 rgb = math.saturate(p-1f);
+        return v * math.lerp(new float3(1f),rgb,s);
     }
 }
 

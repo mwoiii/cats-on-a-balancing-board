@@ -116,7 +116,7 @@ public partial struct CatMovementSystem : ISystem {
 
             if (math.length(catData.ValueRO.position) > board.radius) // if cat fallen off...
             {
-                float3 lastLocalPos = new(catData.ValueRO.position.x, 0, catData.ValueRO.position.y);
+                float3 lastLocalPos = new(catData.ValueRO.position.x, 0.1f, catData.ValueRO.position.y);
                 float3 worldPos = board.position + math.mul(board.rotation, lastLocalPos);
 
                 float3 lastLocalVel = new(catVelocity.ValueRO.value.x, 0, catVelocity.ValueRO.value.y);

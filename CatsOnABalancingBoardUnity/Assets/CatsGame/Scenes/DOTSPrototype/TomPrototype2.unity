@@ -4742,6 +4742,7 @@ MonoBehaviour:
   volume: 0.5
   minPitch: 0.9
   maxPitch: 1.1
+  maxConcurrentSounds: 100
 --- !u!1 &1723187204
 GameObject:
   m_ObjectHideFlags: 0
