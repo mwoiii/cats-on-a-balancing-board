@@ -15,23 +15,49 @@ public partial struct CatProjectionSystem : ISystem {
     public void OnUpdate(ref SystemState state) {
         BoardTransform board = SystemAPI.GetSingleton<BoardTransform>();
 
-        foreach (var (catData, localTransform) in SystemAPI.Query<RefRO<CatData>, RefRW<LocalTransform>>().WithDisabled<IsInitialFalling>()) {
-            float3 localOffset = new(catData.ValueRO.position.x, projHeight, catData.ValueRO.position.y);
+        state.Dependency = new ProjectionJob{board = board}.ScheduleParallel(state.Dependency);
 
-            localTransform.ValueRW.Position = board.position + math.mul(board.rotation, localOffset);
-        }
-
-        if (SystemAPI.HasSingleton<InitialFallData>()) {
+        if (SystemAPI.HasSingleton<InitialFallData>()) 
+        {
             float height = SystemAPI.GetSingleton<InitialFallData>().height;
 
-            foreach (var (catData, localTransform) in SystemAPI.Query<RefRO<CatData>, RefRW<LocalTransform>>().WithAll<IsInitialFalling>()) {
-                float3 landedLocalOffset = new(catData.ValueRO.position.x, projHeight, catData.ValueRO.position.y);
-                float3 landedWorldPos = board.position + math.mul(board.rotation, landedLocalOffset);
-                float3 worldPos = landedWorldPos;
+            state.Dependency = new InitialFallingJob
+            {
+                board = board,
+                height = height
+            }.ScheduleParallel(state.Dependency);
+        }
+    }
 
-                worldPos.y += height - projHeight;
-                localTransform.ValueRW.Position = worldPos;
-            }
+    [WithDisabled(typeof(IsInitialFalling))]
+    [BurstCompile]
+    partial struct ProjectionJob : IJobEntity
+    {
+        public BoardTransform board;
+
+        void Execute(in CatData catData, ref LocalTransform localTransform) 
+        {
+            float3 localOffset = new(catData.position.x, projHeight, catData.position.y);
+
+            localTransform.Position = board.position + math.mul(board.rotation, localOffset);
+        }
+    }
+
+    [WithAll(typeof(IsInitialFalling))]
+    [BurstCompile]
+    partial struct InitialFallingJob : IJobEntity 
+    {
+        public BoardTransform board;
+        public float height;
+
+        void Execute(in CatData catData, ref LocalTransform localTransform) 
+        {
+            float3 landedLocalOffset = new(catData.position.x, projHeight, catData.position.y);
+            float3 landedWorldPos = board.position + math.mul(board.rotation, landedLocalOffset);
+            float3 worldPos = landedWorldPos;
+
+            worldPos.y += height - projHeight;
+            localTransform.Position = worldPos;
         }
     }
 }

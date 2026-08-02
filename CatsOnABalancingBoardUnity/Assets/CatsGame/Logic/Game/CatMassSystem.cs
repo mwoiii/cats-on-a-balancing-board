@@ -2,7 +2,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 
-[UpdateAfter(typeof(CatMovementSystem))]
+[UpdateAfter(typeof(CatProjectionSystem))] // A millisecond is a millisecond
 [BurstCompile]
 public partial struct CatMassSystem : ISystem {
     public void OnCreate(ref SystemState state) {

@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -44,13 +45,54 @@ public partial struct CatMovementSystem : ISystem {
         float dispersionStrength = math.min(catCount * dispersionPerCat, maxDispersion);
         frameCounter++;
 
-        EntityCommandBuffer ecb = new(Allocator.Temp);
+        EntityCommandBuffer ecb = new(Allocator.TempJob);
+        NativeQueue<int> catnipHits = new(Allocator.TempJob);
 
-        foreach (var (catData, catVelocity, entity) in SystemAPI.Query<RefRW<CatData>, RefRW<CatVelocity>>().WithDisabled<IsInitialFalling>().WithEntityAccess()) {
+        var job = new CatMovementJob
+        {
+            weights = weights,
+            board = board,
+            down = down,
+            deltaTime = deltaTime,
+            frameCounter = frameCounter,
+            dispersionStrength = dispersionStrength,
+            catnipHits = catnipHits.AsParallelWriter(),
+            ecb = ecb.AsParallelWriter()
+        };
+
+        state.Dependency = job.ScheduleParallel(state.Dependency);
+        state.Dependency.Complete();
+
+        while (catnipHits.TryDequeue(out int index))
+        {
+            pulses.ElementAt(index).count++;
+        }
+        catnipHits.Dispose();
+
+        ecb.Playback(state.EntityManager);
+        ecb.Dispose();
+    }
+
+    [WithDisabled(typeof(IsInitialFalling))]
+    [BurstCompile]
+    partial struct CatMovementJob : IJobEntity
+    {
+        [ReadOnly] public DynamicBuffer<WeightSnapshot> weights;
+        public BoardTransform board;
+        public float2 down;
+        public float deltaTime;
+        public uint frameCounter;
+        public float dispersionStrength;
+        public NativeQueue<int>.ParallelWriter catnipHits;
+        public EntityCommandBuffer.ParallelWriter ecb;
+
+        [BurstCompile]
+        void Execute([ChunkIndexInQuery] int sortKey, Entity entity, ref CatData catData, ref CatVelocity catVelocity)
+        {   
             Random randomSauce = Random.CreateFromIndex((uint)entity.Index * 67 + frameCounter * 21); // some Bezout shenanigans going on here
 
             // weight reactive behaviour
-            float2 catPos = catData.ValueRO.position;
+            float2 catPos = catData.position;
 
             float nearestBasicDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
             float2 nearestBasicPos = float2.zero;
@@ -109,8 +151,8 @@ public partial struct CatMovementSystem : ISystem {
                     weightForce += math.normalize(toTarget) * moveForce;
                 }
 
-                if (nearestCatnipDist < catnipContactRadius && weights[nearestCatnipIndex].state == WeightState.Landed) {
-                    pulses.ElementAt(nearestCatnipIndex).count++;
+                if (nearestCatnipDist < catnipContactRadius && weights[nearestCatnipIndex].state == WeightBehaviour.WeightState.Landed) {
+                    catnipHits.Enqueue(nearestCatnipIndex);
                 }
             }
             if (hasLemon) {
@@ -122,27 +164,24 @@ public partial struct CatMovementSystem : ISystem {
             float2 dispersion = randomSauce.NextFloat2Direction() * dispersionStrength;
 
             // forces applied (gravity and friction also thrown in here)
-            catVelocity.ValueRW.value += (down + weightForce + dispersion) * deltaTime;
-            catVelocity.ValueRW.value *= math.max(0, 1 - friction * deltaTime);
-            catData.ValueRW.position += catVelocity.ValueRW.value * deltaTime;
+            catVelocity.value += (down + weightForce + dispersion) * deltaTime;
+            catVelocity.value *= math.max(0, 1 - friction * deltaTime);
+            catData.position += catVelocity.value * deltaTime;
 
-
-            if (math.length(catData.ValueRO.position) > board.radius) // if cat fallen off...
+            if (math.length(catData.position) > board.radius) // if cat fallen off...
             {
-                float3 lastLocalPos = new(catData.ValueRO.position.x, 0.1f, catData.ValueRO.position.y);
+                float3 lastLocalPos = new(catData.position.x, 0.1f, catData.position.y);
                 float3 worldPos = board.position + math.mul(board.rotation, lastLocalPos);
 
-                float3 lastLocalVel = new(catVelocity.ValueRO.value.x, 0, catVelocity.ValueRO.value.y);
+                float3 lastLocalVel = new(catVelocity.value.x, 0, catVelocity.value.y);
                 float3 worldVel = math.mul(board.rotation, lastLocalVel);
 
-                ecb.RemoveComponent<CatData>(entity);
-                ecb.RemoveComponent<CatVelocity>(entity);
+                ecb.RemoveComponent<CatData>(sortKey,entity);
+                ecb.RemoveComponent<CatVelocity>(sortKey,entity);
 
-                ecb.SetComponent(entity, LocalTransform.FromPosition(worldPos));
-                ecb.AddComponent(entity, new FallingCatData { velocity = worldVel });
+                ecb.SetComponent(sortKey,entity, LocalTransform.FromPosition(worldPos));
+                ecb.AddComponent(sortKey,entity, new FallingCatData { velocity = worldVel });
             }
         }
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
     }
 }

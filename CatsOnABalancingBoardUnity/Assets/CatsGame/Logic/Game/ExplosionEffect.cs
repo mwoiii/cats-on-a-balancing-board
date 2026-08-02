@@ -1,5 +1,8 @@
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
+using System.Collections;
 
 public class ExplosionEffect : MonoBehaviour {
     public static ExplosionEffect instance;
@@ -26,9 +29,12 @@ public class ExplosionEffect : MonoBehaviour {
 
     public float maxPitch = 1.1f;
 
-    public int maxConcurrentSounds = 1000;
+    public int maxConcurrentSounds = 100;
+    public int maxConcurrentSprites = 1000;
     AudioSource[] sourcePool;
+    SpriteRenderer [] spritePool;
     int nextSourceIndex;
+    int nextSpriteIndex;
 
     Camera mainCamera;
 
@@ -38,16 +44,34 @@ public class ExplosionEffect : MonoBehaviour {
         supernovaSprite = Sprite.Create(supernovaTexture, new Rect(0, 0, supernovaTexture.width, supernovaTexture.height), new Vector2(0.5f, 0.5f));
         mainCamera = Camera.main;
 
+        Transform pool = new GameObject("the pool").transform;
+
         sourcePool = new AudioSource[maxConcurrentSounds];
         for (int i = 0; i < maxConcurrentSounds; i++)
         {
             GameObject a = new($"ExplosionSource_{i}");
-            a.transform.SetParent(transform);
+            a.transform.SetParent(pool);
             AudioSource b = a.AddComponent<AudioSource>();
             b.spatialBlend = 1;
             b.playOnAwake = false;
             sourcePool[i]=b;
         }
+        
+        spritePool = new SpriteRenderer[maxConcurrentSprites];
+        for (int i = 0; i < maxConcurrentSprites; i++)
+        {
+            GameObject a = new($"ExplosionSprite_{i}");
+            a.transform.SetParent(pool);
+            SpriteRenderer b = a.AddComponent<SpriteRenderer>();
+            b.sprite = explosionSprite;
+            if (Camera.main != null) {
+                b.transform.rotation = Camera.main.transform.rotation;
+            }
+            b.transform.localScale = Vector3.one * spriteScale;
+            b.enabled = false;
+            spritePool[i]=b;
+        }
+
     }
 
     AudioSource GetNextSource()
@@ -57,54 +81,41 @@ public class ExplosionEffect : MonoBehaviour {
         return b;
     }
 
-    void PlaySoundAt(AudioClip clip, Vector3 pos)
+    SpriteRenderer GetNextSprite()
     {
-        if (clip == null){return;}
+        SpriteRenderer b = spritePool[nextSpriteIndex];
+        nextSpriteIndex = (nextSpriteIndex + 1) % maxConcurrentSprites;
+        return b;
+    }
+
+    void PlaySoundAt(AudioClip clip, Texture texture, Vector3 pos)
+    {
+        if (clip == null || texture == null){return;}
 
         AudioSource b = GetNextSource();
         b.Stop();
         b.transform.position = pos;
         b.clip = clip;
         b.volume = volume;
-        b.pitch = Random.Range(minPitch, maxPitch);
+        b.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
         b.Play();
+
+        SpriteRenderer c = GetNextSprite();
+        c.transform.position = pos;
+        c.enabled = true;
     }
 
+    IEnumerator Disable(SpriteRenderer c)
+	{
+		yield return new WaitForSeconds (lifetime);
+        c.enabled = false;
+	}
+
     public void PlayAt(Vector3 position) {
-        GameObject hi = new GameObject("ExplosionVFX");
-        hi.transform.position = position;
-
-        PlaySoundAt(explosionSound, position);
-
-        if (explosionTexture != null) {
-            if (Camera.main != null) {
-                hi.transform.rotation = Camera.main.transform.rotation;
-            }
-
-            SpriteRenderer s = hi.AddComponent<SpriteRenderer>();
-            s.sprite = explosionSprite;
-            hi.transform.localScale = Vector3.one * spriteScale;
-        }
-
-        Destroy(hi, lifetime);
+        PlaySoundAt(explosionSound, explosionTexture, position);
     }
 
     public void SuperNovaAt(Vector3 position) {
-        GameObject hi = new GameObject("SupernovaVFX");
-        hi.transform.position = position;
-
-        PlaySoundAt(supernovaSound, position);
-
-        if (supernovaTexture != null) {
-            if (Camera.main != null) {
-                hi.transform.rotation = mainCamera.transform.rotation;
-            }
-
-            SpriteRenderer s = hi.AddComponent<SpriteRenderer>();
-            s.sprite = supernovaSprite;
-            hi.transform.localScale = Vector3.one * spriteScale;
-        }
-
-        Destroy(hi, lifetime);
+        PlaySoundAt(supernovaSound, supernovaTexture, position);
     }
 }
