@@ -20,6 +20,6 @@ public partial struct CatFallMovementSystem : ISystem {
     }
 }
 
-public struct FallingCatData : IComponentData {
+public struct FallingCatData : IComponentData, IEnableableComponent {
     public float3 velocity;
 }

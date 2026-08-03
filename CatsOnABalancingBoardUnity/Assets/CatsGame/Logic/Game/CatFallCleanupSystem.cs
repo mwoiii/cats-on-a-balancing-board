@@ -20,14 +20,15 @@ public partial struct CatFallCleanupSystem : ISystem {
         EntityCommandBuffer ecb = new(Allocator.Temp);
         Unity.Mathematics.Random randomSauce = new(676767);
 
-        foreach (var (fallingData, localTransform, entity) in SystemAPI.Query<RefRW<FallingCatData>, RefRO<LocalTransform>>().WithNone<FallenCatData>().WithEntityAccess()) {
+        foreach (var (fallingData, localTransform, entity) in SystemAPI.Query<RefRW<FallingCatData>, RefRO<LocalTransform>>().WithDisabled<FallenCatData>().WithEntityAccess()) {
             if (localTransform.ValueRO.Position.y < explodeHeight) {
                 float impactSpeed = math.length(fallingData.ValueRO.velocity);
                 float3 norm = new(0, 1, 0);
                 fallingData.ValueRW.velocity = randomSauce.NextFloat(0.9f, 1.1f) * bounceMult * impactSpeed * norm;
                 fallingData.ValueRW.velocity += randomSauce.NextFloat(0.1f, 0.3f) * bounceMult * localTransform.ValueRO.Position; // Sorry once again
 
-                ecb.AddComponent(entity, new FallenCatData { timeToExplode = delay });
+                ecb.SetComponent(entity, new FallenCatData { timeToExplode = delay });
+                ecb.SetComponentEnabled<FallenCatData>(entity, true);
             }
         }
 
@@ -81,6 +82,6 @@ public partial struct CatExplosionSystem : ISystem {
 }
 
 
-public struct FallenCatData : IComponentData {
+public struct FallenCatData : IComponentData, IEnableableComponent {
     public float timeToExplode;
 }

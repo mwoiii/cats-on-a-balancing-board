@@ -1,4 +1,3 @@
-using TMPro;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -48,8 +47,7 @@ public partial struct CatMovementSystem : ISystem {
         EntityCommandBuffer ecb = new(Allocator.TempJob);
         NativeQueue<int> catnipHits = new(Allocator.TempJob);
 
-        var job = new CatMovementJob
-        {
+        var job = new CatMovementJob {
             weights = weights,
             board = board,
             down = down,
@@ -63,8 +61,7 @@ public partial struct CatMovementSystem : ISystem {
         state.Dependency = job.ScheduleParallel(state.Dependency);
         state.Dependency.Complete();
 
-        while (catnipHits.TryDequeue(out int index))
-        {
+        while (catnipHits.TryDequeue(out int index)) {
             pulses.ElementAt(index).count++;
         }
         catnipHits.Dispose();
@@ -75,8 +72,7 @@ public partial struct CatMovementSystem : ISystem {
 
     [WithDisabled(typeof(IsInitialFalling))]
     [BurstCompile]
-    partial struct CatMovementJob : IJobEntity
-    {
+    partial struct CatMovementJob : IJobEntity {
         [ReadOnly] public DynamicBuffer<WeightSnapshot> weights;
         public BoardTransform board;
         public float2 down;
@@ -87,8 +83,7 @@ public partial struct CatMovementSystem : ISystem {
         public EntityCommandBuffer.ParallelWriter ecb;
 
         [BurstCompile]
-        void Execute([ChunkIndexInQuery] int sortKey, Entity entity, ref CatData catData, ref CatVelocity catVelocity)
-        {   
+        void Execute([ChunkIndexInQuery] int sortKey, Entity entity, ref CatData catData, ref CatVelocity catVelocity) {
             Random randomSauce = Random.CreateFromIndex((uint)entity.Index * 67 + frameCounter * 21); // some Bezout shenanigans going on here
 
             // weight reactive behaviour
@@ -176,11 +171,12 @@ public partial struct CatMovementSystem : ISystem {
                 float3 lastLocalVel = new(catVelocity.value.x, 0, catVelocity.value.y);
                 float3 worldVel = math.mul(board.rotation, lastLocalVel);
 
-                ecb.RemoveComponent<CatData>(sortKey,entity);
-                ecb.RemoveComponent<CatVelocity>(sortKey,entity);
+                ecb.SetComponentEnabled<CatData>(sortKey, entity, false);
+                ecb.SetComponentEnabled<CatVelocity>(sortKey, entity, false);
 
-                ecb.SetComponent(sortKey,entity, LocalTransform.FromPosition(worldPos));
-                ecb.AddComponent(sortKey,entity, new FallingCatData { velocity = worldVel });
+                ecb.SetComponent(sortKey, entity, LocalTransform.FromPosition(worldPos));
+                ecb.SetComponentEnabled<FallingCatData>(sortKey, entity, true);
+                ecb.SetComponent(sortKey, entity, new FallingCatData { velocity = worldVel });
             }
         }
     }
