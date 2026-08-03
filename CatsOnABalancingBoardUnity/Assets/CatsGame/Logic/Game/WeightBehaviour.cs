@@ -1,4 +1,6 @@
 using System.Collections;
+using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 
 public class WeightBehaviour : MonoBehaviour {
@@ -26,8 +28,13 @@ public class WeightBehaviour : MonoBehaviour {
 
     private float shrinkTimer = 0f;
 
-    void Start() {
+    EntityManager entityManager; // someone should optimize this stuff
 
+    EffectSpawnerConfig effectConfig;
+
+    private void Start() {
+        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        effectConfig = entityManager.CreateEntityQuery(typeof(EffectSpawnerConfig)).GetSingleton<EffectSpawnerConfig>();
     }
 
     void Update() {
@@ -48,7 +55,9 @@ public class WeightBehaviour : MonoBehaviour {
             if (a.type == WeightType.Antimatter && type != WeightType.Antimatter) {
                 Destroy(a.gameObject);
                 Destroy(transform.gameObject);
-                ExplosionEffect.instance.SuperNovaAt(transform.position);
+                AudioPool.instance.PlaySupernovaSoundAt(transform.position);
+                Entity supernova = entityManager.Instantiate(effectConfig.supernovaPrefab);
+                entityManager.SetComponentData(supernova, new LocalTransform { Position = transform.position, Scale = 0.2f });
             }
         }
     }

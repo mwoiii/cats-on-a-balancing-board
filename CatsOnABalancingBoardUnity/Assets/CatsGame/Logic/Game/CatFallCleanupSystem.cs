@@ -44,14 +44,25 @@ public partial struct CatFallCleanupSystem : ISystem {
 public partial struct CatExplosionSystem : ISystem {
     public static event Action CatLost;
 
+    public void OnCreate(ref SystemState state) {
+        state.RequireForUpdate<EffectSpawnerConfig>();
+    }
+
     public void OnUpdate(ref SystemState state) {
+        EffectSpawnerConfig config = SystemAPI.GetSingleton<EffectSpawnerConfig>();
+
         EntityCommandBuffer ecb = new(Allocator.Temp);
 
         foreach (var (fallenData, localTransform, entity) in SystemAPI.Query<RefRO<FallenCatData>, RefRO<LocalTransform>>().WithEntityAccess()) {
             if (fallenData.ValueRO.timeToExplode <= 0) {
-                if (ExplosionEffect.instance != null) {
+                if (AudioPool.instance != null) {
                     float3 pos = localTransform.ValueRO.Position;
-                    ExplosionEffect.instance.PlayAt(new UnityEngine.Vector3(pos.x, pos.y, pos.z));
+                    if (config.currentExplosionCount < config.maxExplosionCount) {
+                        Entity explosion = state.EntityManager.Instantiate(config.explosionPrefab);
+                        ecb.SetComponent(explosion, new LocalTransform { Position = pos, Scale = 0.2f });
+                        config.currentExplosionCount++;
+                    }
+                    AudioPool.instance.PlayExplosionSoundAt(new UnityEngine.Vector3(pos.x, pos.y, pos.z));
                 }
                 ecb.DestroyEntity(entity);
                 CatLost?.Invoke();
@@ -68,6 +79,7 @@ public partial struct CatExplosionSystem : ISystem {
         ecb.Dispose();
     }
 }
+
 
 public struct FallenCatData : IComponentData {
     public float timeToExplode;

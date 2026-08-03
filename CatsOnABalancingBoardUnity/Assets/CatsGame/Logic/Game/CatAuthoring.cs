@@ -13,7 +13,7 @@ public class CatAuthoring : MonoBehaviour {
             AddComponent(entity, new CatVelocity { value = float2.zero });
             AddComponent(entity, new IsInitialFalling());
             SetComponentEnabled<IsInitialFalling>(entity, true);
-            AddComponent(entity, new URPMaterialPropertyBaseColor {Value = new float4(0,0,0,1)});
+            AddComponent(entity, new URPMaterialPropertyBaseColor { Value = new float4(0, 0, 0, 1) });
         }
     }
 }

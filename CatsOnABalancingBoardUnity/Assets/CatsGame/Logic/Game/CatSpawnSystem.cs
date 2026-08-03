@@ -3,7 +3,6 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Unity.Rendering;
 
 [BurstCompile]
 public partial struct CatSpawnSystem : ISystem {
@@ -55,11 +54,10 @@ public partial struct CatSpawnSystem : ISystem {
         SystemAPI.SetSingleton(config);
     }
 
-    static float3 HSVToRGBBurstable(float h, float s, float v)
-    {
-        float3 p = math.abs(math.frac(h + new float3(1f,2f/3f,1f/3f)) * 6f - 3f);
-        float3 rgb = math.saturate(p-1f);
-        return v * math.lerp(new float3(1f),rgb,s);
+    static float3 HSVToRGBBurstable(float h, float s, float v) {
+        float3 p = math.abs(math.frac(h + new float3(1f, 2f / 3f, 1f / 3f)) * 6f - 3f);
+        float3 rgb = math.saturate(p - 1f);
+        return v * math.lerp(new float3(1f), rgb, s);
     }
 }
 
