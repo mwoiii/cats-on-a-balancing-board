@@ -244,6 +244,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 4283982339323740326, guid: d038810760b968d48ba497d09bab1734, type: 3}
   supernovaPrefab: {fileID: 4283982339323740326, guid: d2df19f0371ad1b4aa11057905859fd0, type: 3}
   maxExplosionCount: 1000
+  maxSupernovaCount: 100
 --- !u!4 &1973166633
 Transform:
   m_ObjectHideFlags: 0

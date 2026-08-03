@@ -10,9 +10,9 @@ public partial struct StackingGridSystem : ISystem {
     // if the board is always circular then approximately 22% of the array is wasted space
     // who up designing a circular array
 
-    public const int width = 320;
+    public const int width = 400;
 
-    public const int height = 320;
+    public const int height = 400;
 
     public const int maxIndex = width * height - 1;
 
@@ -21,12 +21,17 @@ public partial struct StackingGridSystem : ISystem {
     public void OnCreate(ref SystemState state) {
         state.RequireForUpdate<BoardTransform>();
         state.RequireForUpdate<StackingGridData>();
+        state.RequireForUpdate<RefreshGridData>();
+        state.RequireForUpdate<RefreshGridValue>();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
         BoardTransform board = SystemAPI.GetSingleton<BoardTransform>();
-        var grid = SystemAPI.GetSingletonBuffer<StackingGridData>().Reinterpret<ushort>().AsNativeArray();
+        var stackingGrid = SystemAPI.GetSingletonBuffer<StackingGridData>().Reinterpret<ushort>().AsNativeArray();
+        var refreshGrid = SystemAPI.GetSingletonBuffer<RefreshGridData>().Reinterpret<byte>().AsNativeArray();
+        var refreshGridValue = SystemAPI.GetSingletonRW<RefreshGridValue>();
+        refreshGridValue.ValueRW.value += 1;
 
         float rDiameter = 1f / (board.radius * 2f);
         float widthMult = rDiameter * width;
@@ -35,7 +40,9 @@ public partial struct StackingGridSystem : ISystem {
         StackingGridJob job = new StackingGridJob() {
             widthMult = widthMult,
             heightMult = heightMult,
-            grid = grid,
+            stackingGrid = stackingGrid,
+            refreshGrid = refreshGrid,
+            refreshValue = refreshGridValue.ValueRO.value,
             board = board,
         };
 
@@ -51,7 +58,11 @@ public partial struct StackingGridJob : IJobEntity {
 
     public float heightMult;
 
-    public NativeArray<ushort> grid;
+    public NativeArray<ushort> stackingGrid;
+
+    public NativeArray<byte> refreshGrid;
+
+    public byte refreshValue;
 
     public BoardTransform board;
 
@@ -67,16 +78,26 @@ public partial struct StackingGridJob : IJobEntity {
 
         int prevStackIndex = catData.prevStackIndex;
 
-        if (index != prevStackIndex) {
-            if (prevStackIndex >= 0 && prevStackIndex <= StackingGridSystem.maxIndex && grid[prevStackIndex] > 0) {
-                grid[prevStackIndex] -= 1;
-            }
-            catData.prevStackIndex = index;
-            if (grid[index] < ushort.MaxValue) {
-                grid[index] += 1;
-            }
+        // if entered a new cell and the cell hasn't already been updated
+        if (index != prevStackIndex && prevStackIndex >= 0 && prevStackIndex <= StackingGridSystem.maxIndex && refreshGrid[prevStackIndex] != refreshValue) {
+            refreshGrid[prevStackIndex] = refreshValue;
+            stackingGrid[prevStackIndex] = 0;
         }
 
-        localTransform.Position.y += (grid[index] - 1) * StackingGridSystem.stackingHeight;
+        catData.prevStackIndex = index;
+
+        // if the current cell hasn't been refreshed
+        if (refreshGrid[index] != refreshValue) {
+            refreshGrid[index] = refreshValue;
+            stackingGrid[index] = 0;
+            //UnityEngine.Debug.Log($"NEW FUCKIN FRAME!! {index} is now 0.");
+        }
+
+        // increment the current cell
+        if (stackingGrid[index] < ushort.MaxValue) {
+            stackingGrid[index] += 1;
+        }
+
+        localTransform.Position.y += (stackingGrid[index] - 1) * StackingGridSystem.stackingHeight;
     }
 }
