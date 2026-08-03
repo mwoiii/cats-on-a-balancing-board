@@ -17,10 +17,18 @@ namespace Assets.CatsGame.Logic.Game {
 
             EntityCommandBuffer ecb = new(Allocator.Temp);
 
-            foreach (var (explosion, entity) in SystemAPI.Query<RefRW<EffectData>>().WithEntityAccess()) {
-                explosion.ValueRW.lifetime -= deltaTime;
-                if (explosion.ValueRW.lifetime <= 0) {
+            foreach (var (effect, entity) in SystemAPI.Query<RefRW<EffectData>>().WithEntityAccess()) {
+                effect.ValueRW.lifetime -= deltaTime;
+                if (effect.ValueRW.lifetime <= 0) {
                     ecb.DestroyEntity(entity);
+                    switch (effect.ValueRW.type) {
+                        case EffectType.Explosion:
+                            config.currentExplosionCount--;
+                            break;
+                        case EffectType.Supernova:
+                            config.currentSupernovaCount--;
+                            break;
+                    }
                     config.currentExplosionCount -= 1;
                 }
             }
@@ -32,5 +40,7 @@ namespace Assets.CatsGame.Logic.Game {
 
     public struct EffectData : IComponentData {
         public float lifetime;
+
+        public EffectType type;
     }
 }

@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using System.Collections;
 using Unity.Entities;
 using Unity.Transforms;
@@ -28,13 +29,10 @@ public class WeightBehaviour : MonoBehaviour {
 
     private float shrinkTimer = 0f;
 
-    EntityManager entityManager; // someone should optimize this stuff
-
-    EffectSpawnerConfig effectConfig;
+    private EntityManager entityManager;
 
     private void Start() {
-        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        effectConfig = entityManager.CreateEntityQuery(typeof(EffectSpawnerConfig)).GetSingleton<EffectSpawnerConfig>();
+        entityManager = SingletonEntities.entityManager;
     }
 
     void Update() {
@@ -56,8 +54,12 @@ public class WeightBehaviour : MonoBehaviour {
                 Destroy(a.gameObject);
                 Destroy(transform.gameObject);
                 AudioPool.instance.PlaySupernovaSoundAt(transform.position);
-                Entity supernova = entityManager.Instantiate(effectConfig.supernovaPrefab);
-                entityManager.SetComponentData(supernova, new LocalTransform { Position = transform.position, Scale = 0.2f });
+                var effectConfig = SingletonEntities.effectConfig;
+                if (effectConfig.currentSupernovaCount < effectConfig.maxSupernovaCount) {
+                    Entity supernova = entityManager.Instantiate(effectConfig.supernovaPrefab);
+                    effectConfig.currentSupernovaCount++;
+                    entityManager.SetComponentData(supernova, new LocalTransform { Position = transform.position, Scale = 0.2f });
+                }
             }
         }
     }

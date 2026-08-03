@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using System.Collections;
 using Unity.Entities;
 using Unity.Transforms;
@@ -10,13 +11,10 @@ public class KillPlane : MonoBehaviour {
 
     public float bounceMultiplier = 5;
 
-    EntityManager entityManager; // someone should optimize this stuff
-
-    EffectSpawnerConfig effectConfig;
+    private EntityManager entityManager;
 
     private void Start() {
-        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        effectConfig = entityManager.CreateEntityQuery(typeof(EffectSpawnerConfig)).GetSingleton<EffectSpawnerConfig>();
+        entityManager = SingletonEntities.entityManager;
     }
 
     private void OnCollisionEnter(Collision collision) {
@@ -33,7 +31,7 @@ public class KillPlane : MonoBehaviour {
     IEnumerator Wait(Collider other) {
         yield return new WaitForSeconds(deletionDelay);
         if (other != null) {
-            Entity explosion = entityManager.Instantiate(effectConfig.explosionPrefab);
+            Entity explosion = entityManager.Instantiate(SingletonEntities.effectConfig.explosionPrefab);
             entityManager.SetComponentData(explosion, new LocalTransform { Position = other.transform.position, Scale = 0.2f });
             AudioPool.instance.PlayExplosionSoundAt(other.transform.position);
             if (other.gameObject.CompareTag("Cat")) {

@@ -23,11 +23,8 @@ public class AudioPool : MonoBehaviour {
     [System.NonSerialized]
     public Queue<AudioSource> sourceQueue;
 
-    private Transform holder;
-
     private void Awake() {
         instance = this;
-        holder = new GameObject("PooledAudio").transform;
         sourcePool = new ObjectPool<AudioSource>(CreateNewAudioSource, OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, true, maxConcurrentSounds, maxConcurrentSounds);
         sourceQueue = new Queue<AudioSource>(maxConcurrentSounds);
     }
@@ -40,7 +37,7 @@ public class AudioPool : MonoBehaviour {
         returnToPool.pool = sourcePool;
         audioSource.spatialBlend = 1;
         audioSource.playOnAwake = false;
-        audioObject.transform.SetParent(holder);
+        audioObject.transform.SetParent(transform);
         return audioSource;
     }
 

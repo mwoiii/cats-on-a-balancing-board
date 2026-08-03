@@ -1314,6 +1314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 478497810}
   - component: {fileID: 478497809}
+  - component: {fileID: 478497811}
   m_Layer: 0
   m_Name: GameLogic
   m_TagString: Untagged
@@ -1348,6 +1349,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &478497811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478497808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b347ee7dc1ebd4dae140e358709809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.CatsGame.Logic.Game.SingletonEntities
 --- !u!1 &488201370
 GameObject:
   m_ObjectHideFlags: 0
@@ -2878,6 +2891,7 @@ Transform:
   m_Children:
   - {fileID: 1751617315}
   - {fileID: 710101341}
+  - {fileID: 1739250258}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &855036524
@@ -4698,9 +4712,8 @@ GameObject:
   - component: {fileID: 1241083940}
   - component: {fileID: 1241083937}
   - component: {fileID: 1716254377}
-  - component: {fileID: 1716254378}
   m_Layer: 0
-  m_Name: deathPlane
+  m_Name: DeathPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4721,24 +4734,6 @@ MonoBehaviour:
   catManager: {fileID: 0}
   deletionDelay: 1
   bounceMultiplier: 1
---- !u!114 &1716254378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716254374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe35431c3bb9e7546a88b612106548f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExplosionEffect
-  explosionSound: {fileID: 8300000, guid: 118c32becc36d61419b87bcab29123a7, type: 3}
-  supernovaSound: {fileID: 8300000, guid: e6b40b65071d25948875568673a339bc, type: 3}
-  volume: 0.5
-  minPitch: 0.9
-  maxPitch: 1.1
-  maxConcurrentSounds: 100
 --- !u!1 &1723187204
 GameObject:
   m_ObjectHideFlags: 0
@@ -4901,6 +4896,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723187204}
   m_CullTransparentMesh: 1
+--- !u!1 &1739250257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1739250258}
+  - component: {fileID: 1739250259}
+  m_Layer: 0
+  m_Name: AudioPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1739250258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739250257}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 855036523}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1739250259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739250257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe35431c3bb9e7546a88b612106548f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExplosionEffect
+  explosionSound: {fileID: 8300000, guid: 118c32becc36d61419b87bcab29123a7, type: 3}
+  supernovaSound: {fileID: 8300000, guid: e6b40b65071d25948875568673a339bc, type: 3}
+  volume: 0.5
+  minPitch: 0.9
+  maxPitch: 1.1
+  maxConcurrentSounds: 100
 --- !u!1 &1742208175
 GameObject:
   m_ObjectHideFlags: 0
@@ -8225,9 +8270,9 @@ SceneRoots:
   - {fileID: 1981588762}
   - {fileID: 150362994}
   - {fileID: 473563219}
-  - {fileID: 1241083940}
   - {fileID: 478497810}
+  - {fileID: 1241083940}
   - {fileID: 868957269}
   - {fileID: 744840447}
-  - {fileID: 2091158341}
   - {fileID: 805277243}
+  - {fileID: 2091158341}
