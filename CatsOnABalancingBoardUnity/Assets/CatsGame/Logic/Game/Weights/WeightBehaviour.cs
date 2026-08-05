@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace OMC {
     public class WeightBehaviour : MonoBehaviour {
-        public enum WeightType { None, Catnip, Lemon, Antimatter }
+        public enum WeightType { None, Catnip, Lemon, Antimatter, Indecisive }
 
         public WeightType type = WeightType.None;
 
@@ -14,21 +14,17 @@ namespace OMC {
 
         public WeightState State { get; private set; } = WeightState.Falling;
 
-        [SerializeField]
-        private float shrinkAmount = 0.01f;
+        float shrinkAmount = 0.05f;
 
-        [SerializeField]
-        private float minScale = 0.01f;
+        float minScale = 0.1f;
 
-        [SerializeField]
-        private string catTag = "Cat";
+        string catTag = "Cat";
 
-        [SerializeField]
-        private float shrinkInterval = 0.5f; // seconds between shrink ticks
+        float shrinkInterval = 0.1f; // seconds between shrink ticks
 
-        public float shrinkIntervalLemon = 0.8f;
+        float shrinkIntervalLemon = 0.8f;
 
-        private float shrinkTimer = 0f;
+        float shrinkTimer = 0f;
 
         private EntityManager entityManager;
 
@@ -47,6 +43,10 @@ namespace OMC {
                 State = WeightState.Landed;
                 if (type == WeightType.Lemon) {
                     StartCoroutine(Decay());
+                }
+                if (type == WeightType.Indecisive){
+                    StartCoroutine(Decay());
+                    StartCoroutine(IndecisiveWarp());
                 }
             }
             WeightBehaviour a = collision.collider.gameObject.GetComponent<WeightBehaviour>();
@@ -100,6 +100,20 @@ namespace OMC {
 
             ShrinkAndCheck();
             shrinkTimer = shrinkInterval;
+        }
+
+
+        int indecisiveWarpTime = 1;
+        IEnumerator IndecisiveWarp()
+        {
+            yield return new WaitForSeconds(indecisiveWarpTime);
+            while(transform != null)
+            {
+                Vector2 a = UnityEngine.Random.insideUnitCircle * 3;
+                transform.position = new Vector3(a.x,3,a.y);
+                yield return new WaitForSeconds(indecisiveWarpTime);
+            }
+            
         }
     }
 }

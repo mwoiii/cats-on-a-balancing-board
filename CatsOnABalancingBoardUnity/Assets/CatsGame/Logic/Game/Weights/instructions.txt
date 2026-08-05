@@ -1,0 +1,1 @@
+Hey so add the new type to the config csv and then the script will ask for prefab(s) (they don't need any components but the registry only automatically adds a WeightBehaviour and RigidBody) for functionality add a matching WeightType in WeightBehaviour.cs (has to be done separately for burst compiling reasons) and then program the quirks of the type in wherever appropriate

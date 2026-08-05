@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 4407177342874316039}
   - component: {fileID: 6770715883964672761}
   - component: {fileID: 5300005081292084640}
-  - component: {fileID: 4308695665570095935}
-  - component: {fileID: -8574582284097456198}
+  - component: {fileID: 5313187150561501633}
+  - component: {fileID: 2919896148856071528}
   m_Layer: 0
-  m_Name: BasicWeightSphere 1
+  m_Name: IndecisiveSphere
   m_TagString: Weight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 00ccbeedf660c0942a91b0715ba6e226, type: 2}
+  - {fileID: 2100000, guid: 462462608223138478068c85b85737dd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,7 +101,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6982464574026435089}
   serializedVersion: 5
-  m_Mass: 20
+  m_Mass: 10
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -120,7 +120,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 3
---- !u!135 &4308695665570095935
+--- !u!135 &5313187150561501633
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,7 +141,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-8574582284097456198
+--- !u!114 &2919896148856071528
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,3 +153,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9bc78931afd1f4db8f0a428593b9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OMC.WeightBehaviour
+  type: 2

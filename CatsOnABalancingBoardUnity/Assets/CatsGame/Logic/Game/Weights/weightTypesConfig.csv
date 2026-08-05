@@ -1,0 +1,6 @@
+typeName,weight,probabilityBias,rarity,multAdd,baseAdd,canBlock,canSphere
+None,20,2,0,0,0,true,true
+Catnip,10,1.5,0,0,-0.5,true,true
+Lemon,10,1,0,0,1,true,true
+Antimatter,0,1,1,-1,0,true,true
+Indecisive,10,1,1,0,0.1,true,false
