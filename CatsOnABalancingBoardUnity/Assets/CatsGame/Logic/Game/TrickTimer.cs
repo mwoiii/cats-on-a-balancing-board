@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -24,13 +25,13 @@ public class TrickTimer : MonoBehaviour {
     public float maxPitch = 2f;
 
     void Awake() {
-        ResetTimerAndCombo();
+        ResetTimerAndCombo(0);
     }
 
     void Start() {
         WeightDropper.FirstWeightDropped += GetStartedWithIt;
         CatManagerScript.LostCat += ResetTimerAndCombo;
-        CatExplosionSystem.CatLost += ResetTimerAndCombo;
+        CatCountBridgingSystem.CatCountChange += ResetTimerAndCombo;
 
         countdownSource.volume = volume / 1.5f;
         completeSource.volume = volume;
@@ -74,7 +75,11 @@ public class TrickTimer : MonoBehaviour {
         }
     }
 
-    void ResetTimerAndCombo() {
+    void ResetTimerAndCombo(int count) {
+        if (count >= 0) {
+            return;
+        }
+
         currentSecond = trickLength;
         litterBonus = initialBonus;
         OnTimerChanged?.Invoke(currentSecond);
@@ -86,7 +91,7 @@ public class TrickTimer : MonoBehaviour {
 
     void OnDestroy() {
         CatManagerScript.LostCat -= ResetTimerAndCombo;
-        CatExplosionSystem.CatLost -= ResetTimerAndCombo;
+        CatCountBridgingSystem.CatCountChange -= ResetTimerAndCombo;
         WeightDropper.FirstWeightDropped -= GetStartedWithIt;
     }
 

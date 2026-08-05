@@ -14,7 +14,7 @@ public class KillPlane : MonoBehaviour {
     private EntityManager entityManager;
 
     private void Start() {
-        entityManager = SingletonEntities.entityManager;
+        entityManager = StaticEntityData.entityManager;
     }
 
     private void OnCollisionEnter(Collision collision) {
@@ -31,7 +31,7 @@ public class KillPlane : MonoBehaviour {
     IEnumerator Wait(Collider other) {
         yield return new WaitForSeconds(deletionDelay);
         if (other != null) {
-            Entity explosion = entityManager.Instantiate(SingletonEntities.effectConfig.explosionPrefab);
+            Entity explosion = entityManager.Instantiate(StaticEntityData.effectConfig.explosionPrefab);
             entityManager.SetComponentData(explosion, new LocalTransform { Position = other.transform.position, Scale = 0.2f });
             AudioPool.instance.PlayExplosionSoundAt(other.transform.position);
             if (other.gameObject.CompareTag("Cat")) {

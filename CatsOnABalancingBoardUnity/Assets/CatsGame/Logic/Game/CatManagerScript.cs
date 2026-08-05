@@ -25,7 +25,7 @@ public class CatManagerScript : MonoBehaviour {
 
     public float maxPitch = 1.5f;
 
-    public static event System.Action LostCat;
+    public static event System.Action<int> LostCat;
 
     public void Awake() {
         score = 0d;
@@ -43,7 +43,7 @@ public class CatManagerScript : MonoBehaviour {
         cats.Remove(cat);
         if (HUDController.instance) {
             HUDController.instance.UpdateRemainingCats(-1);
-            LostCat?.Invoke();
+            LostCat?.Invoke(1);
         }
         // Debug.Log("Cats count: " + cats.Count);
         if (cats.Count == 0) {

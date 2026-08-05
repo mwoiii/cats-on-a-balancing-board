@@ -105,3 +105,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b6b43024bccc7e48a6460c7b49fda85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionAuthoring
+  lifetime: 0.8

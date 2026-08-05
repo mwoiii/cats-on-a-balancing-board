@@ -32,7 +32,7 @@ public class WeightBehaviour : MonoBehaviour {
     private EntityManager entityManager;
 
     private void Start() {
-        entityManager = SingletonEntities.entityManager;
+        entityManager = StaticEntityData.entityManager;
     }
 
     void Update() {
@@ -54,7 +54,7 @@ public class WeightBehaviour : MonoBehaviour {
                 Destroy(a.gameObject);
                 Destroy(transform.gameObject);
                 AudioPool.instance.PlaySupernovaSoundAt(transform.position);
-                var effectConfig = SingletonEntities.effectConfig;
+                var effectConfig = StaticEntityData.effectConfig;
                 if (effectConfig.currentSupernovaCount < effectConfig.maxSupernovaCount) {
                     Entity supernova = entityManager.Instantiate(effectConfig.supernovaPrefab);
                     effectConfig.currentSupernovaCount++;

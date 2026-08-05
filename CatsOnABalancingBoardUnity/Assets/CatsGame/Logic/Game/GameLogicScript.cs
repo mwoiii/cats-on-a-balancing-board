@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using UnityEngine;
 
 public class GameLogicScript : MonoBehaviour {
@@ -10,6 +11,8 @@ public class GameLogicScript : MonoBehaviour {
     public static double score;
 
     public const double scoreScaleFactor = 0.05d;
+
+    public int catCount { get; private set; }
 
     private void Update() {
         if (gameRunning) {
@@ -24,6 +27,14 @@ public class GameLogicScript : MonoBehaviour {
 
     void Awake() {
         instance = this;
+        CatCountBridgingSystem.CatCountChange += CheckGameOver;
+    }
+
+    private void CheckGameOver(int difference) {
+        catCount += difference;
+        if (catCount <= 0 && gameRunning) {
+            GameOver();
+        }
     }
 
     public void GameOver() {

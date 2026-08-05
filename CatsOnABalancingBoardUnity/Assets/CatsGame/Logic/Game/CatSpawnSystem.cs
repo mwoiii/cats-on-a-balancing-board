@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -5,16 +6,19 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [BurstCompile]
+[UpdateBefore(typeof(CatCountBridgingSystem))]
 public partial struct CatSpawnSystem : ISystem {
     uint spawnCallCount;
 
     public void OnCreate(ref SystemState state) {
         state.RequireForUpdate<CatSpawnerConfig>();
+        state.RequireForUpdate<CatCount>();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
         CatSpawnerConfig config = SystemAPI.GetSingleton<CatSpawnerConfig>();
+        var catCount = SystemAPI.GetSingletonRW<CatCount>();
 
         int countToSpawn = 0;
         if (!config.finished) {
@@ -25,6 +29,8 @@ public partial struct CatSpawnSystem : ISystem {
             config.pendingSpawn = 0;
         }
         config.spawnedThisUpdate = countToSpawn;
+        catCount.ValueRW.gained += countToSpawn;
+
 
         if (countToSpawn > 0) {
             Random randomSauce = new(676767 + spawnCallCount);
@@ -58,18 +64,5 @@ public partial struct CatSpawnSystem : ISystem {
         float3 p = math.abs(math.frac(h + new float3(1f, 2f / 3f, 1f / 3f)) * 6f - 3f);
         float3 rgb = math.saturate(p - 1f);
         return v * math.lerp(new float3(1f), rgb, s);
-    }
-}
-
-[UpdateAfter(typeof(CatSpawnSystem))]
-public partial struct CatSpawnHUDSystem : ISystem // I want to keep the burst compilation for the main spawn system
-{
-    public void OnUpdate(ref SystemState state) {
-        if (!SystemAPI.HasSingleton<CatSpawnerConfig>()) { return; }
-
-        CatSpawnerConfig config = SystemAPI.GetSingleton<CatSpawnerConfig>();
-        if (config.spawnedThisUpdate > 0 && HUDController.instance != null) {
-            HUDController.instance.UpdateRemainingCats(config.spawnedThisUpdate);
-        }
     }
 }

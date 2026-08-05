@@ -1,8 +1,9 @@
-using System;
+using Assets.CatsGame.Logic.Game;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 
 [UpdateAfter(typeof(CatFallMovementSystem))]
@@ -16,7 +17,6 @@ public partial struct CatFallCleanupSystem : ISystem {
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        float deltaTime = SystemAPI.Time.DeltaTime;
         EntityCommandBuffer ecb = new(Allocator.Temp);
         Unity.Mathematics.Random randomSauce = new(676767);
 
@@ -32,54 +32,54 @@ public partial struct CatFallCleanupSystem : ISystem {
             }
         }
 
-        foreach (var fallenData in SystemAPI.Query<RefRW<FallenCatData>>()) {
-            fallenData.ValueRW.timeToExplode -= deltaTime;
-        }
-
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
     }
 }
 
 [UpdateAfter(typeof(CatFallCleanupSystem))]
+[UpdateBefore(typeof(CatCountBridgingSystem))]
 public partial struct CatExplosionSystem : ISystem {
-    public static event Action CatLost;
 
     public void OnCreate(ref SystemState state) {
         state.RequireForUpdate<EffectSpawnerConfig>();
+        state.RequireForUpdate<CatCount>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state) {
         EffectSpawnerConfig config = SystemAPI.GetSingleton<EffectSpawnerConfig>();
-
         EntityCommandBuffer ecb = new(Allocator.Temp);
+        var catCount = SystemAPI.GetSingletonRW<CatCount>();
+        var positionBuffer = SystemAPI.GetSingletonBuffer<LostCatPosition>().Reinterpret<float3>().AsNativeArray();
+        float deltaTime = SystemAPI.Time.DeltaTime;
+        int lostCount = 0;
 
-        foreach (var (fallenData, localTransform, entity) in SystemAPI.Query<RefRO<FallenCatData>, RefRO<LocalTransform>>().WithEntityAccess()) {
+        foreach (var (fallenData, localTransform, mmInfo, entity) in SystemAPI.Query<RefRW<FallenCatData>, RefRO<LocalTransform>, RefRO<MaterialMeshInfo>>().WithEntityAccess()) {
+            fallenData.ValueRW.timeToExplode -= deltaTime;
             if (fallenData.ValueRO.timeToExplode <= 0) {
-                if (AudioPool.instance != null) {
-                    float3 pos = localTransform.ValueRO.Position;
-                    if (config.currentExplosionCount < config.maxExplosionCount) {
-                        Entity explosion = state.EntityManager.Instantiate(config.explosionPrefab);
-                        ecb.SetComponent(explosion, new LocalTransform { Position = pos, Scale = 0.2f });
-                        config.currentExplosionCount++;
-                    }
-                    AudioPool.instance.PlayExplosionSoundAt(new UnityEngine.Vector3(pos.x, pos.y, pos.z));
+                float3 pos = localTransform.ValueRO.Position;
+                if (lostCount < positionBuffer.Length) {
+                    positionBuffer[lostCount] = pos;
                 }
+                lostCount++;
+                if (config.currentExplosionCount < config.maxExplosionCount) {
+                    Entity explosion = ecb.Instantiate(config.explosionPrefab);
+                    ecb.SetComponent(explosion, new LocalTransform { Position = pos, Scale = 0.2f });
+                    config.currentExplosionCount++;
+                }
+                ecb.SetComponentEnabled<MaterialMeshInfo>(entity, false);
                 ecb.DestroyEntity(entity);
-                CatLost?.Invoke();
-
-                if (HUDController.instance != null) {
-                    HUDController.instance.UpdateRemainingCats(-1);
-
-                    if (HUDController.instance.catCount <= 0 && GameLogicScript.gameRunning && GameLogicScript.instance != null) { GameLogicScript.instance.GameOver(); }
-                }
             }
         }
+
+        catCount.ValueRW.lost += lostCount;
 
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
     }
 }
+
 
 
 public struct FallenCatData : IComponentData, IEnableableComponent {

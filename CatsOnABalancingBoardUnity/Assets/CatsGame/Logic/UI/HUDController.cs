@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using TMPro;
 using UnityEngine;
 
@@ -23,10 +24,11 @@ public class HUDController : MonoBehaviour {
 
     public TextMeshProUGUI scoreText;
 
-    public int catCount { get; private set; }
+    private int catCount;
 
     public void Awake() {
         instance = this;
+        CatCountBridgingSystem.CatCountChange += UpdateRemainingCats;
     }
 
     public void Start() {
@@ -47,6 +49,10 @@ public class HUDController : MonoBehaviour {
         if (litterText) {
             litterText.text = bonus.ToString();
         }
+    }
+
+    private void UpdateRemainingCats(int difference) {
+        UpdateRemainingCats(difference, true);
     }
 
     public void UpdateRemainingCats(int difference, bool doSpikeVibrate = true) {

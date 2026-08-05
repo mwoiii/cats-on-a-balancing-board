@@ -5,6 +5,6 @@ public partial struct ScoreSystem : ISystem {
         if (!GameLogicScript.gameRunning || HUDController.instance == null) { return; }
 
         double deltaTime = SystemAPI.Time.DeltaTime;
-        GameLogicScript.score += HUDController.instance.catCount * deltaTime * GameLogicScript.scoreScaleFactor;
+        GameLogicScript.score += GameLogicScript.instance.catCount * deltaTime * GameLogicScript.scoreScaleFactor;
     }
 }
