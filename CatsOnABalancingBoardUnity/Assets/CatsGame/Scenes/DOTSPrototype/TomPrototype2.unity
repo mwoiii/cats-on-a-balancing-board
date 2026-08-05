@@ -1315,6 +1315,7 @@ GameObject:
   - component: {fileID: 478497810}
   - component: {fileID: 478497809}
   - component: {fileID: 478497811}
+  - component: {fileID: 478497812}
   m_Layer: 0
   m_Name: GameLogic
   m_TagString: Untagged
@@ -1361,6 +1362,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64b347ee7dc1ebd4dae140e358709809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.CatsGame.Logic.Game.SingletonEntities
+--- !u!114 &478497812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478497808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 551483ad12603a040947bc5348a85c24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  period: 10
 --- !u!1 &488201370
 GameObject:
   m_ObjectHideFlags: 0

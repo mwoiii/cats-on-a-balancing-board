@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Assets.CatsGame.Logic.Game {
+namespace OMC {
     [RequireComponent(typeof(AudioSource))]
     public class ReturnToAudioPool : MonoBehaviour {
         public AudioSource audioSource;

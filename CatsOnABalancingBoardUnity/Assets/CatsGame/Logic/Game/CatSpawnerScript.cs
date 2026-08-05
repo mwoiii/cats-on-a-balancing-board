@@ -1,68 +1,70 @@
 using System.Collections;
 using UnityEngine;
 
-public class CatSpawnerScript : MonoBehaviour {
-    public static CatSpawnerScript instance;
+namespace OMC {
+    public class CatSpawnerScript : MonoBehaviour {
+        public static CatSpawnerScript instance;
 
-    public GameObject catPrefab;
+        public GameObject catPrefab;
 
-    public CatManagerScript catManager;
+        public CatManagerScript catManager;
 
-    public int startingCatCount = 10;
+        public int startingCatCount = 10;
 
-    public float dropHeight = 0.5f;
+        public float dropHeight = 0.5f;
 
-    public int batchSize = 5;
+        public int batchSize = 5;
 
-    public float batchInterval = 0.1f;
+        public float batchInterval = 0.1f;
 
-    public float edgeMargin = 0.5f;
+        public float edgeMargin = 0.5f;
 
-    float halfX, halfZ, spawnY;
+        float halfX, halfZ, spawnY;
 
-    private Vector3 boardCenter;
+        private Vector3 boardCenter;
 
-    void Start() {
-        instance = this;
+        void Start() {
+            instance = this;
 
-        GameObject board = GameObject.FindGameObjectWithTag("Board");
-        Bounds bounds = board.GetComponent<Renderer>().bounds;
+            GameObject board = GameObject.FindGameObjectWithTag("Board");
+            Bounds bounds = board.GetComponent<Renderer>().bounds;
 
-        halfX = bounds.extents.x - edgeMargin;
-        halfZ = bounds.extents.z - edgeMargin;
-        spawnY = bounds.max.y + dropHeight;
-        boardCenter = bounds.center;
+            halfX = bounds.extents.x - edgeMargin;
+            halfZ = bounds.extents.z - edgeMargin;
+            spawnY = bounds.max.y + dropHeight;
+            boardCenter = bounds.center;
 
-        StartCoroutine(PopulateBoard(startingCatCount));
-    }
+            StartCoroutine(PopulateBoard(startingCatCount));
+        }
 
-    public IEnumerator PopulateBoard(int catCount) {
-        int spawned = 0;
-        while (spawned < catCount) {
-            int batchCount = Mathf.Min(batchSize, catCount - spawned);
-            for (int i = 0; i < batchCount; i++) {
-                Vector2 boardPos = RandomBoardPosition();
-                Vector3 spawnPos = new Vector3(boardPos.x, spawnY, boardPos.y);
+        public IEnumerator PopulateBoard(int catCount) {
+            int spawned = 0;
+            while (spawned < catCount) {
+                int batchCount = Mathf.Min(batchSize, catCount - spawned);
+                for (int i = 0; i < batchCount; i++) {
+                    Vector2 boardPos = RandomBoardPosition();
+                    Vector3 spawnPos = new Vector3(boardPos.x, spawnY, boardPos.y);
 
-                GameObject cat = Instantiate(catPrefab, spawnPos, Quaternion.identity);
+                    GameObject cat = Instantiate(catPrefab, spawnPos, Quaternion.identity);
 
-                if (catManager != null) {
-                    catManager.RegisterCat(cat);
+                    if (catManager != null) {
+                        catManager.RegisterCat(cat);
+                    }
                 }
+                spawned += batchCount;
+
+                yield return new WaitForSeconds(batchInterval);
             }
-            spawned += batchCount;
-
-            yield return new WaitForSeconds(batchInterval);
         }
-    }
 
-    Vector2 RandomBoardPosition() {
-        Vector2 boardOffset;
-        do {
-            boardOffset = new Vector2(Random.Range(-halfX, halfX), Random.Range(-halfZ, halfZ));
+        Vector2 RandomBoardPosition() {
+            Vector2 boardOffset;
+            do {
+                boardOffset = new Vector2(Random.Range(-halfX, halfX), Random.Range(-halfZ, halfZ));
+            }
+            while ((boardOffset.x * boardOffset.x) / (halfX * halfX) + (boardOffset.y * boardOffset.y) / (halfZ * halfZ) > 1);
+            Vector2 boardPosition = new Vector2(boardCenter.x + boardOffset.x, boardCenter.z + boardOffset.y);
+            return boardPosition;
         }
-        while ((boardOffset.x * boardOffset.x) / (halfX * halfX) + (boardOffset.y * boardOffset.y) / (halfZ * halfZ) > 1);
-        Vector2 boardPosition = new Vector2(boardCenter.x + boardOffset.x, boardCenter.z + boardOffset.y);
-        return boardPosition;
     }
 }

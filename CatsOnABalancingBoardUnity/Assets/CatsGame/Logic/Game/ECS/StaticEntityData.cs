@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Assets.CatsGame.Logic.Game {
+namespace OMC.ECS {
     public class StaticEntityData : MonoBehaviour {
 
         public static EntityManager entityManager;
