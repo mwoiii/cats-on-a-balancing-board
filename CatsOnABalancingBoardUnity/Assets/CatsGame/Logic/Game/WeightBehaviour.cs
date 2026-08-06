@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -14,7 +13,6 @@ namespace OMC {
             Indecisive
         }
 
-        [NonSerialized]
         public WeightType type = WeightType.None;
 
         public enum WeightState { Falling, Landed }
