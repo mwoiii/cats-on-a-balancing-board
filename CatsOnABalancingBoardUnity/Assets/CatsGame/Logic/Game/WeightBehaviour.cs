@@ -13,6 +13,7 @@ namespace OMC {
             Indecisive
         }
 
+        [HideInInspector]
         public WeightType type = WeightType.None;
 
         public enum WeightState { Falling, Landed }
