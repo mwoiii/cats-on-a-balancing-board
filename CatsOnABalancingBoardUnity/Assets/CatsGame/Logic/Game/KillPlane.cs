@@ -1,7 +1,4 @@
-using OMC.ECS;
 using System.Collections;
-using Unity.Entities;
-using Unity.Transforms;
 using UnityEngine;
 
 namespace OMC {
@@ -11,12 +8,6 @@ namespace OMC {
         public float deletionDelay = 1;
 
         public float bounceMultiplier = 5;
-
-        private EntityManager entityManager;
-
-        private void Start() {
-            entityManager = StaticEntityData.entityManager;
-        }
 
         private void OnCollisionEnter(Collision collision) {
             Rigidbody b = collision.rigidbody;
@@ -31,10 +22,8 @@ namespace OMC {
 
         IEnumerator Wait(Collider other) {
             yield return new WaitForSeconds(deletionDelay);
-            if (other != null) {
-                Entity explosion = entityManager.Instantiate(StaticEntityData.effectConfig.explosionPrefab);
-                entityManager.SetComponentData(explosion, new LocalTransform { Position = other.transform.position, Scale = 0.2f });
-                AudioPool.instance.PlayExplosionSoundAt(other.transform.position);
+            if (other) {
+                EffectController.instance.PlayExplosionAtPosition(other.transform.position);
                 if (other.gameObject.CompareTag("Cat")) {
                     catManager.RemoveCat(other.gameObject);
                 }

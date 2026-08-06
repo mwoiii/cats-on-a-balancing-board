@@ -16,7 +16,7 @@ public class CatBatchDeletion : MonoBehaviour {
     private EntityQuery query;
 
     private void Start() {
-        entityManager = StaticEntityData.entityManager;
+        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         countdown = period;
         query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<FallenCatData>(), ComponentType.ReadOnly<LocalTransform>(), ComponentType.Exclude<MaterialMeshInfo>());
     }
@@ -31,7 +31,7 @@ public class CatBatchDeletion : MonoBehaviour {
 
     private void ExecuteBatchDeletion() {
         if (!query.IsEmpty) {
-            var array = query.ToEntityArray(Allocator.TempJob);
+            var array = query.ToEntityArray(Allocator.Temp);
             // experimenting with tradeoff for single lagspike but instant memory clear or lots of smaller lagspikes with gradual memory tradeoff
             // hard to know if latter is perceptible so running with prior until then
             //int quantity = math.max(1000, (int)(array.Length * 0.5f));

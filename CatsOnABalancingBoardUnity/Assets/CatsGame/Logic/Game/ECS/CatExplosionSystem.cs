@@ -11,13 +11,11 @@ namespace OMC.ECS {
     public partial struct CatExplosionSystem : ISystem {
 
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<EffectSpawnerConfig>();
             state.RequireForUpdate<CatCount>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EffectSpawnerConfig config = SystemAPI.GetSingleton<EffectSpawnerConfig>();
             EntityCommandBuffer ecb = new(Allocator.Temp);
             var catCount = SystemAPI.GetSingletonRW<CatCount>();
             var positionBuffer = SystemAPI.GetSingletonBuffer<LostCatPosition>().Reinterpret<float3>().AsNativeArray();
@@ -32,11 +30,6 @@ namespace OMC.ECS {
                         positionBuffer[lostCount] = pos;
                     }
                     lostCount++;
-                    if (config.currentExplosionCount < config.maxExplosionCount) {
-                        Entity explosion = ecb.Instantiate(config.explosionPrefab);
-                        ecb.SetComponent(explosion, new LocalTransform { Position = pos, Scale = 0.2f });
-                        config.currentExplosionCount++;
-                    }
                     ecb.SetComponentEnabled<MaterialMeshInfo>(entity, false);
                 }
             }

@@ -1,7 +1,5 @@
-using OMC.ECS;
 using System.Collections;
 using Unity.Entities;
-using Unity.Transforms;
 using UnityEngine;
 
 namespace OMC {
@@ -33,7 +31,7 @@ namespace OMC {
         private EntityManager entityManager;
 
         private void Start() {
-            entityManager = StaticEntityData.entityManager;
+            entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
 
         void Update() {
@@ -54,13 +52,7 @@ namespace OMC {
                 if (a.type == WeightType.Antimatter && type != WeightType.Antimatter) {
                     Destroy(a.gameObject);
                     Destroy(transform.gameObject);
-                    AudioPool.instance.PlaySupernovaSoundAt(transform.position);
-                    var effectConfig = StaticEntityData.effectConfig;
-                    if (effectConfig.currentSupernovaCount < effectConfig.maxSupernovaCount) {
-                        Entity supernova = entityManager.Instantiate(effectConfig.supernovaPrefab);
-                        effectConfig.currentSupernovaCount++;
-                        entityManager.SetComponentData(supernova, new LocalTransform { Position = transform.position, Scale = 0.2f });
-                    }
+                    EffectController.instance.PlaySupernovaAtPosition(transform.position);
                 }
             }
         }
