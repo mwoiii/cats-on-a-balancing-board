@@ -26,7 +26,7 @@ namespace OMC {
         public float maxPitch = 2f;
 
         private void Awake() {
-            ResetTimerAndCombo(0);
+            ResetTimerAndCombo(1);
         }
 
         private void Start() {
@@ -77,9 +77,6 @@ namespace OMC {
         }
 
         private void ResetTimerAndCombo(int count) {
-            if (count >= 0) {
-                return;
-            }
 
             currentSecond = trickLength;
             litterBonus = initialBonus;

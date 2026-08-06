@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/CatsGame/Scenes/EggPrototype.unity
     guid: 82630a41c5d33ae4bb8a24ceed823009
+  - enabled: 1
+    path: Assets/CatsGame/Scenes/ErrorScene.unity
+    guid: 5a1f20ac768be05479b20c1a8242f729
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

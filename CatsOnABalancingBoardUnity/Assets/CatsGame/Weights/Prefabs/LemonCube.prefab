@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3788495035759359977}
   - component: {fileID: 5300005081292084640}
   - component: {fileID: 8847935656710571486}
+  - component: {fileID: -6758870672386013200}
   m_Layer: 0
   m_Name: LemonCube
   m_TagString: Weight
@@ -154,8 +155,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightBehaviour
   type: 2
-  shrinkAmount: 0.05
-  minScale: 0.1
-  catTag: Cat
-  shrinkInterval: 0.1
-  shrinkIntervalLemon: 0.8
+  State: 0
+--- !u!114 &-6758870672386013200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982464574026435089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac96c774238913f4a9a1bd8b8e6261df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DecayOverTime
+  weightBehaviour: {fileID: 0}

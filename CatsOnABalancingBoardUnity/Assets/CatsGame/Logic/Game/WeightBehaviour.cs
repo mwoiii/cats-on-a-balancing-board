@@ -1,10 +1,11 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace OMC {
     public class WeightBehaviour : MonoBehaviour {
 
-        // we could probably do Something to make this kind of dynamic but for another time
+        // we could probably do Something to make this kind of dynamic but for another time // The Burst Compiler forbids it my liege
         public enum WeightType {
             None,
             Catnip,
@@ -18,7 +19,8 @@ namespace OMC {
 
         public enum WeightState { Falling, Landed }
 
-        public WeightState State { get; private set; } = WeightState.Falling;
+        [HideInInspector]
+        public WeightState State = WeightState.Falling;
 
         private float shrinkAmount = 0.05f;
 
@@ -28,11 +30,7 @@ namespace OMC {
 
         private float shrinkInterval = 0.1f; // seconds between shrink ticks
 
-        private float shrinkIntervalLemon = 0.8f;
-
         private float shrinkTimer = 0f;
-
-        private int indecisiveWarpTime = 1;
 
         void Update() {
             if (shrinkTimer > 0f) {
@@ -43,40 +41,6 @@ namespace OMC {
         void OnCollisionEnter(Collision collision) {
             if (State == WeightState.Falling) {
                 State = WeightState.Landed;
-
-                switch (type) {
-                    case WeightType.Lemon:
-                        StartCoroutine(Decay());
-                        break;
-                    case WeightType.Indecisive:
-                        StartCoroutine(Decay());
-                        StartCoroutine(IndecisiveWarp());
-                        break;
-                }
-            }
-            WeightBehaviour colliderBehaviour = collision.collider.gameObject.GetComponent<WeightBehaviour>();
-            if (colliderBehaviour) {
-                if (colliderBehaviour.type == WeightType.Antimatter && type != WeightType.Antimatter) {
-                    Destroy(colliderBehaviour.gameObject);
-                    Destroy(transform.gameObject);
-                    EffectController.instance.PlaySupernovaAtPosition(transform.position);
-                }
-            }
-        }
-
-        IEnumerator IndecisiveWarp() {
-            yield return new WaitForSeconds(indecisiveWarpTime);
-            while (transform != null) {
-                Vector2 a = UnityEngine.Random.insideUnitCircle * 3;
-                transform.position = new Vector3(a.x, 3, a.y);
-                yield return new WaitForSeconds(indecisiveWarpTime);
-            }
-        }
-
-        IEnumerator Decay() {
-            while (gameObject != null) {
-                ShrinkAndCheck();
-                yield return new WaitForSeconds(shrinkIntervalLemon);
             }
         }
 
@@ -89,7 +53,7 @@ namespace OMC {
             shrinkTimer = shrinkInterval;
         }
 
-        private void ShrinkAndCheck() {
+        public void ShrinkAndCheck() {
             Vector3 newScale = transform.localScale - Vector3.one * shrinkAmount;
             transform.localScale = newScale;
 

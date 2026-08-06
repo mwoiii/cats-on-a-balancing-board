@@ -293,25 +293,32 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100497376}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6764c9918e9c77b45a8eda524cfd11bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuThemeSyncPaws
   song: {fileID: 100497378}
   meowTimestamps:
-  - 0
-  - 3.6
-  - 4.8
-  - 9.6
-  - 13.2
-  - 14.4
-  - 19.2
-  - 22.8
-  - 24
-  - 28.8
-  - 32.4
-  - 33.6
+  - 11.7
+  - 12.43
+  - 13.17
+  - 13.53
+  - 14.26
+  - 14.63
+  - 15.36
+  - 16.09
+  - 16.46
+  - 17.19
+  - 17.56
+  - 18.29
+  - 19.02
+  - 19.39
+  - 20.12
+  - 20.48
+  - 21.22
+  - 22.31
+  - 23.04
 --- !u!1 &150362987
 GameObject:
   m_ObjectHideFlags: 0
@@ -2840,7 +2847,7 @@ MonoBehaviour:
   minAmbientMeowInterval: 3
   maxAmbientMeowInterval: 8
   assumedBasePopulation: 100
-  volume: 0.3
+  volume: 0.5
   minPitch: 0.5
   maxPitch: 1.5
 --- !u!4 &805277243

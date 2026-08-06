@@ -90,9 +90,9 @@ namespace OMC.ECS {
                 // weight reactive behaviour
                 float2 catPos = catData.position;
 
-                float nearestBasicDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
-                float2 nearestBasicPos = float2.zero;
-                bool hasBasic = false;
+                float nearestNoneDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
+                float2 nearestNonePos = float2.zero;
+                bool hasNone = false;
 
                 float nearestCatnipDist = float.MaxValue;
                 float2 nearestCatnipPos = float2.zero;
@@ -108,11 +108,12 @@ namespace OMC.ECS {
                     float dist = math.distancesq(catPos, w.localPosition); // distance squared saves a square root operation but i maybe should be more precise with variable names
 
                     switch (w.type) {
-                        case WeightType.None:
-                            if (w.state == WeightState.Falling && dist < nearestBasicDist) {
-                                nearestBasicDist = dist;
-                                nearestBasicPos = w.localPosition;
-                                hasBasic = true;
+                        case WeightType.None: case WeightType.Indecisive:
+                            if (w.state == WeightState.Falling && dist < nearestNoneDist) 
+                            {
+                                nearestNoneDist = dist;
+                                nearestNonePos = w.localPosition;
+                                hasNone = true;
                             }
                             break;
                         case WeightType.Catnip:
@@ -134,9 +135,9 @@ namespace OMC.ECS {
                 }
 
                 float2 weightForce = float2.zero;
-                if (hasBasic) // can the cat has basic
+                if (hasNone) // can the cat has None
                 {
-                    float2 toTarget = nearestBasicPos - catPos;
+                    float2 toTarget = nearestNonePos - catPos;
                     if (math.lengthsq(toTarget) > 0) {
                         weightForce -= math.normalize(toTarget) * moveForce;
                     }
