@@ -1,9 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace OMC {
     public class WeightDropper : MonoBehaviour {
+        public static WeightDropper instance;
 
         public GameObject shadowPrefab;
 
@@ -31,6 +35,8 @@ namespace OMC {
 
         public GameObject nextPrefab { get; private set; }
 
+        public List<WeightDef> currentRotation = new();
+
         public static event System.Action FirstWeightDropped;
 
         bool firstWeightDropped = false;
@@ -44,6 +50,13 @@ namespace OMC {
         public static Dictionary<GameObject, WeightBehaviour> weightBehaviourDict = new();
 
         void Start() {
+            if (currentRotation.NotUnityNull().ToArray().Length == 0)
+            {
+                Debug.LogError("Put a WeightDef in the WeightDropper rotation");
+            }
+
+            instance = this;
+
             shadow = Instantiate(shadowPrefab, board.position + board.up * surfaceOffset, board.rotation);
             shadow.transform.localScale = Vector3.one * shadowScale;
             shadow.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
@@ -96,10 +109,10 @@ namespace OMC {
         }
 
         void PickNext() {
-            WeightDef picked = WeightTypeRegistry.GetRandomWeight();
+            WeightDef picked = WeightTypeRegistry.GetRandomWeight(currentRotation);
             if (WeightTypeRegistry.weightDefs.Length > 1) {
                 while (picked == prevPicked) {
-                    picked = WeightTypeRegistry.GetRandomWeight();
+                    picked = WeightTypeRegistry.GetRandomWeight(currentRotation);
                 }
             }
             prevPicked = picked;

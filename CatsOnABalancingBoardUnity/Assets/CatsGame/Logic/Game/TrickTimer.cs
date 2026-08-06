@@ -7,7 +7,8 @@ namespace OMC {
     public class TrickTimer : MonoBehaviour {
         public int trickLength;
 
-        public int initialBonus;
+        float bonusBase;
+        float bonusMult;
 
         public AudioClip countdownSound;
 
@@ -25,11 +26,8 @@ namespace OMC {
 
         public float maxPitch = 2f;
 
-        private void Awake() {
-            ResetTimerAndCombo(1);
-        }
-
         private void Start() {
+            ResetTimerAndCombo(0);
             WeightDropper.FirstWeightDropped += GetStartedWithIt;
             CatManagerScript.LostCat += ResetTimerAndCombo;
             CatCountBridgingSystem.CatCountChange += ResetTimerAndCombo;
@@ -45,7 +43,7 @@ namespace OMC {
         public static int currentSecond { get; private set; }
 
         public static int litterBonus { get; private set; }
-
+        
         public static event Action<int> OnTimerChanged;
 
         public static event Action<int> OnLitterBonusChanged;
@@ -53,8 +51,7 @@ namespace OMC {
         private IEnumerator Timer() {
             while (GameLogicScript.gameRunning) {
                 yield return new WaitForSeconds(1);
-                currentSecond--;
-                OnTimerChanged?.Invoke(currentSecond);
+                DecrementTimer();
                 if (currentSecond == 3) {
                     PlayCountdown();
                 }
@@ -63,28 +60,64 @@ namespace OMC {
 
                     if (CatSpawnerScript.instance != null) {
                         StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
-                        litterBonus *= 2;
-                        OnLitterBonusChanged?.Invoke(litterBonus);
-                        currentSecond = trickLength;
+                        
+                        IncrementLitterBonus();
+                        ResetTimer();
                     } else {
                         CatSpawnRequest.Enqueue(litterBonus);
-                        litterBonus *= 2;
-                        OnLitterBonusChanged?.Invoke(litterBonus);
-                        currentSecond = trickLength;
+
+                        IncrementLitterBonus();
+                        ResetTimer();
                     }
                 }
             }
         }
 
         private void ResetTimerAndCombo(int count) {
+            if (count <= 0)
+            {
+                ResetLitterBonus();
+            
+                ResetTimer();
+            }
+        }
 
-            currentSecond = trickLength;
-            litterBonus = initialBonus;
-            OnTimerChanged?.Invoke(currentSecond);
+        private void ResetLitterBonus()
+        {
+            bonusMult = 10;
+            bonusBase = 1;
+            foreach (WeightDef def in WeightDropper.instance.currentRotation)
+            {
+                bonusMult += def.multAdd;
+                bonusBase += def.baseAdd;
+            }
+            Debug.Log($"{bonusMult} * {bonusBase} ^ k");
+
+            litterBonus = (int)Mathf.Floor(bonusMult);
             OnLitterBonusChanged?.Invoke(litterBonus);
+        }
 
+        int comboCounter = 0;
+        private void IncrementLitterBonus()
+        {
+            comboCounter++;
+            litterBonus = (int)Mathf.Ceil(bonusMult * Mathf.Pow(bonusBase,comboCounter));
+            OnLitterBonusChanged?.Invoke(litterBonus);
+        }
+
+        private void ResetTimer()
+        {
+            currentSecond = trickLength;
+            OnTimerChanged?.Invoke(currentSecond);
+            
             countdownSource.Stop();
             completeSource.pitch = basePitch;
+        }
+
+        private void DecrementTimer()
+        {
+            currentSecond--;
+            OnTimerChanged?.Invoke(currentSecond);
         }
 
         private void OnDestroy() {

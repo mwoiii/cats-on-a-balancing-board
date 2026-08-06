@@ -46,27 +46,27 @@ namespace OMC {
             return typeToDef[type];
         }
 
-        public static WeightDef GetRandomWeight() {
-            if (weightDefs.Length == 0) {
+        public static WeightDef GetRandomWeight(List<WeightDef> selection) {
+            if (selection.Count == 0) {
                 return null;
             }
 
             float total = 0f;
-            foreach (var weight in weightDefs) {
+            foreach (var weight in selection) {
                 total += weight.probabilityBias;
             }
 
             float roll = Random.Range(0, total);
             float cum = 0f;
 
-            foreach (var weight in weightDefs) {
+            foreach (var weight in selection) {
                 cum += weight.probabilityBias;
                 if (roll < cum) {
                     return weight;
                 }
             }
 
-            return weightDefs[^1];
+            return selection[^1];
         }
     }
 }

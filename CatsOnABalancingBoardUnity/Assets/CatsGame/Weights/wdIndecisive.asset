@@ -17,6 +17,6 @@ MonoBehaviour:
   probabilityBias: 1
   rarity: 1
   multAdd: 0
-  baseAdd: 0.1
+  baseAdd: 0.4
   blockPrefab: {fileID: 6982464574026435089, guid: 71b65ff82cc9e6240bcc77542f8dbc8a, type: 3}
   spherePrefab: {fileID: 0}
