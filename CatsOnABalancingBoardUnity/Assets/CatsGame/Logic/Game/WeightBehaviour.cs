@@ -1,10 +1,17 @@
 using System.Collections;
-using Unity.Entities;
 using UnityEngine;
 
 namespace OMC {
     public class WeightBehaviour : MonoBehaviour {
-        public enum WeightType { None, Catnip, Lemon, Antimatter }
+
+        // we could probably do Something to make this kind of dynamic but for another time
+        public enum WeightType {
+            None,
+            Catnip,
+            Lemon,
+            Antimatter,
+            Indecisive
+        }
 
         public WeightType type = WeightType.None;
 
@@ -12,27 +19,19 @@ namespace OMC {
 
         public WeightState State { get; private set; } = WeightState.Falling;
 
-        [SerializeField]
-        private float shrinkAmount = 0.01f;
+        private float shrinkAmount = 0.05f;
 
-        [SerializeField]
         private float minScale = 0.01f;
 
-        [SerializeField]
         private string catTag = "Cat";
 
-        [SerializeField]
-        private float shrinkInterval = 0.5f; // seconds between shrink ticks
+        private float shrinkInterval = 0.1f; // seconds between shrink ticks
 
-        public float shrinkIntervalLemon = 0.8f;
+        private float shrinkIntervalLemon = 0.8f;
 
         private float shrinkTimer = 0f;
 
-        private EntityManager entityManager;
-
-        private void Start() {
-            entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        }
+        private int indecisiveWarpTime = 1;
 
         void Update() {
             if (shrinkTimer > 0f) {
@@ -43,17 +42,33 @@ namespace OMC {
         void OnCollisionEnter(Collision collision) {
             if (State == WeightState.Falling) {
                 State = WeightState.Landed;
-                if (type == WeightType.Lemon) {
-                    StartCoroutine(Decay());
+
+                switch (type) {
+                    case WeightType.Lemon:
+                        StartCoroutine(Decay());
+                        break;
+                    case WeightType.Indecisive:
+                        StartCoroutine(Decay());
+                        StartCoroutine(IndecisiveWarp());
+                        break;
                 }
             }
-            WeightBehaviour a = collision.collider.gameObject.GetComponent<WeightBehaviour>();
-            if (a != null) {
-                if (a.type == WeightType.Antimatter && type != WeightType.Antimatter) {
-                    Destroy(a.gameObject);
+            WeightBehaviour colliderBehaviour = collision.collider.gameObject.GetComponent<WeightBehaviour>();
+            if (colliderBehaviour) {
+                if (colliderBehaviour.type == WeightType.Antimatter && type != WeightType.Antimatter) {
+                    Destroy(colliderBehaviour.gameObject);
                     Destroy(transform.gameObject);
                     EffectController.instance.PlaySupernovaAtPosition(transform.position);
                 }
+            }
+        }
+
+        IEnumerator IndecisiveWarp() {
+            yield return new WaitForSeconds(indecisiveWarpTime);
+            while (transform != null) {
+                Vector2 a = UnityEngine.Random.insideUnitCircle * 3;
+                transform.position = new Vector3(a.x, 3, a.y);
+                yield return new WaitForSeconds(indecisiveWarpTime);
             }
         }
 

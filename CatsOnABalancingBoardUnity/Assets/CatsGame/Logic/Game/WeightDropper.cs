@@ -4,9 +4,6 @@ using UnityEngine.InputSystem;
 
 namespace OMC {
     public class WeightDropper : MonoBehaviour {
-        public GameObject[] weightPrefabs;
-
-        public float[] weightBiases;
 
         public GameObject shadowPrefab;
 
@@ -30,7 +27,7 @@ namespace OMC {
 
         private float lastSpawned;
 
-        int prevIndex;
+        private WeightDef prevPicked;
 
         public GameObject nextPrefab { get; private set; }
 
@@ -52,14 +49,9 @@ namespace OMC {
             shadow.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
             shadow.transform.SetParent(board);
 
-            nextPrefab = weightPrefabs[GetNextIndex()];
-            OnNextPrefab?.Invoke(nextPrefab);
+            PickNext();
             spinAngle = 0f;
             lastSpawned = Time.time;
-
-            if (weightBiases.Length != weightPrefabs.Length) {
-                Debug.LogError("prefab list and biases list should be same length!!");
-            }
         }
 
         void Update() {
@@ -90,9 +82,9 @@ namespace OMC {
             if (Keyboard.current.spaceKey.wasPressedThisFrame) {
                 if (Time.time - lastSpawned > timeBetween) {
                     GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+
                     weightBehaviourDict[obj] = obj.GetComponent<WeightBehaviour>();
-                    nextPrefab = weightPrefabs[GetNextIndex()];
-                    OnNextPrefab?.Invoke(nextPrefab);
+                    PickNext();
                     lastSpawned = Time.time;
 
                     if (!firstWeightDropped) {
@@ -103,26 +95,16 @@ namespace OMC {
             }
         }
 
-        int GetNextIndex() {
-            float total = 0;
-            foreach (float w in weightBiases) { total += w; }
-
-            float roll = Random.Range(0, total);
-            float cumulative = 0;
-
-            for (int i = 0; i < weightPrefabs.Length; i++) {
-                cumulative += weightBiases[i];
-                if (roll < cumulative && i != prevIndex) {
-                    prevIndex = i;
-                    return i;
-                } else if (roll < cumulative && i == prevIndex) {
-                    return GetNextIndex();
+        void PickNext() {
+            WeightDef picked = WeightTypeRegistry.GetRandomWeight();
+            if (WeightTypeRegistry.weightDefs.Length > 1) {
+                while (picked == prevPicked) {
+                    picked = WeightTypeRegistry.GetRandomWeight();
                 }
             }
-
-            Debug.LogWarning("failed to pick random next index...");
-            prevIndex = 0;
-            return 0;
+            prevPicked = picked;
+            nextPrefab = picked.GetRandomShapePrefab();
+            OnNextPrefab?.Invoke(nextPrefab);
         }
     }
 }

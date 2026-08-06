@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static OMC.WeightBehaviour;
 
 namespace OMC {
     public class CatBehaviour : MonoBehaviour {
@@ -61,7 +62,7 @@ namespace OMC {
                 toTarget.y = 0;
                 if (toTarget.sqrMagnitude <= 0) { CenterBias(); return; }
 
-                if (WeightDropper.weightBehaviourDict[weights[0]].State == WeightBehaviour.WeightState.Falling) // repelled by falling weights
+                if (WeightDropper.weightBehaviourDict[weights[0]].State == WeightState.Falling) // repelled by falling weights
                 {
                     body.AddForce(toTarget.normalized * -moveForce, ForceMode.Acceleration);
                 }
@@ -101,15 +102,15 @@ namespace OMC {
 
             foreach (GameObject w in WeightDropper.weightBehaviourDict.Keys) {
                 float dist = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(w.transform.position.x, w.transform.position.z));
-                if (dist < weightWinner && WeightDropper.weightBehaviourDict[w].type == WeightBehaviour.WeightType.None) {
+                if (dist < weightWinner && WeightDropper.weightBehaviourDict[w].type == WeightType.None) {
                     nearestWeight = w;
                     weightWinner = dist;
                 }
-                if (dist < catnipWinner && WeightDropper.weightBehaviourDict[w].type == WeightBehaviour.WeightType.Catnip) {
+                if (dist < catnipWinner && WeightDropper.weightBehaviourDict[w].type == WeightType.Catnip) {
                     nearestCatnip = w;
                     catnipWinner = dist;
                 }
-                if (dist < lemonWinner && WeightDropper.weightBehaviourDict[w].type == WeightBehaviour.WeightType.Lemon) {
+                if (dist < lemonWinner && WeightDropper.weightBehaviourDict[w].type == WeightType.Lemon) {
                     nearestLemon = w;
                     lemonWinner = dist;
                 }
