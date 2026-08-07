@@ -11,7 +11,11 @@ namespace OMC {
             Catnip,
             Lemon,
             Antimatter,
-            Indecisive
+            Indecisive,
+            BoardGlue,
+            BlueRaspberry,
+            FreeWill,
+            Whirlpool
         }
 
         [HideInInspector]

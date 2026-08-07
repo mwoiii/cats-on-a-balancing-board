@@ -91,6 +91,8 @@ namespace OMC {
                 bonusMult += def.multAdd;
                 bonusBase += def.baseAdd;
             }
+            bonusMult = Mathf.Max(bonusMult,0);
+            bonusBase = Mathf.Max(bonusBase,1);
             Debug.Log($"{bonusMult} * {bonusBase} ^ k");
 
             litterBonus = (int)Mathf.Floor(bonusMult);

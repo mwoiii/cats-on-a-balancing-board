@@ -103,12 +103,16 @@ namespace OMC.ECS {
                 float2 nearestLemonPos = float2.zero;
                 bool hasLemon = false;
 
+                float nearestWhirlpoolDist = float.MaxValue;
+                float2 nearestWhirlpoolPos = float2.zero;
+                bool hasWhirlpool = false;
+
                 for (int i = 0; i < weights.Length; i++) {
                     WeightSnapshot w = weights[i];
                     float dist = math.distancesq(catPos, w.localPosition); // distance squared saves a square root operation but i maybe should be more precise with variable names
 
                     switch (w.type) {
-                        case WeightType.None: case WeightType.Indecisive:
+                        case WeightType.None: case WeightType.Indecisive: case WeightType.FreeWill:
                             if (w.state == WeightState.Falling && dist < nearestNoneDist) 
                             {
                                 nearestNoneDist = dist;
@@ -129,6 +133,14 @@ namespace OMC.ECS {
                                 nearestLemonDist = dist;
                                 nearestLemonPos = w.localPosition;
                                 hasLemon = true;
+                            }
+                            break;
+                        case WeightType.Whirlpool:
+                            if (dist < nearestWhirlpoolDist)
+                            {
+                                nearestWhirlpoolDist = dist;
+                                nearestWhirlpoolPos = w.localPosition;
+                                hasWhirlpool = true;
                             }
                             break;
                     }
@@ -155,6 +167,16 @@ namespace OMC.ECS {
                 if (hasLemon) {
                     float2 toTarget = nearestLemonPos - catPos;
                     if (math.lengthsq(toTarget) > 0) { weightForce -= math.normalize(toTarget) * moveForce; }
+                }
+                if (hasWhirlpool)
+                {
+                    float2 toTarget = nearestWhirlpoolPos - catPos;
+                    if (math.lengthsq(toTarget) > 0)
+                    {
+                        float2 dir = math.normalize(toTarget);
+                        float2 tangent = new float2(-dir.y,dir.x);
+                        weightForce += (dir + tangent) * moveForce;
+                    }
                 }
 
                 // random dispersion

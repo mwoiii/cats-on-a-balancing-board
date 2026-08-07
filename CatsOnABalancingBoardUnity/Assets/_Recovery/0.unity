@@ -1190,9 +1190,9 @@ MonoBehaviour:
   shadowScale: 0.5
   currentRotation:
   - {fileID: 11400000, guid: 539ac9f01e0703647a96e62997395711, type: 2}
-  - {fileID: 11400000, guid: e6941b79fc80aef4997f67d212046b9d, type: 2}
-  - {fileID: 11400000, guid: e3481513bc6ccab43ba2ff13016c367c, type: 2}
   - {fileID: 11400000, guid: b51f1387927f37a4a8278a77c8ed656b, type: 2}
+  - {fileID: 11400000, guid: 4ee38616e81014d4d8a126385556a62c, type: 2}
+  - {fileID: 11400000, guid: 7c8acbae5a15d704893a27523a08a9ce, type: 2}
 --- !u!114 &473563221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1378,7 +1378,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1ce44c57fadf0124a94c30d4509e162c, type: 2}
   - {fileID: 11400000, guid: 128bf09fb09d03b48b5ab5a1cccd413c, type: 2}
   - {fileID: 11400000, guid: 7c8acbae5a15d704893a27523a08a9ce, type: 2}
-  - {fileID: 11400000, guid: e6941b79fc80aef4997f67d212046b9d, type: 2}
 --- !u!1 &488201370
 GameObject:
   m_ObjectHideFlags: 0

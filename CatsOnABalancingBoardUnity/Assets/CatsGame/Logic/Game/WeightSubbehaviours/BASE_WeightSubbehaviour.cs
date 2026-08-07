@@ -1,6 +1,7 @@
 using UnityEngine;
 using OMC;
 
+[RequireComponent(typeof(WeightBehaviour))]
 public class WeightSubbehaviour : MonoBehaviour
 {
     [HideInInspector]
@@ -9,6 +10,6 @@ public class WeightSubbehaviour : MonoBehaviour
     internal void Start()
     {
         weightBehaviour = gameObject.GetComponent<WeightBehaviour>();
-        if (weightBehaviour == null){Debug.LogError("Prefab needs WeightBehaviour before sub behaviours can be added");}
+        if (weightBehaviour == null){Debug.LogError("HOW");}
     }
 }
