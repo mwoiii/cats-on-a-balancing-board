@@ -10,12 +10,12 @@ namespace OMC {
         public float bounceMultiplier = 5;
 
         private void OnCollisionEnter(Collision collision) {
-            Rigidbody b = collision.rigidbody;
-            if (b != null) {
+            Rigidbody colliderBody = collision.rigidbody;
+            if (colliderBody) {
                 Vector3 norm = collision.GetContact(0).normal;
                 float impactSpeed = collision.relativeVelocity.magnitude;
-                b.linearVelocity += -bounceMultiplier * impactSpeed * norm;
-                b.linearVelocity += bounceMultiplier * 0.1f * b.position; // Sorry
+                colliderBody.linearVelocity += -bounceMultiplier * impactSpeed * norm;
+                colliderBody.linearVelocity += bounceMultiplier * 0.1f * colliderBody.position; // Sorry
             }
             StartCoroutine(Wait(collision.collider));
         }

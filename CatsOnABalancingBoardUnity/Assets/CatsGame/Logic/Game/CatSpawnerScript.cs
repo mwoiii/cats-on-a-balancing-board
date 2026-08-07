@@ -23,10 +23,10 @@ namespace OMC {
 
         private Vector3 boardCenter;
 
-        void Start() {
+        private void Start() {
             instance = this;
 
-            GameObject board = GameObject.FindGameObjectWithTag("Board");
+            GameObject board = BoardController.boardInstance;
             Bounds bounds = board.GetComponent<Renderer>().bounds;
 
             halfX = bounds.extents.x - edgeMargin;
@@ -47,7 +47,7 @@ namespace OMC {
 
                     GameObject cat = Instantiate(catPrefab, spawnPos, Quaternion.identity);
 
-                    if (catManager != null) {
+                    if (catManager) {
                         catManager.RegisterCat(cat);
                     }
                 }

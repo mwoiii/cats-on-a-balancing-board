@@ -23,7 +23,7 @@ namespace OMC {
         void FixedUpdate() {
             DynamicBuffer<WeightContactPulse> pulses = boss.GetBuffer<WeightContactPulse>(weightEntity);
             for (int i = 0; i < pulses.Length && i < activeWeights.Count; i++) {
-                if (pulses[i].count > 0 && activeWeights[i] != null) {
+                if (pulses[i].count > 0 && activeWeights[i]) {
                     activeWeights[i].NotifyCatContact();
                 }
             }
@@ -36,11 +36,13 @@ namespace OMC {
             foreach (KeyValuePair<GameObject, WeightBehaviour> entry in WeightDropper.weightBehaviourDict) {
                 GameObject weightObject = entry.Key;
                 WeightBehaviour behaviour = entry.Value;
-                if (weightObject == null || behaviour == null) { continue; } // Guy who only just learnt what continue does
+                if (!weightObject || !behaviour) {
+                    continue;
+                } // Guy who only just learnt what continue does
 
                 Vector3 worldOffset = weightObject.transform.position - board.position;
                 Vector3 localPos = Quaternion.Inverse(board.rotation) * worldOffset;
-                buffer.Add(new WeightSnapshot { localPosition = new float2(localPos.x, localPos.z), type = behaviour.type, state = behaviour.State });
+                buffer.Add(new WeightSnapshot { localPosition = new float2(localPos.x, localPos.z), type = behaviour.type, state = behaviour.state });
                 pulses.Add(new WeightContactPulse { count = 0 });
                 activeWeights.Add(behaviour);
             }

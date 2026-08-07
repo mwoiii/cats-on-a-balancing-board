@@ -18,7 +18,9 @@ namespace OMC.UI {
         }
 
         void Update() {
-            if (song == null || !song.isPlaying) { return; }
+            if (!song || !song.isPlaying) {
+                return;
+            }
 
             if (lastMeow && song.time < lastTimestamp) {
                 lastMeow = false;

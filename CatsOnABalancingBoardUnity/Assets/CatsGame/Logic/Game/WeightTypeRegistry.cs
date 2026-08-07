@@ -3,9 +3,7 @@ using UnityEngine;
 using static OMC.WeightBehaviour;
 
 namespace OMC {
-
     public class WeightTypeRegistry : MonoBehaviour {
-
         public static bool loaded { get; private set; }
 
         [SerializeField]

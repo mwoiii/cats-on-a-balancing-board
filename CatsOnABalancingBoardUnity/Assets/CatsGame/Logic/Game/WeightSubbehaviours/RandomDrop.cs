@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class RandomDrop : WeightSubbehaviour
-{
-    new void Start()
-    {
-        base.Start();
-        
-        float boardRadius = GameObject.FindGameObjectWithTag("Board").GetComponent<Collider>().bounds.extents.x;
-        Vector2 b = UnityEngine.Random.insideUnitCircle * boardRadius;
-        transform.position = new Vector3(b.x, 3, b.y);
+namespace OMC {
+    public class RandomDrop : WeightSubBehaviourBase {
+        public override void Start() {
+            base.Start();
+
+            float boardRadius = BoardController.boardInstance.GetComponent<Collider>().bounds.extents.x;
+            Vector2 randomPos = Random.insideUnitCircle * boardRadius;
+            transform.position = new Vector3(randomPos.x, 3, randomPos.y);
+        }
     }
 }

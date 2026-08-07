@@ -25,7 +25,10 @@ namespace OMC.UI {
         }
 
         void OnGUI() {
-            style ??= new GUIStyle(GUI.skin.label) { fontSize = 24, normal = { textColor = Color.blueViolet } };
+            style ??= new GUIStyle(GUI.skin.label) {
+                fontSize = 24,
+                normal = { textColor = Color.blueViolet }
+            };
             GUI.Label(new Rect(10, 10, 200, 40), $"{fps:0.}", style);
         }
 #endif

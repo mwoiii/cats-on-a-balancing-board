@@ -8,49 +8,65 @@ namespace OMC {
 
         public int previewLayer = 10;
 
-        WeightDropper weightDropper;
+        private WeightDropper weightDropper;
 
-        GameObject currentPreview;
+        private GameObject currentPreview;
 
         void Start() {
-            weightDropper = FindAnyObjectByType<WeightDropper>();
-            if (weightDropper == null) { return; }
+            weightDropper = WeightDropper.instance;
+            if (!weightDropper) {
+                Debug.LogError("No WeightDropper found for NextUpBoxBehaviour! This is not allowed!");
+                Destroy(this);
+                return;
+            }
 
-            weightDropper.OnNextPrefab += SetPreview;
-            SetPreview(weightDropper.nextPrefab);
+            weightDropper.OnNextPrefab += TrySetPreview;
+            TrySetPreview(weightDropper.nextPrefab);
         }
 
         void Update() {
-            if (previewPivot != null) { previewPivot.Rotate(Vector3.up, spinSpeed * Time.deltaTime, Space.Self); }
-            if (currentPreview != null) {
+            if (previewPivot) {
+                previewPivot.Rotate(Vector3.up, spinSpeed * Time.deltaTime, Space.Self);
+            }
+            if (currentPreview) {
                 currentPreview.transform.localPosition = Vector3.zero;
                 currentPreview.transform.localRotation = Quaternion.identity;
             }
         }
 
         void OnDestroy() {
-            if (weightDropper != null) { weightDropper.OnNextPrefab -= SetPreview; }
+            if (weightDropper) {
+                weightDropper.OnNextPrefab -= TrySetPreview;
+            }
         }
 
-        void SetPreview(GameObject prefab) {
-            if (currentPreview != null) { Destroy(currentPreview); }
-            if (prefab == null) { return; }
+        void TrySetPreview(GameObject prefab) {
+            if (currentPreview) {
+                Destroy(currentPreview);
+            }
+
+            if (!prefab) {
+                return;
+            }
+
+            bool hasDisplay = false;
+            WeightBehaviour weightBehaviour;
+            if (prefab.TryGetComponent(out weightBehaviour) && weightBehaviour.displayPrefab) {
+                hasDisplay = true;
+            }
 
             currentPreview = Instantiate(prefab, previewPivot.position, Quaternion.identity, previewPivot);
             currentPreview.transform.localPosition = Vector3.zero;
             currentPreview.transform.localRotation = Quaternion.identity;
-            currentPreview.GetComponent<WeightBehaviour>().type = WeightBehaviour.WeightType.None;
 
-            foreach (var a in currentPreview.GetComponentsInChildren<Rigidbody>()) { Destroy(a); }
-            foreach (var a in currentPreview.GetComponentsInChildren<Collider>()) { Destroy(a); }
-
-            SetLayerRecursively(currentPreview, previewLayer);
-        }
-
-        void SetLayerRecursively(GameObject obj, int layer) {
-            obj.layer = layer;
-            foreach (Transform child in obj.transform) {
-                SetLayerRecursively(child.gameObject, layer);
+            if (!hasDisplay) {
+                currentPreview.GetComponent<WeightBehaviour>().type = WeightBehaviour.WeightType.None;
+                foreach (var rigidbody in currentPreview.GetComponentsInChildren<Rigidbody>()) {
+                    Destroy(rigidbody);
+                }
+                foreach (var collider in currentPreview.GetComponentsInChildren<Collider>()) {
+                    Destroy(collider);
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ namespace OMC {
 
         Transform board;
 
-        BoardMath boardMath;
+        BoardController boardController;
 
         Rigidbody body;
 
@@ -37,9 +37,9 @@ namespace OMC {
         void Start() {
             body = GetComponent<Rigidbody>();
 
-            GameObject boardObject = GameObject.FindGameObjectWithTag("Board");
+            GameObject boardObject = BoardController.boardInstance;
             board = boardObject.transform;
-            boardMath = boardObject.GetComponent<BoardMath>();
+            boardController = boardObject.GetComponent<BoardController>();
 
             body.linearDamping = baseDamping;
         }
@@ -57,24 +57,24 @@ namespace OMC {
 
             //Vector3 dir = toTarget.normalized;
 
-            if (weights[0] != null) {
+            if (weights[0]) {
                 Vector3 toTarget = weights[0].transform.position - transform.position;
                 toTarget.y = 0;
                 if (toTarget.sqrMagnitude <= 0) { CenterBias(); return; }
 
-                if (WeightDropper.weightBehaviourDict[weights[0]].State == WeightState.Falling) // repelled by falling weights
+                if (WeightDropper.weightBehaviourDict[weights[0]].state == WeightState.Falling) // repelled by falling weights
                 {
                     body.AddForce(toTarget.normalized * -moveForce, ForceMode.Acceleration);
                 }
             }
-            if (weights[1] != null) {
+            if (weights[1]) {
                 Vector3 toTarget = weights[1].transform.position - transform.position;
                 toTarget.y = 0;
                 if (toTarget.sqrMagnitude <= 0) { CenterBias(); return; }
 
                 body.AddForce(toTarget.normalized * moveForce, ForceMode.Acceleration);
             }
-            if (weights[2] != null) {
+            if (weights[2]) {
                 Vector3 toTarget = weights[2].transform.position - transform.position;
                 toTarget.y = 0;
                 if (toTarget.sqrMagnitude <= 0) { CenterBias(); return; }
@@ -122,7 +122,7 @@ namespace OMC {
             if (preventGripping) {
                 return;
             }
-            if (boardMath.slope > slopeTolerance) {
+            if (boardController.slope > slopeTolerance) {
                 if (canGrip && !gripping) {
                     body.linearDamping = gripDamping;
                     gripping = true;

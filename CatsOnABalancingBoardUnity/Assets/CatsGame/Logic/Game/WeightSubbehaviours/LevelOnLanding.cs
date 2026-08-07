@@ -1,49 +1,53 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class LevelOnLanding : WeightSubbehaviour
-{
-    GameObject board;
-    Rigidbody boardBody;
+namespace OMC {
+    public class LevelOnLanding : WeightSubBehaviourBase {
+        GameObject board;
 
-    public float strength = 10f;
+        Rigidbody boardBody;
 
-    new void Start()
-    {
-        base.Start();
-        board = GameObject.FindGameObjectWithTag("Board");
-        boardBody = board.GetComponent<Rigidbody>();
-    }
+        public float strength = 10f;
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (!collision.collider.CompareTag("Board")){return;}
-        if (correcting || correctingLock){return;}
+        bool correcting = false;
 
-        boardBody.angularVelocity = Vector3.zero;
-        correcting = true;
-    }
+        bool correctingLock = false;
 
-    bool correcting = false;
-    bool correctingLock = false;
-    void FixedUpdate()
-    {
-        if (correcting && !correctingLock)
-        {
-            Quaternion correction = Quaternion.FromToRotation(board.transform.up,Vector3.up);
-            correction.ToAngleAxis(out float angle, out Vector3 axis);
+        public override void Start() {
+            base.Start();
+            board = BoardController.boardInstance;
+            boardBody = board.GetComponent<Rigidbody>();
+        }
 
-            if (angle > 180) {angle -= 360;}
-            
-            if (angle < 1)
-            {
-                correcting = false;
-                correctingLock = true;
+        void OnCollisionEnter(Collision collision) {
+            if (!collision.collider.CompareTag("Board")) {
                 return;
             }
 
-            boardBody.AddTorque(angle * Mathf.Deg2Rad * strength * axis.normalized,ForceMode.VelocityChange);
+            if (correcting || correctingLock) {
+                return;
+            }
+
+            boardBody.angularVelocity = Vector3.zero;
+            correcting = true;
         }
-        
+
+        void FixedUpdate() {
+            if (correcting && !correctingLock) {
+                Quaternion correction = Quaternion.FromToRotation(board.transform.up, Vector3.up);
+                correction.ToAngleAxis(out float angle, out Vector3 axis);
+
+                if (angle > 180) {
+                    angle -= 360;
+                }
+
+                if (angle < 1) {
+                    correcting = false;
+                    correctingLock = true;
+                    return;
+                }
+
+                boardBody.AddTorque(angle * Mathf.Deg2Rad * strength * axis.normalized, ForceMode.VelocityChange);
+            }
+        }
     }
 }

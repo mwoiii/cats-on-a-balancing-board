@@ -6,7 +6,7 @@ public class EggSpinBehaviour : MonoBehaviour {
     public float spinSpeed = 60f;
 
     void Update() {
-        if (previewPivot != null) {
+        if (previewPivot) {
             previewPivot.Rotate(Vector3.up, spinSpeed * Time.deltaTime, Space.Self);
         }
     }

@@ -55,7 +55,7 @@ namespace OMC {
 
         public void ClearAllCats() {
             foreach (GameObject cat in cats) {
-                if (cat != null)
+                if (cat)
                     Destroy(cat);
             }
 

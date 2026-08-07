@@ -4,11 +4,15 @@ namespace OMC.ECS {
     public static class CatSpawnRequest {
         public static void Enqueue(int count) {
             World world = World.DefaultGameObjectInjectionWorld;
-            if (world == null) { return; }
+            if (world == null) {
+                return;
+            }
 
             EntityManager boss = world.EntityManager;
             EntityQuery query = boss.CreateEntityQuery(typeof(CatSpawnerConfig));
-            if (query.IsEmpty) { return; }
+            if (query.IsEmpty) {
+                return;
+            }
 
             Entity configEntity = query.GetSingletonEntity();
 

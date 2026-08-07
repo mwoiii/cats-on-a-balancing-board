@@ -1,11 +1,9 @@
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace OMC {
     public class WeightBehaviour : MonoBehaviour {
 
-        // we could probably do Something to make this kind of dynamic but for another time // The Burst Compiler forbids it my liege
+        // we could probably do Something to make this kind of dynamic but for another time // The Burst Compiler forbids it my liege // Weak mindset it would just Fucking Suck because we would lose switch statements and visual clarity with enums so actually Strong mindset Fuck that
         public enum WeightType {
             None,
             Catnip,
@@ -21,10 +19,13 @@ namespace OMC {
         [HideInInspector]
         public WeightType type = WeightType.None;
 
-        public enum WeightState { Falling, Landed }
-
         [HideInInspector]
-        public WeightState State = WeightState.Falling;
+        public WeightState state = WeightState.Falling;
+
+        [SerializeField]
+        public GameObject displayPrefab;
+
+        public enum WeightState { Falling, Landed }
 
         private float shrinkAmount = 0.05f;
 
@@ -43,16 +44,15 @@ namespace OMC {
         }
 
         void OnCollisionEnter(Collision collision) {
-            if (State == WeightState.Falling) {
-                State = WeightState.Landed;
+            if (state == WeightState.Falling) {
+                state = WeightState.Landed;
             }
         }
 
         void OnCollisionStay(Collision collision) {
-            if (type != WeightType.Catnip) return;
-            if (!collision.collider.CompareTag(catTag)) return;
-            if (shrinkTimer > 0f) return; // still on cooldown
-
+            if (type != WeightType.Catnip || !collision.collider.CompareTag(catTag) || shrinkTimer > 0f) {
+                return;
+            }
             ShrinkAndCheck();
             shrinkTimer = shrinkInterval;
         }
@@ -71,8 +71,9 @@ namespace OMC {
         }
 
         public void NotifyCatContact() {
-            if (type != WeightType.Catnip) { return; }
-            if (shrinkTimer > 0) { return; }
+            if (type != WeightType.Catnip || shrinkTimer > 0) {
+                return;
+            }
 
             ShrinkAndCheck();
             shrinkTimer = shrinkInterval;

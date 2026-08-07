@@ -56,7 +56,7 @@ namespace OMC {
 
 
         void PlaySoundAt(AudioClip clip, Vector3 pos) {
-            if (clip == null) {
+            if (!clip) {
                 return;
             }
 

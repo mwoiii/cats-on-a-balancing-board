@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using static OMC.WeightBehaviour;
 
@@ -23,7 +22,7 @@ namespace OMC {
 
         public GameObject spherePrefab;
 
-        [NonSerialized]
+        [HideInInspector]
         public GameObject[] shapePrefabs;
 
         public void Init() {
@@ -46,7 +45,11 @@ namespace OMC {
         }
 
         public GameObject GetRandomShapePrefab() {
-            return shapePrefabs[UnityEngine.Random.Range(0, shapePrefabs.Length)];
+            if (shapePrefabs.Length == 0) {
+                Debug.LogError($"{name} has no shape prefabs! Returning null!");
+                return null;
+            }
+            return shapePrefabs[Random.Range(0, shapePrefabs.Length)];
         }
     }
 }

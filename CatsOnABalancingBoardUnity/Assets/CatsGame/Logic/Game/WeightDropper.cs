@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -35,7 +34,7 @@ namespace OMC {
 
         public GameObject nextPrefab { get; private set; }
 
-        public List<WeightDef> currentRotation = new();
+        public List<WeightDef> currentWeightRotation = new();
 
         public static event System.Action FirstWeightDropped;
 
@@ -49,14 +48,14 @@ namespace OMC {
 
         public static Dictionary<GameObject, WeightBehaviour> weightBehaviourDict = new();
 
-        void Start() {
-            if (currentRotation.NotUnityNull().ToArray().Length == 0)
-            {
-                Debug.LogError("Put a WeightDef in the WeightDropper rotation");
+        private void Awake() {
+            if (currentWeightRotation.NotUnityNull().ToArray().Length == 0) {
+                Debug.LogError("No WeightDefs found in the WeightDropper rotation!");
             }
-
             instance = this;
+        }
 
+        private void Start() {
             shadow = Instantiate(shadowPrefab, board.position + board.up * surfaceOffset, board.rotation);
             shadow.transform.localScale = Vector3.one * shadowScale;
             shadow.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
@@ -67,7 +66,7 @@ namespace OMC {
             lastSpawned = Time.time;
         }
 
-        void Update() {
+        private void Update() {
             Vector2 input = Vector2.zero;
             if (Keyboard.current.wKey.isPressed) input.y += 1f;
             if (Keyboard.current.sKey.isPressed) input.y -= 1f;
@@ -94,12 +93,12 @@ namespace OMC {
 
             if (Keyboard.current.spaceKey.wasPressedThisFrame) {
                 if (Time.time - lastSpawned > timeBetween) {
-                    GameObject obj = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
-
-                    weightBehaviourDict[obj] = obj.GetComponent<WeightBehaviour>();
+                    if (nextPrefab) {
+                        GameObject weight = Instantiate(nextPrefab, shadow.transform.position + Vector3.up * dropHeight, Quaternion.identity);
+                        weightBehaviourDict[weight] = weight.GetComponent<WeightBehaviour>();
+                    }
                     PickNext();
                     lastSpawned = Time.time;
-
                     if (!firstWeightDropped) {
                         firstWeightDropped = true;
                         FirstWeightDropped.Invoke();
@@ -109,10 +108,10 @@ namespace OMC {
         }
 
         void PickNext() {
-            WeightDef picked = WeightTypeRegistry.GetRandomWeight(currentRotation);
+            WeightDef picked = WeightTypeRegistry.GetRandomWeight(currentWeightRotation);
             if (WeightTypeRegistry.weightDefs.Length > 1) {
                 while (picked == prevPicked) {
-                    picked = WeightTypeRegistry.GetRandomWeight(currentRotation);
+                    picked = WeightTypeRegistry.GetRandomWeight(currentWeightRotation);
                 }
             }
             prevPicked = picked;

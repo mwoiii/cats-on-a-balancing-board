@@ -49,7 +49,7 @@ namespace OMC {
                 sauce.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
                 sauce.spatialBlend = 1;
                 sauce.Play();
-                Destroy(audioObject, meow != null ? meow.length : 1f);
+                Destroy(audioObject, meow ? meow.length : 1f);
 
                 float populationCoeff = Mathf.Sqrt(Mathf.Sqrt(assumedBasePopulation / catCount));
                 //populationCoeff = Mathf.Min(0.1f, populationCoeff); // optional ceiling for meow frequency. kind of lame idk
