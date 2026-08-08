@@ -22,7 +22,7 @@ namespace OMC.ECS {
             }
 
             float2 center = totalMass > 0 ? weightedSum / totalMass : float2.zero;
-            SystemAPI.SetSingleton(new CatMassSnapshot { centerOfMass = center, totalMass = MathF.Min(totalMass,10) });
+            SystemAPI.SetSingleton(new CatMassSnapshot { centerOfMass = center, totalMass = totalMass });
         }
     }
 

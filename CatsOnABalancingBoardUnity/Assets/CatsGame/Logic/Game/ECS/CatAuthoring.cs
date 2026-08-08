@@ -10,7 +10,8 @@ namespace OMC.ECS {
         class Baker : Baker<CatAuthoring> {
             public override void Bake(CatAuthoring authoring) {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new CatData { position = float2.zero, mass = authoring.mass, prevStackIndex = -1 });
+                AddComponent(entity, new CatData { position = float2.zero, mass = authoring.mass });
+                AddComponent(entity, new CatStack { prevStackIndex = -1, smoothStackOffset = 0});
                 AddComponent(entity, new CatVelocity { value = float2.zero });
                 AddComponent(entity, new IsInitialFalling());
                 SetComponentEnabled<IsInitialFalling>(entity, true);
@@ -26,11 +27,16 @@ namespace OMC.ECS {
     public struct CatData : IComponentData, IEnableableComponent {
         public float2 position;
         public float mass;
-        public int prevStackIndex;
     }
 
     public struct CatVelocity : IComponentData, IEnableableComponent {
         public float2 value;
+    }
+
+    public struct CatStack : IComponentData, IEnableableComponent
+    {
+        public int prevStackIndex;
+        public float smoothStackOffset;
     }
 
     public struct IsInitialFalling : IComponentData, IEnableableComponent { }

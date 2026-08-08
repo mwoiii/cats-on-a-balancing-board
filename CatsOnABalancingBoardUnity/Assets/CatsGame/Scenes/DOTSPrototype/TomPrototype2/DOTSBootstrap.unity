@@ -195,7 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CatSpawnerAuthoring
   catPrefab: {fileID: 4283982339323740326, guid: 04ead0eb335129a49a440e896cb84d5d, type: 3}
   dropHeight: 1
-  count: 100
+  count: 1000000
   radius: 2.5
   scale: 0.02
 --- !u!4 &721526851

@@ -31,7 +31,7 @@ namespace OMC.ECS {
             Vector3 localPoint = new Vector3(snapshot.centerOfMass.x, 0, snapshot.centerOfMass.y);
             Vector3 worldPoint = board.transform.TransformPoint(localPoint);
 
-            float force = snapshot.totalMass * 9.81f;
+            float force = Mathf.Min(snapshot.totalMass,10) * 9.81f; // total mass cap
             board.AddForceAtPosition(Vector3.down * force, worldPoint, ForceMode.Force);
         }
     }

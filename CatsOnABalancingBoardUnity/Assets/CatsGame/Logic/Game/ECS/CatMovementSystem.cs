@@ -11,7 +11,7 @@ namespace OMC.ECS {
     public partial struct CatMovementSystem : ISystem {
         const float friction = 2;
 
-        const float gripStrength = 1;
+        const float gripStrength = 2;
 
         const float moveForce = 1.2f;
 

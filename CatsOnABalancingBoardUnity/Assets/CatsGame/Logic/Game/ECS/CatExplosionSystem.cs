@@ -1,4 +1,6 @@
-﻿using Unity.Burst;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -9,7 +11,6 @@ namespace OMC.ECS {
     [UpdateAfter(typeof(CatFallCleanupSystem))]
     [UpdateBefore(typeof(CatCountBridgingSystem))]
     public partial struct CatExplosionSystem : ISystem {
-
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<CatCount>();
         }

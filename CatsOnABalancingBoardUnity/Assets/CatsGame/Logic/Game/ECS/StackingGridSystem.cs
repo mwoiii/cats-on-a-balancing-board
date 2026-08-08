@@ -1,6 +1,7 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace OMC.ECS {
@@ -45,6 +46,7 @@ namespace OMC.ECS {
                 refreshGrid = refreshGrid,
                 refreshValue = refreshGridValue.ValueRO.value,
                 board = board,
+                deltaTime = SystemAPI.Time.DeltaTime
             };
 
             // job.run if cat count is below some threshold
@@ -67,17 +69,21 @@ namespace OMC.ECS {
 
         public BoardTransform board;
 
+        public float deltaTime;
+
+        const float smoothingRate = 5f;
+
         [BurstCompile]
-        void Execute(ref CatData catData, ref LocalTransform localTransform) {
-            float x = (catData.position.x + board.radius) * widthMult;
-            float y = (catData.position.y + board.radius) * heightMult;
+        void Execute(ref CatStack catStack, ref LocalTransform localTransform) {
+            float x = (localTransform.Position.x + board.radius) * widthMult;
+            float y = (localTransform.Position.z + board.radius) * heightMult;
             int index = (int)(y * StackingGridSystem.width + x);
 
             if (index < 0 || index > StackingGridSystem.maxIndex) {
                 return;
             }
 
-            int prevStackIndex = catData.prevStackIndex;
+            int prevStackIndex = catStack.prevStackIndex;
 
             // if entered a new cell and the cell hasn't already been updated
             if (index != prevStackIndex && prevStackIndex >= 0 && prevStackIndex <= StackingGridSystem.maxIndex && refreshGrid[prevStackIndex] != refreshValue) {
@@ -85,7 +91,7 @@ namespace OMC.ECS {
                 stackingGrid[prevStackIndex] = 0;
             }
 
-            catData.prevStackIndex = index;
+            catStack.prevStackIndex = index;
 
             // if the current cell hasn't been refreshed
             if (refreshGrid[index] != refreshValue) {
@@ -99,7 +105,11 @@ namespace OMC.ECS {
                 stackingGrid[index] += 1;
             }
 
-            localTransform.Position.y += (stackingGrid[index] - 1) * StackingGridSystem.stackingHeight;
+            float targetOffset = (stackingGrid[index] - 1) * StackingGridSystem.stackingHeight;
+            float t = 1 - math.exp(-smoothingRate * deltaTime);
+            catStack.smoothStackOffset = math.lerp(catStack.smoothStackOffset,targetOffset,t);
+
+            localTransform.Position.y += catStack.smoothStackOffset;
         }
     }
 }
