@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564a725aafc5b8443bcc6cb484a60114, type: 3}
+  m_Name: wdWhirlpool
+  m_EditorClassIdentifier: Assembly-CSharp::OMC.WeightDef
+  weightType: 8
+  force: 10
+  probabilityBias: 1.5
+  rarity: 0
+  multAdd: -5
+  baseAdd: 0
+  blockPrefab: {fileID: 6982464574026435089, guid: 7265220206f79d74ba64c6e3be451ddb, type: 3}
+  spherePrefab: {fileID: 0}
+  shapePrefabs: []

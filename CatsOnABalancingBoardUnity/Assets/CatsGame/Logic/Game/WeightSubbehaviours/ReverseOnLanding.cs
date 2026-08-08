@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace OMC {
-    public class LevelOnLanding : WeightSubBehaviourBase {
+    public class ReverseOnLanding : WeightSubBehaviourBase {
         GameObject board;
 
         Rigidbody boardBody;
@@ -11,6 +11,8 @@ namespace OMC {
         bool correcting = false;
 
         bool correctingLock = false;
+
+        Vector3 targetUp;
 
         public override void Start() {
             base.Start();
@@ -27,13 +29,16 @@ namespace OMC {
                 return;
             }
 
+            Vector3 currentUp = board.transform.up;
+            targetUp = new Vector3(-currentUp.x,currentUp.y,-currentUp.z);
+
             boardBody.angularVelocity = Vector3.zero;
             correcting = true;
         }
 
         void FixedUpdate() {
             if (correcting && !correctingLock) {
-                Quaternion correction = Quaternion.FromToRotation(board.transform.up, Vector3.up);
+                Quaternion correction = Quaternion.FromToRotation(board.transform.up, targetUp);
                 correction.ToAngleAxis(out float angle, out Vector3 axis);
 
                 if (angle > 180) {
@@ -51,3 +56,4 @@ namespace OMC {
         }
     }
 }
+

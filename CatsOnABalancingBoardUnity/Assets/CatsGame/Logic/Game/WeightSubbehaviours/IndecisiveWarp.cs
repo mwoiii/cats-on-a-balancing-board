@@ -22,7 +22,10 @@ namespace OMC {
         }
 
         void OnCollisionEnter(Collision collision) {
-            StartCoroutine(Warp());
+            if (collision.gameObject.CompareTag("Board"))
+            {
+                StartCoroutine(Warp());
+            }
         }
 
         IEnumerator Warp() {
@@ -33,17 +36,15 @@ namespace OMC {
                 for (int i = 0; i < warpCount; i++) {
                     if (transform) {
                         Vector2 startPos = new(transform.position.x, transform.position.z);
-                        Vector2 tpMovement = Random.insideUnitCircle * boardRadius;
-                        // this can cause an infinite loop and crashes the game if startpos is far out enough
-                        //while (Vector2.Distance(startPos, tpMovement) > selfRadius) {
-                        //    tpMovement = Random.insideUnitCircle * boardRadius;
-                        //}
-                        transform.position = new Vector3(tpMovement.x, 3, tpMovement.y);
+                        Vector2 tpMovement = startPos + Random.insideUnitCircle * selfRadius; ///
+                        transform.position = new Vector3(tpMovement.x, 4, tpMovement.y);
                         weightBehaviour.state = WeightBehaviour.WeightState.Falling;
                         yield return new WaitForSeconds(warpTime);
                     }
                 }
+
                 indecisiving = false;
+                Destroy(gameObject);
             }
         }
     }

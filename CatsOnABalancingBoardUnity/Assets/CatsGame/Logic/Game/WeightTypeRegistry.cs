@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static OMC.WeightBehaviour;
 
@@ -6,9 +7,10 @@ namespace OMC {
     public class WeightTypeRegistry : MonoBehaviour {
         public static bool loaded { get; private set; }
 
-        [SerializeField]
-        private WeightDef[] _weightDefs;
+        //[SerializeField]
+        //private WeightDef[] _weightDefs;
 
+        [NonSerialized]
         public static WeightDef[] weightDefs;
 
         private static Dictionary<WeightType, WeightDef> typeToDef = new();
@@ -19,7 +21,8 @@ namespace OMC {
                 return;
             }
 
-            weightDefs = _weightDefs;
+            //weightDefs = _weightDefs;
+            weightDefs = Resources.LoadAll<WeightDef>("");
             Init();
         }
 
@@ -54,7 +57,7 @@ namespace OMC {
                 total += weight.probabilityBias;
             }
 
-            float roll = Random.Range(0, total);
+            float roll = UnityEngine.Random.Range(0, total);
             float cum = 0f;
 
             foreach (var weight in selection) {

@@ -13,7 +13,10 @@ namespace OMC {
             BoardGlue,
             BlueRaspberry,
             FreeWill,
-            Whirlpool
+            Whirlpool,
+            RedRaspberry,
+            Magnet,
+            MrPunch
         }
 
         [HideInInspector]

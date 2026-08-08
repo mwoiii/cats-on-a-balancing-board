@@ -61,6 +61,10 @@ namespace OMC {
 
             if (!hasDisplay) {
                 currentPreview.GetComponent<WeightBehaviour>().type = WeightBehaviour.WeightType.None;
+                foreach (var sub in currentPreview.GetComponentsInChildren<WeightSubBehaviourBase>())
+                {
+                    Destroy(sub);
+                }
                 foreach (var rigidbody in currentPreview.GetComponentsInChildren<Rigidbody>()) {
                     Destroy(rigidbody);
                 }
