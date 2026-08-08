@@ -49,9 +49,8 @@ namespace OMC.ECS {
                 deltaTime = SystemAPI.Time.DeltaTime
             };
 
-            // job.run if cat count is below some threshold
-            // or maybe always. it depends how we optimize things
-            job.Schedule();
+            // WE BALL!!!!!!
+            job.ScheduleParallel();
         }
     }
 
@@ -61,8 +60,10 @@ namespace OMC.ECS {
 
         public float heightMult;
 
+        [NativeDisableParallelForRestriction] // WE BALL!!!!!!!!!!!!!
         public NativeArray<ushort> stackingGrid;
 
+        [NativeDisableParallelForRestriction] // WE BALL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         public NativeArray<byte> refreshGrid;
 
         public byte refreshValue;
@@ -107,7 +108,7 @@ namespace OMC.ECS {
 
             float targetOffset = (stackingGrid[index] - 1) * StackingGridSystem.stackingHeight;
             float t = 1 - math.exp(-smoothingRate * deltaTime);
-            catStack.smoothStackOffset = math.lerp(catStack.smoothStackOffset,targetOffset,t);
+            catStack.smoothStackOffset = math.lerp(catStack.smoothStackOffset, targetOffset, t);
 
             localTransform.Position.y += catStack.smoothStackOffset;
         }
