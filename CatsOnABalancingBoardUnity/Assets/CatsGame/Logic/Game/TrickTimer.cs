@@ -89,7 +89,7 @@ namespace OMC {
                 bonusMult += def.multAdd;
                 bonusBase += def.baseAdd;
             }
-            bonusMult = Mathf.Max(bonusMult, 0);
+            bonusMult = Mathf.Max(bonusMult, 1);
             bonusBase = Mathf.Max(bonusBase, 1);
             Debug.Log($"{bonusMult} * {bonusBase} ^ k");
 

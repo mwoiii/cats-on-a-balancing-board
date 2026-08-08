@@ -31,6 +31,7 @@ namespace OMC.UI {
                         SceneManager.LoadScene("EggPrototype");
                     } else {
                         SceneManager.LoadScene(gameSceneName);
+                        Time.timeScale = 1;
                     }
                 }
             }));
@@ -50,10 +51,18 @@ namespace OMC.UI {
             }));
         }
 
+        public void Unpause()
+        {
+            StartCoroutine(BeginSelectOption(() =>
+            {
+                GameLogicScript.instance.Unpause();
+            }));
+        }
+
         public IEnumerator BeginSelectOption(System.Action action) {
             if (!selectedOption) {
                 selectedOption = true;
-                yield return new WaitForSeconds(selectOptionDelay);
+                yield return new WaitForSecondsRealtime(selectOptionDelay);
                 action();
                 selectedOption = false;
             }

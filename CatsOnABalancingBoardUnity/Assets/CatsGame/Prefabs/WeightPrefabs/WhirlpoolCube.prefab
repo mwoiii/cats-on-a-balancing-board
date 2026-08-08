@@ -158,8 +158,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9bc78931afd1f4db8f0a428593b9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightBehaviour
-  type: 2
-  State: 0
+  type: 8
+  state: 0
+  displayPrefab: {fileID: 0}
 --- !u!114 &-6758870672386013200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,7 +175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DecayOverTime
   weightBehaviour: {fileID: 0}
   shrinkDelay: 0
-  shrinkInterval: 1.5
+  shrinkInterval: 0.8
 --- !u!1 &7892619381464141831
 GameObject:
   m_ObjectHideFlags: 0

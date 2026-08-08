@@ -11,6 +11,8 @@ namespace OMC.ECS {
     public partial struct CatMovementSystem : ISystem {
         const float friction = 2;
 
+        const float gripStrength = 1;
+
         const float moveForce = 1.2f;
 
         const float reactDistance = 1.5f;
@@ -41,6 +43,8 @@ namespace OMC.ECS {
             float3 gravityLocal = math.mul(math.inverse(board.rotation), gravityWorld); // Imagine rotating a cube by thirty degrees
             float2 down = new(gravityLocal.x, gravityLocal.z);
 
+            float frictionWithGrip = friction + gripStrength * math.length(down);
+
             int catCount = catQuery.CalculateEntityCount();
             float dispersionStrength = math.min(catCount * dispersionPerCat, maxDispersion);
             frameCounter++;
@@ -55,6 +59,7 @@ namespace OMC.ECS {
                 deltaTime = deltaTime,
                 frameCounter = frameCounter,
                 dispersionStrength = dispersionStrength,
+                frictionWithGrip = frictionWithGrip,
                 catnipHits = catnipHits.AsParallelWriter(),
                 ecb = ecb.AsParallelWriter()
             };
@@ -80,6 +85,7 @@ namespace OMC.ECS {
             public float deltaTime;
             public uint frameCounter;
             public float dispersionStrength;
+            public float frictionWithGrip;
             public NativeQueue<int>.ParallelWriter catnipHits;
             public EntityCommandBuffer.ParallelWriter ecb;
 
@@ -180,7 +186,7 @@ namespace OMC.ECS {
 
                 // forces applied (gravity and friction also thrown in here)
                 catVelocity.value += (down + weightForce + dispersion) * deltaTime;
-                catVelocity.value *= math.max(0, 1 - friction * deltaTime);
+                catVelocity.value *= math.max(0, 1 - frictionWithGrip * deltaTime);
                 catData.position += catVelocity.value * deltaTime;
 
                 if (math.length(catData.position) > board.radius) // if cat fallen off...

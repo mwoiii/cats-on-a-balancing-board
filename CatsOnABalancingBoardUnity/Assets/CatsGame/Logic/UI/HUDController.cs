@@ -8,6 +8,7 @@ namespace OMC.UI {
         public static HUDController instance;
 
         public GameObject gameOverScreen;
+        public GameObject pauseScreen;
 
         public Vibrate counterVibrate;
 
@@ -77,6 +78,28 @@ namespace OMC.UI {
 
             if (gameOverScreen) {
                 gameOverScreen.SetActive(true);
+            }
+        }
+
+        public void InitiatePause()
+        {
+            Time.timeScale = 0;
+            if (pauseScreen)
+            {
+                pauseScreen.SetActive(true);
+            }
+        }
+
+        public void TerminatePause()
+        {
+            Time.timeScale = 1;
+            if (pauseScreen)
+            {
+                pauseScreen.SetActive(false);
+                foreach(var paw in pauseScreen.GetComponentsInChildren<RandomizedVibrate>()) // clear paws. the pause paws 
+                {
+                    Destroy(paw.gameObject);
+                }
             }
         }
     }
