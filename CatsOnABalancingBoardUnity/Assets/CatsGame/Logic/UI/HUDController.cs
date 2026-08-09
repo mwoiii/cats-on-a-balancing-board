@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using OMC.ECS;
 using TMPro;
 using UnityEngine;
@@ -81,22 +82,18 @@ namespace OMC.UI {
             }
         }
 
-        public void InitiatePause()
-        {
+        public void InitiatePause() {
             Time.timeScale = 0;
-            if (pauseScreen)
-            {
+            if (pauseScreen) {
                 pauseScreen.SetActive(true);
             }
         }
 
-        public void TerminatePause()
-        {
-            Time.timeScale = 1;
-            if (pauseScreen)
-            {
+        public void TerminatePause() {
+            Time.timeScale = GlobalTimescale.timeScale;
+            if (pauseScreen) {
                 pauseScreen.SetActive(false);
-                foreach(var paw in pauseScreen.GetComponentsInChildren<RandomizedVibrate>()) // clear paws. the pause paws 
+                foreach (var paw in pauseScreen.GetComponentsInChildren<RandomizedVibrate>()) // clear paws. the pause paws 
                 {
                     Destroy(paw.gameObject);
                 }

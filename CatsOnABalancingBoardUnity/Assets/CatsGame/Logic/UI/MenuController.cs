@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -31,7 +32,7 @@ namespace OMC.UI {
                         SceneManager.LoadScene("EggPrototype");
                     } else {
                         SceneManager.LoadScene(gameSceneName);
-                        Time.timeScale = 1;
+                        Time.timeScale = GlobalTimescale.timeScale;
                     }
                 }
             }));
@@ -51,10 +52,8 @@ namespace OMC.UI {
             }));
         }
 
-        public void Unpause()
-        {
-            StartCoroutine(BeginSelectOption(() =>
-            {
+        public void Unpause() {
+            StartCoroutine(BeginSelectOption(() => {
                 GameLogicScript.instance.Unpause();
             }));
         }

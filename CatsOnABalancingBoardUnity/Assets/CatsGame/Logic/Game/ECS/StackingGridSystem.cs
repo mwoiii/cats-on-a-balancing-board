@@ -29,6 +29,12 @@ namespace OMC.ECS {
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
+            float deltaTime = SystemAPI.Time.DeltaTime;
+
+            if (deltaTime <= 0) {
+                return;
+            }
+
             BoardTransform board = SystemAPI.GetSingleton<BoardTransform>();
             var stackingGrid = SystemAPI.GetSingletonBuffer<StackingGridData>().Reinterpret<ushort>().AsNativeArray();
             var refreshGrid = SystemAPI.GetSingletonBuffer<RefreshGridData>().Reinterpret<byte>().AsNativeArray();
@@ -46,7 +52,7 @@ namespace OMC.ECS {
                 refreshGrid = refreshGrid,
                 refreshValue = refreshGridValue.ValueRO.value,
                 board = board,
-                deltaTime = SystemAPI.Time.DeltaTime
+                deltaTime = deltaTime
             };
 
             // WE BALL!!!!!!
@@ -98,7 +104,6 @@ namespace OMC.ECS {
             if (refreshGrid[index] != refreshValue) {
                 refreshGrid[index] = refreshValue;
                 stackingGrid[index] = 0;
-                //UnityEngine.Debug.Log($"NEW FUCKIN FRAME!! {index} is now 0.");
             }
 
             // increment the current cell

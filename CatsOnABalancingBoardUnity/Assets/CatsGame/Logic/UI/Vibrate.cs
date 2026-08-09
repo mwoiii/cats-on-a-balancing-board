@@ -10,6 +10,9 @@ namespace OMC.UI {
         [SerializeField]
         private float _frequency = 1f;
 
+        [SerializeField]
+        private bool unscaledTime = false;
+
         public float frequency {
             get {
                 return _frequency;
@@ -58,7 +61,7 @@ namespace OMC.UI {
             activePeriod = Mathf.Lerp(activePeriod, period, Time.deltaTime * spikeLerpSpeed);
             activeMagnitude = Mathf.Lerp(activeMagnitude, magnitude, Time.deltaTime * spikeLerpSpeed);
 
-            stopwatch += Time.deltaTime;
+            stopwatch += unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             if (stopwatch > activePeriod) {
                 stopwatch = 0f;
                 transform.localPosition = localStartPos + (new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f) * activeMagnitude);

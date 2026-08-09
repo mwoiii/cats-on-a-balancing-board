@@ -15,6 +15,9 @@ namespace OMC.UI {
 
         private int spriteIndex;
 
+        [SerializeField]
+        private bool unscaledTime = false;
+
         public void Awake() {
             targetGraphic = GetComponent<Image>();
         }
@@ -24,7 +27,7 @@ namespace OMC.UI {
                 return;
             }
 
-            spriteStopwatch += Time.deltaTime;
+            spriteStopwatch += unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             if (spriteStopwatch > spriteSwapWait) {
                 spriteIndex = (spriteIndex + 1) % sprites.Length;
                 targetGraphic.sprite = sprites[spriteIndex];

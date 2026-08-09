@@ -45,15 +45,13 @@ namespace OMC {
             Debug.Log($"Game over at gameTime: {gameTime}");
         }
 
-        public void Pause()
-        {
+        public void Pause() {
             gameRunning = false;
             HUDController.instance.InitiatePause();
             Debug.Log($"paused at gameTime: {gameTime}");
         }
 
-        public void Unpause()
-        {
+        public void Unpause() {
             gameRunning = true;
             HUDController.instance.TerminatePause();
             Debug.Log($"unpaused at gameTime: {gameTime}");
