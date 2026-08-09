@@ -12,6 +12,10 @@ namespace OMC {
 
         bool correctingLock = false;
 
+        public AudioSource source;
+        public AudioClip clip;
+        public float volume = 0.5f;
+
         public override void Start() {
             base.Start();
             board = BoardController.boardInstance;
@@ -19,16 +23,39 @@ namespace OMC {
         }
 
         void OnCollisionEnter(Collision collision) {
-            if (!collision.collider.CompareTag("Board")) {
+            if (!collision.collider.CompareTag("Board") || correctingLock) {
                 return;
             }
 
-            if (correcting || correctingLock) {
+            if (correcting) {
+                if (!collision.collider.CompareTag("Board"))
+                {
+                    correcting = false;
+                    correctingLock = true;
+                    return;
+                }
                 return;
             }
 
             boardBody.angularVelocity = Vector3.zero;
             correcting = true;
+            
+            if (source && clip)
+            {
+                source.clip = clip;
+                source.volume = volume;
+                source.Play();
+            }
+        }
+
+        void OnCollisionExit(Collision collision)
+        {
+            if (collision.collider.CompareTag("Board"))
+            {
+                correcting = false;
+                correctingLock = true;
+                return;
+            }
         }
 
         void FixedUpdate() {
@@ -40,11 +67,11 @@ namespace OMC {
                     angle -= 360;
                 }
 
-                if (angle < 1) {
-                    correcting = false;
-                    correctingLock = true;
-                    return;
-                }
+                //if (angle < 1) {
+                //    correcting = false;
+                //    correctingLock = true;
+                //    return;
+                //}
 
                 boardBody.AddTorque(angle * Mathf.Deg2Rad * strength * axis.normalized, ForceMode.VelocityChange);
             }

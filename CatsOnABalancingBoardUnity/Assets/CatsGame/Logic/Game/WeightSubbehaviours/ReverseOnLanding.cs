@@ -14,6 +14,10 @@ namespace OMC {
 
         Vector3 targetUp;
 
+        public AudioSource source;
+        public AudioClip clip;
+        public float volume = 0.5f;
+
         public override void Start() {
             base.Start();
             board = BoardController.boardInstance;
@@ -34,6 +38,13 @@ namespace OMC {
 
             boardBody.angularVelocity = Vector3.zero;
             correcting = true;
+            
+            if (source && clip)
+            {
+                source.clip = clip;
+                source.volume = volume;
+                source.Play();
+            }
         }
 
         void FixedUpdate() {

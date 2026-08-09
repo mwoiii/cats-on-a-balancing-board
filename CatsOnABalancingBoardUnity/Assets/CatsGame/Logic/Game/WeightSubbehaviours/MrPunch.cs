@@ -14,11 +14,24 @@ public class MrPunch : WeightSubBehaviourBase
 
     public float punchForce = 100f;
     public float approachForce = 1f;
+
+    public AudioSource source;
+
+    public AudioClip[] clips = new AudioClip[3];
+    public AudioClip punch;
+    public float volume = 0.5f;
     
     new void Start()
     {
         base.Start();
         body = gameObject.GetComponent<Rigidbody>();
+        
+        if (source)
+        {
+            source.volume = volume;
+            source.clip = clips[UnityEngine.Random.Range(0,clips.Length)];
+            source.Play();
+        }
     }
 
     void FixedUpdate()
@@ -44,7 +57,11 @@ public class MrPunch : WeightSubBehaviourBase
             collision.collider.attachedRigidbody.AddExplosionForce(punchForce,transform.position,10);
             punched.Add(collision.collider.gameObject);
             target = null;
-            Debug.Log("Punch!");
+            if (source && punch)
+            {
+                source.clip = punch;
+                source.Play();
+            }
         }
     }
 

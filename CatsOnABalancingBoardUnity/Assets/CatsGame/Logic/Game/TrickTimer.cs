@@ -94,6 +94,7 @@ namespace OMC {
             Debug.Log($"{bonusMult} * {bonusBase} ^ k");
 
             litterBonus = (int)Mathf.Floor(bonusMult);
+            comboCounter = 0;
             OnLitterBonusChanged?.Invoke(litterBonus);
         }
 
