@@ -14,6 +14,10 @@ namespace OMC.ECS {
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
+            if (SystemAPI.Time.DeltaTime <= 0f) {
+                return;
+            }
+
             BoardTransform board = SystemAPI.GetSingleton<BoardTransform>();
 
             state.Dependency = new ProjectionJob { board = board }.ScheduleParallel(state.Dependency);

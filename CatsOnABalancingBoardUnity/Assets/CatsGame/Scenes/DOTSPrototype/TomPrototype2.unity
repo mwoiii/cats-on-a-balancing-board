@@ -1091,6 +1091,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 3
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -1167,8 +1168,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -92.841125}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: -52.2372}
+  m_SizeDelta: {x: 100, y: 98.0523}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &473563218
 GameObject:
@@ -1297,6 +1298,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e212990aecb6af542bb90357fabe810e, type: 3}
   - {fileID: 21300000, guid: 6def0f2f30fee8b49b01f9fd3a71201c, type: 3}
   - {fileID: 21300000, guid: 33934083240e3dc4da1eba03c3f616ed, type: 3}
+  unscaledTime: 0
 --- !u!114 &477761102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1458,6 +1460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -1650,6 +1653,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -1744,6 +1748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -1845,6 +1850,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9313942dbe9b79543b79255a04f81752, type: 3}
   - {fileID: 21300000, guid: 6bd8dbb371203ee4e83e546b062d7b4a, type: 3}
   - {fileID: 21300000, guid: 67f82c19718d4c042a4b28a41bbd4c70, type: 3}
+  unscaledTime: 0
 --- !u!114 &552209327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1937,6 +1943,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 91cc96ea776b2174bbdf63a1cb9715ac, type: 3}
   - {fileID: 21300000, guid: 035ddd583b50e844685a45cbd4436610, type: 3}
   - {fileID: 21300000, guid: a944181a33854b842a10f42c01e25716, type: 3}
+  unscaledTime: 0
 --- !u!114 &555143264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2400,6 +2407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -2780,6 +2788,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 3
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -3115,6 +3124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -3351,6 +3361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -3371,6 +3382,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bbb9534b85d50a54ba62a1f4cefc081d, type: 3}
   - {fileID: 21300000, guid: da7ef1db96b327b4daf5762fa87ff94a, type: 3}
   - {fileID: 21300000, guid: 3fca3a81ed22a784da6bc0bfe2464f99, type: 3}
+  unscaledTime: 0
 --- !u!114 &882802226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3600,7 +3612,7 @@ RectTransform:
   m_GameObject: {fileID: 970127688}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.72, y: 1.72, z: 1.72}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1088276088}
@@ -3608,7 +3620,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 164}
-  m_SizeDelta: {x: 256, y: 256}
+  m_SizeDelta: {x: 150, y: 71}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &970127690
 MonoBehaviour:
@@ -3624,6 +3636,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 5
   _frequency: 30
+  unscaledTime: 1
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -3635,15 +3648,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 970127688}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 115471594103a3c4bbe7461567d6e0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpriteFlicker
   sprites:
-  - {fileID: 21300000, guid: 77b7eb02672fed947a6d37078e74e8a1, type: 3}
-  - {fileID: 21300000, guid: 7cdc9e98cace0c946be4aa9a77f25e0b, type: 3}
-  - {fileID: 21300000, guid: 4c97c4212716c69458233065b332c21e, type: 3}
+  - {fileID: 21300000, guid: 950d0edb0bb85e84fae05a79df4e2065, type: 3}
+  - {fileID: 21300000, guid: 9abe1aece98abe043b22ded7d1e3f5a4, type: 3}
+  - {fileID: 21300000, guid: f7d82da99975d2b43afd4b9002dd77b6, type: 3}
+  unscaledTime: 1
 --- !u!114 &970127692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3664,7 +3678,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c6a84f1bdb791714cba7fc810aa1b058, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 950d0edb0bb85e84fae05a79df4e2065, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3782,6 +3796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 3
   _frequency: 30
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -3858,8 +3873,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -146.3}
-  m_SizeDelta: {x: 512, y: 128}
+  m_AnchoredPosition: {x: 0, y: -144.32315}
+  m_SizeDelta: {x: 746.484, y: 108.7032}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068278351
 MonoBehaviour:
@@ -3882,15 +3897,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068278349}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 115471594103a3c4bbe7461567d6e0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatsMenuButton
   sprites:
-  - {fileID: 21300000, guid: ac002760e04737e4aa406cbe76a178c9, type: 3}
-  - {fileID: 21300000, guid: dacc27a8c7c8c5e499db15c236659f2f, type: 3}
-  - {fileID: 21300000, guid: ec5da6c829f8d2540b512f3d46120687, type: 3}
+  - {fileID: 21300000, guid: 58c41db9ddc747a4bb96bafe600fd7b5, type: 3}
+  - {fileID: 21300000, guid: d2fd8815190b8a44cb9b8188a5b14651, type: 3}
+  - {fileID: 21300000, guid: 39e183d20b109fd408a61c1da37319b5, type: 3}
+  unscaledTime: 1
 --- !u!114 &1068278353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3967,7 +3983,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 165f2eac71f4371408ebe74bfc6072f3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 58c41db9ddc747a4bb96bafe600fd7b5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4222,6 +4238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   magnitude: 2
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 500
   maxFreqSpike: 1000
   spikeIncFrac: 0.05
@@ -4354,6 +4371,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9df30ab710d0a954e910050f44718fa3, type: 3}
   - {fileID: 21300000, guid: b661b27ba433da445a1082fd7d8c4d19, type: 3}
   - {fileID: 21300000, guid: d8273b1bd540c504e98ffcdc32c14425, type: 3}
+  unscaledTime: 0
 --- !u!114 &1132369006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4756,6 +4774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   magnitude: 2
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 500
   maxFreqSpike: 1000
   spikeIncFrac: 0.05
@@ -5103,6 +5122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -5945,8 +5965,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 28.3}
-  m_SizeDelta: {x: 256, y: 128}
+  m_AnchoredPosition: {x: 0, y: -27.51}
+  m_SizeDelta: {x: 256, y: 86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1864667274
 MonoBehaviour:
@@ -5969,15 +5989,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1864667272}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 115471594103a3c4bbe7461567d6e0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CatsMenuButton
   sprites:
-  - {fileID: 21300000, guid: 8ab7a3f8af0649e4084321c87dc2e669, type: 3}
-  - {fileID: 21300000, guid: 2772fa8c866150248984691760d2749c, type: 3}
-  - {fileID: 21300000, guid: 9ced9881ccfc19543a34611283cbbc1b, type: 3}
+  - {fileID: 21300000, guid: bb38932961bfd2d41a9d6bad24c2a4a3, type: 3}
+  - {fileID: 21300000, guid: 168cfe340f25af24c8aa8100c91bbb00, type: 3}
+  - {fileID: 21300000, guid: f4f635c96fdba7643a8605daf1adc4f0, type: 3}
+  unscaledTime: 1
 --- !u!114 &1864667276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6054,7 +6075,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fd45e529c1fe2a245a954fe01c552db8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb38932961bfd2d41a9d6bad24c2a4a3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6124,6 +6145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -6373,6 +6395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -6669,6 +6692,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2c2fcfe629abbb94ba689c58be26cd1a, type: 3}
   - {fileID: 21300000, guid: a27425c34d6faa24e940a2cf7cb1d84f, type: 3}
   - {fileID: 21300000, guid: a407d584c1b4c0f4f83db5b2143a3b47, type: 3}
+  unscaledTime: 0
 --- !u!114 &2000715434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6859,6 +6883,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 0.5
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -7071,6 +7096,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bba38798eea2f7d43a9d1255123dcdeb, type: 3}
   - {fileID: 21300000, guid: 7081f7942b32eb84c970802bb46e5667, type: 3}
   - {fileID: 21300000, guid: baa7cd14393e8034da6af4484836354b, type: 3}
+  unscaledTime: 0
 --- !u!222 &253065839984324182
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7163,6 +7189,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8ab7a3f8af0649e4084321c87dc2e669, type: 3}
   - {fileID: 21300000, guid: 2772fa8c866150248984691760d2749c, type: 3}
   - {fileID: 21300000, guid: 9ced9881ccfc19543a34611283cbbc1b, type: 3}
+  unscaledTime: 0
 --- !u!4 &648036489456962137
 Transform:
   m_ObjectHideFlags: 0
@@ -7263,6 +7290,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 38a70c4d413642f40b003a1c2b89aef6, type: 3}
   - {fileID: 21300000, guid: ddebf3dd8ead90349bff9500ceef24f5, type: 3}
   - {fileID: 21300000, guid: 7069147e933dc6340821fdfe503d5fa9, type: 3}
+  unscaledTime: 0
 --- !u!224 &974337791991359996
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7858,6 +7886,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 77b7eb02672fed947a6d37078e74e8a1, type: 3}
   - {fileID: 21300000, guid: 7cdc9e98cace0c946be4aa9a77f25e0b, type: 3}
   - {fileID: 21300000, guid: 4c97c4212716c69458233065b332c21e, type: 3}
+  unscaledTime: 0
 --- !u!114 &4291301419105413224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7872,6 +7901,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Vibrate
   magnitude: 5
   _frequency: 30
+  unscaledTime: 0
   maxMagSpike: 0
   maxFreqSpike: 0
   spikeIncFrac: 0
@@ -8642,6 +8672,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ff76197a8572e544681f8e538445c29e, type: 3}
   - {fileID: 21300000, guid: b5eb53aac48e9eb4aa854cfda32858a3, type: 3}
   - {fileID: 21300000, guid: 72f0315768f9cf249977648daadfdb99, type: 3}
+  unscaledTime: 0
 --- !u!224 &6511971658110460803
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8839,6 +8870,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ac002760e04737e4aa406cbe76a178c9, type: 3}
   - {fileID: 21300000, guid: dacc27a8c7c8c5e499db15c236659f2f, type: 3}
   - {fileID: 21300000, guid: ec5da6c829f8d2540b512f3d46120687, type: 3}
+  unscaledTime: 0
 --- !u!224 &7913255046429688427
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9089,6 +9121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   magnitude: 2
   _frequency: 20
+  unscaledTime: 0
   maxMagSpike: 500
   maxFreqSpike: 1000
   spikeIncFrac: 0.05
