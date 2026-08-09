@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Unity.Rendering;
 
 namespace OMC.ECS {
     [BurstCompile]
@@ -50,8 +51,8 @@ namespace OMC.ECS {
                     state.EntityManager.SetComponentData(cat, catTransform);
 
                     // Spribnkes...
-                    //float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
-                    //state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh,1f)});
+                    float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
+                    state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh,1f)});
 
                 }
                 SystemAPI.SetSingleton(new InitialFallData { height = config.dropHeight, velocity = 0 });

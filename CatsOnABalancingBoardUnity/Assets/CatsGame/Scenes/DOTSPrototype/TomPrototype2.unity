@@ -448,7 +448,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 3
 --- !u!23 &150362992
 MeshRenderer:
@@ -1226,8 +1226,10 @@ MonoBehaviour:
   spinSpeed: 22.1
   shadowScale: 0.5
   currentWeightRotation:
-  - {fileID: 11400000, guid: 4ee38616e81014d4d8a126385556a62c, type: 2}
+  - {fileID: 11400000, guid: 539ac9f01e0703647a96e62997395711, type: 2}
   - {fileID: 11400000, guid: e6941b79fc80aef4997f67d212046b9d, type: 2}
+  - {fileID: 11400000, guid: c767adc3a890ba74eb4594c5a4f0473b, type: 2}
+  - {fileID: 11400000, guid: 28d02244dbf947240bb8191fc0e414b8, type: 2}
 --- !u!114 &473563221
 MonoBehaviour:
   m_ObjectHideFlags: 0
