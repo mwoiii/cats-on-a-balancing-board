@@ -31,12 +31,13 @@ namespace OMC.ECS {
                     lostCount++;
                     lostValue += catValue.ValueRO.value;
                     ecb.SetComponentEnabled<MaterialMeshInfo>(entity, false);
-                    ecb.SetComponentEnabled<FallenCatData>(entity,false);
-                    ecb.SetComponentEnabled<FallingCatData>(entity,false);
+                    ecb.SetComponentEnabled<FallenCatData>(entity, false);
+                    ecb.SetComponentEnabled<FallingCatData>(entity, false);
                 }
             }
 
             catCount.ValueRW.lost += lostValue;
+            catCount.ValueRW.lostRaw += lostCount;
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();

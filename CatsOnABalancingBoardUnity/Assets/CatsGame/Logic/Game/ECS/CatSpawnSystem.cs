@@ -2,9 +2,8 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 using Unity.Rendering;
-using UnityEngine;
+using Unity.Transforms;
 
 namespace OMC.ECS {
     [BurstCompile]
@@ -34,14 +33,16 @@ namespace OMC.ECS {
                 config.pendingSpawn = 0;
             }
             config.spawnedThisUpdate = countToSpawn;
+
             catCount.ValueRW.gained += countToSpawn;
 
             int tensToSpawn = 0;
-            if (query.CalculateEntityCount() + countToSpawn > 10000)
-            {
+            if (query.CalculateEntityCount() + countToSpawn > 10000) {
                 tensToSpawn = countToSpawn / 10;
                 countToSpawn = tensToSpawn + (countToSpawn % 10);
             }
+
+            catCount.ValueRW.gainedRaw += countToSpawn;
 
             if (countToSpawn > 0) {
                 Unity.Mathematics.Random randomSauce = new(676767 + spawnCallCount);
@@ -49,13 +50,12 @@ namespace OMC.ECS {
 
                 NativeArray<Entity> cats = state.EntityManager.Instantiate(config.prefab, countToSpawn, Allocator.Temp);
 
-                for (int i = 0; i < cats.Length; i++)
-                {
+                for (int i = 0; i < cats.Length; i++) {
                     Entity cat = cats[i];
 
                     CatValue value = SystemAPI.GetComponent<CatValue>(cat);
-                    if (i < tensToSpawn){value.value = 10;}
-                    SystemAPI.SetComponent(cat,value);
+                    if (i < tensToSpawn) { value.value = 10; }
+                    SystemAPI.SetComponent(cat, value);
 
                     float2 offset = randomSauce.NextFloat2Direction() * randomSauce.NextFloat(0f, config.radius);
                     CatData data = SystemAPI.GetComponent<CatData>(cat);
@@ -69,7 +69,7 @@ namespace OMC.ECS {
 
                     // Spribnkes...
                     float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
-                    state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh,1f)});
+                    state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh, 1f) });
 
                 }
                 SystemAPI.SetSingleton(new InitialFallData { height = config.dropHeight, velocity = 0 });

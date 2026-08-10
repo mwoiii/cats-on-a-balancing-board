@@ -106,11 +106,9 @@ namespace OMC.ECS {
                 stackingGrid[index] = 0;
             }
 
-            
-
             // increment the current cell
             ushort valueBefore = stackingGrid[index];
-            stackingGrid[index] += (ushort)math.min(catValue.value,ushort.MaxValue - stackingGrid[index]);
+            stackingGrid[index] += (ushort)math.min(catValue.value, ushort.MaxValue - stackingGrid[index]);
 
             float targetOffset = valueBefore * StackingGridSystem.stackingHeight;
             float t = 1 - math.exp(-smoothingRate * deltaTime);

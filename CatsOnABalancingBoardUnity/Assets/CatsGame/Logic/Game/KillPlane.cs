@@ -23,7 +23,7 @@ namespace OMC {
         IEnumerator Wait(Collider other) {
             yield return new WaitForSeconds(deletionDelay);
             if (other) {
-                EffectController.instance.PlayExplosionAtPosition(other.transform.position);
+                DynamicEffectManager.PlayExplosionAtPosition(other.transform.position);
                 if (other.gameObject.CompareTag("Cat")) {
                     catManager.RemoveCat(other.gameObject);
                 }

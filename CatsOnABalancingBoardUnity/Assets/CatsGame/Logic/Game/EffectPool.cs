@@ -1,48 +1,66 @@
+using OMC.Util;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
+using static OMC.DynamicEffectManager;
 
 namespace OMC {
-    public class EffectPool : MonoBehaviour {
-
-        // it would be gangster if we removed effects that weren't used after a long time
+    public class EffectPool {
 
         public GameObject effectPrefab;
 
-        public int maxConcurrentEffects = 100;
+        public Stack<PooledEffect> available;
 
-        private ObjectPool<GameObject> sourcePool;
+        public Deque<float> returnTimes;
 
-        private void Awake() {
-            sourcePool = new ObjectPool<GameObject>(CreateNewEffect, OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, true, maxConcurrentEffects, maxConcurrentEffects);
+        // todo - allow per effect. effectdef........
+        public const float TimeBeforeCull = 30f;
+
+        private int countActive;
+
+        public EffectPool(GameObject effectPrefab) {
+            this.effectPrefab = effectPrefab;
+            available = new Stack<PooledEffect>(MaxPoolSize);
+            returnTimes = new Deque<float>(MaxPoolSize);
         }
 
-        private GameObject CreateNewEffect() {
-            GameObject effect = Instantiate(effectPrefab);
-            effect.transform.SetParent(transform);
-            effect.GetComponent<ReturnToEffectPool>().pool = sourcePool;
-            return effect;
-        }
-
-        private void OnTakeFromPool(GameObject effect) {
-            effect.gameObject.SetActive(true);
-        }
-
-        private void OnReturnedToPool(GameObject effect) {
-            effect.gameObject.SetActive(false);
-        }
-
-        private void OnDestroyPoolObject(GameObject effect) {
-            Destroy(effect.gameObject);
-        }
-
-
-        public void PlaceEffectAt(Vector3 pos) {
-            if (sourcePool.CountActive >= maxConcurrentEffects) {
+        public void PlaceEffectAt(Vector3 position) {
+            if (countActive >= MaxPoolSize) {
                 return;
             }
 
-            GameObject effect = sourcePool.Get();
-            effect.transform.position = pos;
+            PooledEffect effect;
+            if (available.Count > 0) {
+                effect = available.Pop();
+                returnTimes.DequeueBack();
+                effect.released = false;
+                effect.gameObject.SetActive(true);
+            } else {
+                effect = CreateNewEffect();
+            }
+            effect.transform.position = position;
+
+            countActive++;
+        }
+
+        public PooledEffect CreateNewEffect() {
+            GameObject effectObject = Object.Instantiate(effectPrefab);
+            PooledEffect effect = effectObject.GetComponent<PooledEffect>();
+            effect.pool = this;
+            return effect;
+        }
+
+        public void Release(PooledEffect effect) {
+            if (!effect.released) {
+                if (available.Count >= MaxPoolSize) {
+                    Object.Destroy(effect.gameObject);
+                    return;
+                }
+                effect.gameObject.SetActive(false);
+                available.Push(effect);
+                returnTimes.EnqueueBack(Time.time);
+                effect.released = true;
+                countActive--;
+            }
         }
     }
 }

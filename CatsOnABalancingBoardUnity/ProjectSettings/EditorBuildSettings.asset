@@ -21,4 +21,5 @@ EditorBuildSettings:
     path: Assets/CatsGame/Scenes/ErrorScene.unity
     guid: 5a1f20ac768be05479b20c1a8242f729
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 205e7286393ce8c438ec3e1df7ede658, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

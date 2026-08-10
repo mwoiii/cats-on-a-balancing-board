@@ -19,6 +19,11 @@ namespace OMC.ECS {
     }
 
     public struct CatCount : IComponentData {
+        // physical cats gained/lost
+        public int gainedRaw;
+        public int lostRaw;
+
+        // effective cats gained/lost (includes cat value)
         public int gained;
         public int lost;
     }

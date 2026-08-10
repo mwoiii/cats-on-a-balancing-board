@@ -24,19 +24,6 @@ csharp_new_line_before_members_in_object_initializers = false
 csharp_new_line_before_members_in_anonymous_types = false
 csharp_new_line_between_query_expression_clauses = false
 
-# PascalCase
-dotnet_naming_style.pascal_case_style.capitalization = pascal_case
-dotnet_naming_style.pascal_case_style.required_prefix =
-dotnet_naming_style.pascal_case_style.required_suffix =
-
-dotnet_naming_symbols.methods.applicable_kinds = method
-dotnet_naming_symbols.methods.applicable_accessibilities = *
-dotnet_naming_symbols.methods.required_modifiers = 
-
-dotnet_naming_rule.methods_should_be_pascal_case.symbols = methods
-dotnet_naming_rule.methods_should_be_pascal_case.style = pascal_case_style
-dotnet_naming_rule.methods_should_be_pascal_case.severity = warning
-
 # nothing matters doesn't apply to inheriting classes
 dotnet_naming_symbols.classes.applicable_kinds = class
 dotnet_naming_symbols.classes.applicable_accessibilities = *
@@ -57,3 +44,23 @@ dotnet_naming_rule.fields_camel_case.symbols = fields
 dotnet_naming_rule.fields_camel_case.style = camel_case
 dotnet_naming_rule.fields_camel_case.severity = warning
 
+# PascalCase
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+dotnet_naming_style.pascal_case_style.required_prefix =
+dotnet_naming_style.pascal_case_style.required_suffix =
+
+dotnet_naming_symbols.methods.applicable_kinds = method
+dotnet_naming_symbols.methods.applicable_accessibilities = *
+dotnet_naming_symbols.methods.required_modifiers =
+
+dotnet_naming_symbols.constants.applicable_kinds = field
+dotnet_naming_symbols.constants.applicable_accessibilities = *
+dotnet_naming_symbols.constants.required_modifiers = const
+
+dotnet_naming_rule.methods_should_be_pascal_case.symbols = methods
+dotnet_naming_rule.methods_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_rule.methods_should_be_pascal_case.severity = warning
+
+dotnet_naming_rule.constants_should_be_pascal_case.symbols = constants
+dotnet_naming_rule.constants_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_rule.constants_should_be_pascal_case.severity = warning
