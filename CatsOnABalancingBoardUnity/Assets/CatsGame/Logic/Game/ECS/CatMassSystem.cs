@@ -9,21 +9,18 @@ namespace OMC.ECS {
     [BurstCompile]
     public partial struct CatMassSystem : ISystem {
 
-        EntityQuery query;
-
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<CatMassSnapshot>();
-
-            query = SystemAPI.QueryBuilder().WithAll<CatData>().WithDisabled<IsInitialFalling>().Build();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             float2 weightedSum = float2.zero;
-            float totalMass = query.CalculateEntityCount();
+            float totalMass = 0;
 
-            foreach (var catData in SystemAPI.Query<RefRO<CatData>>().WithDisabled<IsInitialFalling>()) {
+            foreach (var (catData,catValue) in SystemAPI.Query<RefRO<CatData>,RefRO<CatValue>>().WithDisabled<IsInitialFalling>()) {
                 weightedSum += catData.ValueRO.position;
+                totalMass +=  catValue.ValueRO.value;
             }
 
             float2 center = totalMass > 0 ? weightedSum / totalMass : float2.zero;

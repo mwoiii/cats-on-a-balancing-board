@@ -38,7 +38,6 @@ namespace OMC {
                         Vector2 startPos = new(transform.position.x, transform.position.z);
                         Vector2 tpMovement = startPos + Random.insideUnitCircle * selfRadius; ///
                         transform.position = new Vector3(tpMovement.x, 4, tpMovement.y);
-                        weightBehaviour.state = WeightBehaviour.WeightState.Falling;
                         yield return new WaitForSeconds(warpTime);
                     }
                 }

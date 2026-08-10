@@ -81,7 +81,7 @@ namespace OMC.ECS {
         const float smoothingRate = 5f;
 
         [BurstCompile]
-        void Execute(ref CatStack catStack, ref LocalTransform localTransform) {
+        void Execute(ref CatStack catStack, ref CatValue catValue, ref LocalTransform localTransform) {
             float x = (localTransform.Position.x + board.radius) * widthMult;
             float y = (localTransform.Position.z + board.radius) * heightMult;
             int index = (int)(y * StackingGridSystem.width + x);
@@ -106,12 +106,13 @@ namespace OMC.ECS {
                 stackingGrid[index] = 0;
             }
 
-            // increment the current cell
-            if (stackingGrid[index] < ushort.MaxValue) {
-                stackingGrid[index] += 1;
-            }
+            
 
-            float targetOffset = (stackingGrid[index] - 1) * StackingGridSystem.stackingHeight;
+            // increment the current cell
+            ushort valueBefore = stackingGrid[index];
+            stackingGrid[index] += (ushort)math.min(catValue.value,ushort.MaxValue - stackingGrid[index]);
+
+            float targetOffset = valueBefore * StackingGridSystem.stackingHeight;
             float t = 1 - math.exp(-smoothingRate * deltaTime);
             catStack.smoothStackOffset = math.lerp(catStack.smoothStackOffset, targetOffset, t);
 

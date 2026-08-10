@@ -19,8 +19,9 @@ namespace OMC.ECS {
             var positionBuffer = SystemAPI.GetSingletonBuffer<LostCatPosition>().Reinterpret<float3>().AsNativeArray();
             float deltaTime = SystemAPI.Time.DeltaTime;
             int lostCount = 0;
+            int lostValue = 0;
 
-            foreach (var (fallenData, localTransform, mmInfo, entity) in SystemAPI.Query<RefRW<FallenCatData>, RefRO<LocalTransform>, RefRO<MaterialMeshInfo>>().WithEntityAccess()) {
+            foreach (var (fallenData, localTransform, catValue, entity) in SystemAPI.Query<RefRW<FallenCatData>, RefRO<LocalTransform>, RefRO<CatValue>>().WithEntityAccess()) {
                 fallenData.ValueRW.timeToExplode -= deltaTime;
                 if (fallenData.ValueRO.timeToExplode <= 0) {
                     float3 pos = localTransform.ValueRO.Position;
@@ -28,11 +29,14 @@ namespace OMC.ECS {
                         positionBuffer[lostCount] = pos;
                     }
                     lostCount++;
+                    lostValue += catValue.ValueRO.value;
                     ecb.SetComponentEnabled<MaterialMeshInfo>(entity, false);
+                    ecb.SetComponentEnabled<FallenCatData>(entity,false);
+                    ecb.SetComponentEnabled<FallingCatData>(entity,false);
                 }
             }
 
-            catCount.ValueRW.lost += lostCount;
+            catCount.ValueRW.lost += lostValue;
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();

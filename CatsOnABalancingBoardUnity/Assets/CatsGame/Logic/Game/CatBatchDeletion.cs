@@ -18,7 +18,9 @@ public class CatBatchDeletion : MonoBehaviour {
     private void Start() {
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         countdown = period;
-        query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<FallenCatData>(), ComponentType.ReadOnly<LocalTransform>(), ComponentType.Exclude<MaterialMeshInfo>());
+
+        EntityQueryBuilder b = new EntityQueryBuilder(Allocator.Temp).WithAll<CatValue,LocalTransform>().WithDisabled<MaterialMeshInfo>();
+        query = b.Build(entityManager);
     }
 
     private void Update() {

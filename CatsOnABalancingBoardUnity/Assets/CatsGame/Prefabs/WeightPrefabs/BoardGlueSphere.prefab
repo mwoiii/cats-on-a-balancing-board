@@ -174,7 +174,7 @@ MonoBehaviour:
   weightBehaviour: {fileID: 0}
   source: {fileID: -6788974565764033069}
   clip: {fileID: 8300000, guid: 20098eeb3623458498d25cbf1665436b, type: 3}
-  volume: 0.5
+  volume: 0.3
 --- !u!114 &4508363028728298918
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,16 +4,20 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Rendering;
+using UnityEngine;
 
 namespace OMC.ECS {
     [BurstCompile]
     [UpdateBefore(typeof(CatCountBridgingSystem))]
     public partial struct CatSpawnSystem : ISystem {
         uint spawnCallCount;
+        EntityQuery query;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<CatSpawnerConfig>();
             state.RequireForUpdate<CatCount>();
+
+            query = SystemAPI.QueryBuilder().WithAll<CatValue>().Build();
         }
 
         [BurstCompile]
@@ -32,14 +36,27 @@ namespace OMC.ECS {
             config.spawnedThisUpdate = countToSpawn;
             catCount.ValueRW.gained += countToSpawn;
 
+            int tensToSpawn = 0;
+            if (query.CalculateEntityCount() + countToSpawn > 10000)
+            {
+                tensToSpawn = countToSpawn / 10;
+                countToSpawn = tensToSpawn + (countToSpawn % 10);
+            }
 
             if (countToSpawn > 0) {
-                Random randomSauce = new(676767 + spawnCallCount);
+                Unity.Mathematics.Random randomSauce = new(676767 + spawnCallCount);
                 spawnCallCount++;
 
                 NativeArray<Entity> cats = state.EntityManager.Instantiate(config.prefab, countToSpawn, Allocator.Temp);
 
-                foreach (Entity cat in cats) {
+                for (int i = 0; i < cats.Length; i++)
+                {
+                    Entity cat = cats[i];
+
+                    CatValue value = SystemAPI.GetComponent<CatValue>(cat);
+                    if (i < tensToSpawn){value.value = 10;}
+                    SystemAPI.SetComponent(cat,value);
+
                     float2 offset = randomSauce.NextFloat2Direction() * randomSauce.NextFloat(0f, config.radius);
                     CatData data = SystemAPI.GetComponent<CatData>(cat);
                     data.position = offset;

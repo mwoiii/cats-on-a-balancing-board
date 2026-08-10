@@ -60,6 +60,14 @@ namespace OMC {
             shrinkTimer = shrinkInterval;
         }
 
+        void OnCollisionExit(Collision collision)
+        {
+            if (collision.collider.gameObject.CompareTag("Board") && state == WeightState.Landed)
+            {
+                state = WeightState.Falling;
+            }
+        }
+
         public void ShrinkAndCheck() {
             Vector3 newScale = transform.localScale - Vector3.one * shrinkAmount;
             transform.localScale = newScale;

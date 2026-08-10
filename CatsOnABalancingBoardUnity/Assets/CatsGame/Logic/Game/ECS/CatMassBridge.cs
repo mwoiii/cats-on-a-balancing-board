@@ -32,7 +32,6 @@ namespace OMC.ECS {
             Vector3 worldPoint = board.transform.TransformPoint(localPoint);
 
             float force = Mathf.Max(10*Mathf.Log10(snapshot.totalMass/100),1e-7f) * 9.81f; // log mass scaling
-            Debug.Log($"{worldPoint} ::: {force}");
             board.AddForceAtPosition(Vector3.down * force, worldPoint, ForceMode.Force);
         }
     }
