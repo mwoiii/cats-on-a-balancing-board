@@ -1349,6 +1349,7 @@ GameObject:
   - component: {fileID: 478497809}
   - component: {fileID: 478497812}
   - component: {fileID: 478497813}
+  - component: {fileID: 478497814}
   m_Layer: 0
   m_Name: GameLogic
   m_TagString: Untagged
@@ -1408,6 +1409,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7844cc2b2ea834a46b92119ad740507b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OMC.WeightTypeRegistry
+--- !u!114 &478497814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478497808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a2c7c020c1dd684d8a39331917c3a17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OMC.OMCEffectSpawner
 --- !u!1 &488201370
 GameObject:
   m_ObjectHideFlags: 0

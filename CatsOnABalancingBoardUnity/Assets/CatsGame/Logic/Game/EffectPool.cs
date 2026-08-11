@@ -1,35 +1,41 @@
 using OMC.Util;
 using System.Collections.Generic;
 using UnityEngine;
-using static OMC.DynamicEffectManager;
 
 namespace OMC {
     public class EffectPool {
-
-        public GameObject effectPrefab;
+        public EffectDef effectDef;
 
         public Stack<PooledEffect> available;
 
         public Deque<float> returnTimes;
 
-        // todo - allow per effect. effectdef........
-        public const float TimeBeforeCull = 30f;
+        public Queue<PooledEffect> inUse;
 
         private int countActive;
 
-        public EffectPool(GameObject effectPrefab) {
-            this.effectPrefab = effectPrefab;
-            available = new Stack<PooledEffect>(MaxPoolSize);
-            returnTimes = new Deque<float>(MaxPoolSize);
+        public EffectPool(EffectDef effectDef) {
+            this.effectDef = effectDef;
+            available = new Stack<PooledEffect>(effectDef.maxPoolSize);
+            returnTimes = new Deque<float>(effectDef.maxPoolSize);
+            inUse = new Queue<PooledEffect>(effectDef.maxEffectQuantity);
         }
 
         public void PlaceEffectAt(Vector3 position) {
-            if (countActive >= MaxPoolSize) {
-                return;
-            }
 
             PooledEffect effect;
-            if (available.Count > 0) {
+
+            if (countActive >= effectDef.maxEffectQuantity) {
+                if (!effectDef.prioritiseNewEffects) {
+                    return;
+                }
+                inUse.TryDequeue(out effect);
+                if (effect) {
+                    effect.gameObject.SetActive(false);
+                    effect.gameObject.SetActive(true);
+                    countActive--;
+                }
+            } else if (available.Count > 0) {
                 effect = available.Pop();
                 returnTimes.DequeueBack();
                 effect.released = false;
@@ -37,13 +43,18 @@ namespace OMC {
             } else {
                 effect = CreateNewEffect();
             }
-            effect.transform.position = position;
 
-            countActive++;
+            if (effect) {
+                effect.transform.position = position;
+                inUse.Enqueue(effect);
+                countActive++;
+            } else {
+                Debug.LogError($"Failed to retrieve effect from inUse queue for {effectDef.name}!");
+            }
         }
 
         public PooledEffect CreateNewEffect() {
-            GameObject effectObject = Object.Instantiate(effectPrefab);
+            GameObject effectObject = Object.Instantiate(effectDef.effectPrefab);
             PooledEffect effect = effectObject.GetComponent<PooledEffect>();
             effect.pool = this;
             return effect;
@@ -51,7 +62,9 @@ namespace OMC {
 
         public void Release(PooledEffect effect) {
             if (!effect.released) {
-                if (available.Count >= MaxPoolSize) {
+                inUse.TryDequeue(out _);
+                countActive--;
+                if (available.Count >= effectDef.maxPoolSize) {
                     Object.Destroy(effect.gameObject);
                     return;
                 }
@@ -59,7 +72,6 @@ namespace OMC {
                 available.Push(effect);
                 returnTimes.EnqueueBack(Time.time);
                 effect.released = true;
-                countActive--;
             }
         }
     }

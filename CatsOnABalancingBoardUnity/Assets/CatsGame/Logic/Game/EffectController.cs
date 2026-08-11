@@ -1,16 +1,9 @@
 ﻿using UnityEngine;
-using static OMC.EffectPool;
 
 namespace OMC {
     public class EffectController : MonoBehaviour {
 
-        public static EffectController instance;
-
         private float nextCullTime;
-
-        private void Awake() {
-            instance = this;
-        }
 
         private void Update() {
             if (Time.time > nextCullTime) {
@@ -29,7 +22,7 @@ namespace OMC {
                 int toCull = 0;
 
                 foreach (float time in pool.returnTimes) {
-                    if (currentTime > time + TimeBeforeCull) {
+                    if (currentTime > time + pool.effectDef.staleTimeBeforeCull) {
                         toCull++;
                     } else {
                         break;
@@ -37,7 +30,7 @@ namespace OMC {
                 }
 
                 if (toCull > 0) {
-                    Debug.Log($"Culling {toCull} stale effects from {pool.effectPrefab.name} pool");
+                    Debug.Log($"Culling {toCull} stale effects from {pool.effectDef.name} pool");
                 }
 
                 for (int i = 0; i < toCull; i++) {

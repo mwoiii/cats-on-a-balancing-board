@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7626145363586048622}
   - component: {fileID: -1590066829288625019}
   - component: {fileID: 1552699455208340317}
+  - component: {fileID: 7472010726810673054}
   m_Layer: 3
   m_Name: ExplosionPrefab
   m_TagString: Untagged
@@ -105,4 +106,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4daddc6f03be84297a16f6df579026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  lifetime: 0.8
+  effectLifetime: 1
+--- !u!114 &7472010726810673054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4283982339323740326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e2276979748e6c49a28d593bb073061, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OMC.RandomRotation
+  minAngles: {x: 0, y: 0, z: 0}
+  maxAngles: {x: 0, y: 0, z: 360}

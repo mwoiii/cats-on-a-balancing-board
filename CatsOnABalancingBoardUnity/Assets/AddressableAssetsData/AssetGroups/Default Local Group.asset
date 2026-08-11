@@ -15,13 +15,13 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 3fbe5931d7614704ca5c1f6a860ea9a5
   m_SerializeEntries:
-  - m_GUID: d038810760b968d48ba497d09bab1734
-    m_Address: Effects/ExplosionPrefab
+  - m_GUID: 495478e78ed95a9439cbc007e64a8296
+    m_Address: Effects/edSupernova
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d2df19f0371ad1b4aa11057905859fd0
-    m_Address: Effects/SupernovaPrefab
+  - m_GUID: ec4a996c54c2daa4eb94d91796cdeb68
+    m_Address: Effects/edExplosion
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

@@ -7,7 +7,7 @@ namespace OMC {
             if (colliderBehaviour && colliderBehaviour.type != WeightBehaviour.WeightType.Antimatter && weightBehaviour.type == WeightBehaviour.WeightType.Antimatter) {
                 Destroy(colliderBehaviour.gameObject);
                 Destroy(transform.gameObject);
-                DynamicEffectManager.PlaySupernovaAtPosition(transform.position);
+                OMCEffectSpawner.PlaySupernovaAtPosition(transform.position);
             }
         }
     }

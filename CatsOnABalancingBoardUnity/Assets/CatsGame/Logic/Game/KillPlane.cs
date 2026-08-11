@@ -1,3 +1,4 @@
+using Assets.CatsGame.Logic.Game;
 using System.Collections;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace OMC {
         IEnumerator Wait(Collider other) {
             yield return new WaitForSeconds(deletionDelay);
             if (other) {
-                DynamicEffectManager.PlayExplosionAtPosition(other.transform.position);
+                OMCEffectSpawner.PlayExplosionAtPosition(other.transform.position);
                 if (other.gameObject.CompareTag("Cat")) {
                     catManager.RemoveCat(other.gameObject);
                 }

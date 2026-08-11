@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 using static OMC.WeightBehaviour;
 
 namespace OMC.ECS {
@@ -192,15 +191,14 @@ namespace OMC.ECS {
                 if (math.length(catData.position) > board.radius) // if cat fallen off...
                 {
                     float3 lastLocalPos = new(catData.position.x, 0.1f, catData.position.y);
-                    float3 worldPos = board.position + math.mul(board.rotation, lastLocalPos);
 
                     float3 lastLocalVel = new(catVelocity.value.x, 0, catVelocity.value.y);
                     float3 worldVel = math.mul(board.rotation, lastLocalVel);
 
                     ecb.SetComponentEnabled<CatData>(sortKey, entity, false);
                     ecb.SetComponentEnabled<CatVelocity>(sortKey, entity, false);
+                    ecb.SetComponentEnabled<CatStack>(sortKey, entity, false);
 
-                    ecb.SetComponent(sortKey, entity, LocalTransform.FromPosition(worldPos));
                     ecb.SetComponentEnabled<FallingCatData>(sortKey, entity, true);
                     ecb.SetComponent(sortKey, entity, new FallingCatData { velocity = worldVel });
                 }
