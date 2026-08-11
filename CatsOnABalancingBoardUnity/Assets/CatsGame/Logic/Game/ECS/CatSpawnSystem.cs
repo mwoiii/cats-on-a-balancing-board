@@ -40,17 +40,41 @@ namespace OMC.ECS {
 
             catCount.ValueRW.gained += countToSpawn;
 
-            // 5 digits -> start spawning 7s
-            // 6 digits -> start spawning 17s
-            // 7 digits -> start spawning 107s etc.
-            int a = math.max(1,CountDigitsBurstable(countToSpawn) - 4);
-            NativeArray<int> valuedEntityCounts = new(a,Allocator.Temp); // index 0 holds how many 1s to spawn, index 1 cuonts how many 7s to spawn, etc.
-            int entitiesToSpawn = 0;
-            for (int i = a-1; i >= 0; i--)
+            
+            const int totalEntityTarget = 100000;
+            
+            int topTier = 0;
+            while(countToSpawn/TomNumber(topTier) > totalEntityTarget)
             {
-                int tomNum = TomNumber(i);
-                valuedEntityCounts[i] = countToSpawn / tomNum;
-                countToSpawn %= tomNum; // countToSpawn is set to zero by the end of this and should not be used
+                topTier++;
+            }
+
+            int tierCount = topTier + 1;
+            NativeArray<int> valuedEntityCounts = new(tierCount, Allocator.Temp);
+            int remaining = countToSpawn;
+
+            if (topTier > 0) // we newtons method
+            {
+                int first = TomNumber(topTier);
+                int second = TomNumber(topTier-1);
+
+                int h = (int)((long)countToSpawn - (long)totalEntityTarget * second) / (first - second);
+                h = math.clamp(h, 0, countToSpawn/first);
+
+                valuedEntityCounts[topTier] = h;
+                remaining -= h * first;
+            }
+
+            for (int i = topTier > 0 ? topTier - 1 : topTier; i >= 0; i--) // I love programming!!!!!!!!
+            {
+                int t = TomNumber(i);
+                valuedEntityCounts[i] = remaining/t;
+                remaining %= t;
+            }
+
+            int entitiesToSpawn = 0;
+            for (int i = 0; i < tierCount; i++)
+            {
                 entitiesToSpawn += valuedEntityCounts[i];
             }
             
@@ -60,7 +84,8 @@ namespace OMC.ECS {
             //{
             //    debugstring += $"{valuedEntityCounts[i]} of value {TomNumber(i)}, ";
             //}
-            //Debug.Log(debugstring);
+            //Debug.Log(debugstring + $"for a total of {entitiesToSpawn} entities");
+            //
 
             catCount.ValueRW.gainedRaw += entitiesToSpawn;
 
