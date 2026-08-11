@@ -4,19 +4,20 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
+using Unity.VisualScripting;
+using UnityEngine.Rendering;
+using UnityEngine;
+using System.Linq;
 
 namespace OMC.ECS {
     [BurstCompile]
     [UpdateBefore(typeof(CatCountBridgingSystem))]
     public partial struct CatSpawnSystem : ISystem {
         uint spawnCallCount;
-        EntityQuery query;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<CatSpawnerConfig>();
             state.RequireForUpdate<CatCount>();
-
-            query = SystemAPI.QueryBuilder().WithAll<CatValue>().Build();
         }
 
         [BurstCompile]
@@ -32,46 +33,71 @@ namespace OMC.ECS {
                 countToSpawn = config.pendingSpawn;
                 config.pendingSpawn = 0;
             }
+
             config.spawnedThisUpdate = countToSpawn;
+
+            if (countToSpawn == 0){return;}
 
             catCount.ValueRW.gained += countToSpawn;
 
-            int tensToSpawn = 0;
-            if (query.CalculateEntityCount() + countToSpawn > 10000) {
-                tensToSpawn = countToSpawn / 10;
-                countToSpawn = tensToSpawn + (countToSpawn % 10);
+            // 5 digits -> start spawning 7s
+            // 6 digits -> start spawning 17s
+            // 7 digits -> start spawning 107s etc.
+            int a = math.max(1,CountDigitsBurstable(countToSpawn) - 4);
+            NativeArray<int> valuedEntityCounts = new(a,Allocator.Temp); // index 0 holds how many 1s to spawn, index 1 cuonts how many 7s to spawn, etc.
+            int entitiesToSpawn = 0;
+            for (int i = a-1; i >= 0; i--)
+            {
+                int tomNum = TomNumber(i);
+                valuedEntityCounts[i] = countToSpawn / tomNum;
+                countToSpawn %= tomNum; // countToSpawn is set to zero by the end of this and should not be used
+                entitiesToSpawn += valuedEntityCounts[i];
             }
+            
+            // kills burst but useful
+            //string debugstring = "";
+            //for (int i = 0; i < valuedEntityCounts.Length; i++)
+            //{
+            //    debugstring += $"{valuedEntityCounts[i]} of value {TomNumber(i)}, ";
+            //}
+            //Debug.Log(debugstring);
 
-            catCount.ValueRW.gainedRaw += countToSpawn;
+            catCount.ValueRW.gainedRaw += entitiesToSpawn;
 
-            if (countToSpawn > 0) {
-                Unity.Mathematics.Random randomSauce = new(676767 + spawnCallCount);
-                spawnCallCount++;
+            Unity.Mathematics.Random randomSauce = new(676767 + spawnCallCount);
+            spawnCallCount++;
 
-                NativeArray<Entity> cats = state.EntityManager.Instantiate(config.prefab, countToSpawn, Allocator.Temp);
+            NativeArray<Entity> cats = state.EntityManager.Instantiate(config.prefab, entitiesToSpawn, Allocator.Temp);
 
-                for (int i = 0; i < cats.Length; i++) {
-                    Entity cat = cats[i];
-
-                    CatValue value = SystemAPI.GetComponent<CatValue>(cat);
-                    if (i < tensToSpawn) { value.value = 10; }
-                    SystemAPI.SetComponent(cat, value);
-
-                    float2 offset = randomSauce.NextFloat2Direction() * randomSauce.NextFloat(0f, config.radius);
-                    CatData data = SystemAPI.GetComponent<CatData>(cat);
-                    data.position = offset;
-                    state.EntityManager.SetComponentData(cat, data);
-
-                    LocalTransform catTransform = LocalTransform.FromPositionRotationScale(
-                    new float3(offset.x, config.dropHeight, offset.y), quaternion.identity, config.scale
-                    );
-                    state.EntityManager.SetComponentData(cat, catTransform);
-
-                    // Spribnkes...
-                    float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
-                    state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh, 1f) });
-
+            int currentValueIndex = 0;
+            int cum = valuedEntityCounts[0];
+            for (int i = 0; i < cats.Length; i++) {
+                Entity cat = cats[i];
+                    
+                while (i >= cum && currentValueIndex < valuedEntityCounts.Length)
+                {
+                    currentValueIndex++;
+                    cum += valuedEntityCounts[currentValueIndex];
                 }
+
+                CatValue value = SystemAPI.GetComponent<CatValue>(cat);
+                value.value = TomNumber(currentValueIndex);
+                SystemAPI.SetComponent(cat, value);
+
+                float2 offset = randomSauce.NextFloat2Direction() * randomSauce.NextFloat(0f, config.radius);
+                CatData data = SystemAPI.GetComponent<CatData>(cat);
+                data.position = offset;
+                state.EntityManager.SetComponentData(cat, data);
+
+                LocalTransform catTransform = LocalTransform.FromPositionRotationScale(
+                new float3(offset.x, config.dropHeight, offset.y), quaternion.identity, config.scale
+                );
+                state.EntityManager.SetComponentData(cat, catTransform);
+
+                // Spribnkes...
+                float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
+                state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh, 1f) });
+
                 SystemAPI.SetSingleton(new InitialFallData { height = config.dropHeight, velocity = 0 });
             }
 
@@ -82,6 +108,31 @@ namespace OMC.ECS {
             float3 p = math.abs(math.frac(h + new float3(1f, 2f / 3f, 1f / 3f)) * 6f - 3f);
             float3 rgb = math.saturate(p - 1f);
             return v * math.lerp(new float3(1f), rgb, s);
+        }
+
+        static int TomNumber(int a)
+        {
+            if (a <= 0){return 1;}
+            else if (a == 1){return 7;} 
+            else
+            {
+                int t = 1;
+                for (int i = 0; i<a-1;i++){t*=10;}
+                return t + 7;
+            }
+        }
+
+        static int CountDigitsBurstable(int value)
+        {
+            if (value == 0){return 1;}
+            value = math.abs(value);
+            int digits = 0;
+            while (value > 0)
+            {
+                digits++;
+                value /= 10;
+            }
+            return digits;
         }
     }
 }
