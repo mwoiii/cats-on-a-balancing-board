@@ -91,7 +91,7 @@ namespace OMC {
             }
             bonusMult = Mathf.Max(bonusMult, 1);
             bonusBase = Mathf.Max(bonusBase, 1);
-            Debug.Log($"{bonusMult} * {bonusBase} ^ k");
+            //Debug.Log($"{bonusMult} * {bonusBase} ^ k");
 
             litterBonus = (int)Mathf.Floor(bonusMult);
             comboCounter = 0;
