@@ -79,7 +79,6 @@ public class MrPunch : WeightSubBehaviourBase
             {
                 dist = a;
                 target = obj;
-                Debug.Log("Target acquired...");
 
                 punched.RemoveAll(x => x.IsDestroyed() || x == null); // this goes here because its not every frame but frequent enough
             }

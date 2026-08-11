@@ -108,7 +108,7 @@ namespace OMC.ECS {
 
             // increment the current cell
             ushort valueBefore = stackingGrid[index];
-            stackingGrid[index] += (ushort)math.min(catValue.value, ushort.MaxValue - stackingGrid[index]);
+            stackingGrid[index] += (ushort)math.min(catValue.value, 107); // intensity of stacking effect stops at 10mil
 
             float targetOffset = valueBefore * StackingGridSystem.stackingHeight;
             float t = 1 - math.exp(-SmoothingRate * deltaTime);
