@@ -35,6 +35,7 @@ namespace OMC.ECS {
                     ecb.SetComponentEnabled<MaterialMeshInfo>(entity, false);
                     ecb.SetComponentEnabled<FallenCatData>(entity, false);
                     ecb.SetComponentEnabled<FallingCatData>(entity, false);
+                    ecb.SetComponentEnabled<CatStack>(entity, false);
                 }
             }
 

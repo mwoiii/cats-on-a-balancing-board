@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using OMC.ECS;
 using OMC.UI;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace OMC {
@@ -33,7 +35,7 @@ namespace OMC {
         }
 
         private void CheckGameOver(int difference) {
-            catCount += difference;
+            catCount += math.min(difference, int.MaxValue - catCount);
             if (catCount <= 0 && gameRunning) {
                 GameOver();
             }

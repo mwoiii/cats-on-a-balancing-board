@@ -97,10 +97,15 @@ namespace OMC.ECS {
 
                     CatValue foodVal = SystemAPI.GetComponent<CatValue>(food);
                     CatValue hungryVal = SystemAPI.GetComponent<CatValue>(hungry);
-                    hungryVal.value += foodVal.value;
+                    hungryVal.value += math.min(foodVal.value,int.MaxValue - hungryVal.value);
                     SystemAPI.SetComponent(hungry,hungryVal);
 
-                    SystemAPI.SetComponentEnabled<MaterialMeshInfo>(food,false); // cat cleanup should get this
+                    SystemAPI.SetComponent(food, new CatValue{value = 0});
+                    SystemAPI.SetComponentEnabled<MaterialMeshInfo>(food,false);
+                    SystemAPI.SetComponentEnabled<CatData>(food, false);
+                    SystemAPI.SetComponentEnabled<CatVelocity>(food, false);
+                    SystemAPI.SetComponentEnabled<CatStack>(food, false);
+
                 }
 
                 ecb.Playback(state.EntityManager);

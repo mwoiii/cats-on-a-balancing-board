@@ -1,6 +1,7 @@
 using OMC.ECS;
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace OMC {
@@ -66,7 +67,7 @@ namespace OMC {
                         IncrementLitterBonus();
                         ResetTimer();
                     } else {
-                        CatSpawnRequest.Enqueue(litterBonus);
+                        CatSpawnRequest.Enqueue(math.min(litterBonus,int.MaxValue-GameLogicScript.instance.catCount));
 
                         IncrementLitterBonus();
                         ResetTimer();
@@ -94,13 +95,17 @@ namespace OMC {
             //Debug.Log($"{bonusMult} * {bonusBase} ^ k");
 
             litterBonus = (int)Mathf.Floor(bonusMult);
+            
             comboCounter = 0;
+
             OnLitterBonusChanged?.Invoke(litterBonus);
         }
 
         private void IncrementLitterBonus() {
-            comboCounter++;
             litterBonus = (int)Mathf.Ceil(bonusMult * Mathf.Pow(bonusBase, comboCounter));
+
+            comboCounter++;
+            
             OnLitterBonusChanged?.Invoke(litterBonus);
         }
 
