@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 namespace OMC.ECS {
-    [UpdateAfter(typeof(CatProjectionSystem))] // A millisecond is a millisecond
+    [UpdateAfter(typeof(CatProjectionSystem))]
     [BurstCompile]
     public partial struct CatMassSystem : ISystem {
 

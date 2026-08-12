@@ -56,7 +56,7 @@ namespace OMC.ECS {
             };
 
             // WE BALL!!!!!!
-            job.ScheduleParallel();
+            state.Dependency = job.ScheduleParallel(state.Dependency);
         }
     }
 
@@ -82,7 +82,7 @@ namespace OMC.ECS {
         const float SmoothingRate = 5f;
 
         [BurstCompile]
-        void Execute(ref CatStack catStack, ref CatValue catValue, EnabledRefRW<CanCull> canCull, ref LocalTransform localTransform) {
+        void Execute(ref CatStack catStack, in CatValue catValue, EnabledRefRW<CanCull> canCull, ref LocalTransform localTransform) {
             float x = (localTransform.Position.x + board.radius) * widthMult;
             float y = (localTransform.Position.z + board.radius) * heightMult;
             int index = (int)(y * StackingGridSystem.width + x);

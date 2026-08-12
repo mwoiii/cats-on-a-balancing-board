@@ -2,7 +2,7 @@ using Unity.Burst;
 using Unity.Entities;
 
 namespace OMC.ECS {
-    [UpdateAfter(typeof(CatSpawnSystem))]
+    [UpdateAfter(typeof(CatMovementResolveSystem))]
     [UpdateBefore(typeof(CatProjectionSystem))]
     [BurstCompile]
     public partial struct InitialFallSystem : ISystem {

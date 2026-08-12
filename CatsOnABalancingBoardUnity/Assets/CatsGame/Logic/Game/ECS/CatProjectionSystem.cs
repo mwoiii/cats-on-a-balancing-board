@@ -4,6 +4,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace OMC.ECS {
+    [UpdateAfter(typeof(CatMovementSystem))]
+    [UpdateAfter(typeof(InitialFallSystem))]
     [BurstCompile]
     public partial struct CatProjectionSystem : ISystem {
         const float projHeight = 0.1f;

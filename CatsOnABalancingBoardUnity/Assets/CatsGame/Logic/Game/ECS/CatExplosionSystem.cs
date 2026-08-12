@@ -6,7 +6,9 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 namespace OMC.ECS {
+    [UpdateAfter(typeof(CatFallCleanupSystem))]
     [UpdateBefore(typeof(CatMovementSystem))]
+    [UpdateBefore(typeof(CatCountBridgingSystem))]
     public partial struct CatExplosionSystem : ISystem {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<CatCount>();

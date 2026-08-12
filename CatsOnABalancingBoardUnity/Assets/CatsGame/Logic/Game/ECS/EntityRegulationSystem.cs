@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace OMC.ECS {
     [UpdateAfter(typeof(CatMassSystem))]
+    [UpdateAfter(typeof(StackingGridSystem))]
     [BurstCompile]
     public partial struct EntityRegulationSystem : ISystem
     {

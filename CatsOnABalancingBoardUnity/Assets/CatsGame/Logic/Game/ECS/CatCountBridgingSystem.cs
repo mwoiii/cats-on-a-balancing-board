@@ -2,6 +2,9 @@
 using Unity.Entities;
 
 namespace OMC.ECS {
+    [UpdateAfter(typeof(CatSpawnSystem))]
+    [UpdateAfter(typeof(CatExplosionSystem))]
+    [UpdateBefore(typeof(CatMovementResolveSystem))]
     public partial struct CatCountBridgingSystem : ISystem {
         public static event Action<int> CatCountChange;
         public static event Action<int, DynamicBuffer<LostCatPosition>> CatCountChangePositions;

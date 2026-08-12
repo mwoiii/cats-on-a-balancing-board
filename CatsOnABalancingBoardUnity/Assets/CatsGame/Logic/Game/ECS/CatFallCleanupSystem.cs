@@ -1,3 +1,4 @@
+using OMC.UI;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -6,6 +7,7 @@ using Unity.Transforms;
 
 namespace OMC.ECS {
     [UpdateAfter(typeof(CatFallMovementSystem))]
+    [UpdateBefore(typeof(CatExplosionSystem))]
     [BurstCompile]
     public partial struct CatFallCleanupSystem : ISystem {
         const float ExplodeHeight = -1.25f; // public partial structs cant do unity serialised stuff i think

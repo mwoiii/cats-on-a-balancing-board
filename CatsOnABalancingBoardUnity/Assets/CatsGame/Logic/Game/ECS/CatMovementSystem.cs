@@ -2,10 +2,12 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using static OMC.WeightBehaviour;
 
 namespace OMC.ECS {
     [UpdateBefore(typeof(CatProjectionSystem))]
+    [UpdateAfter(typeof(CatExplosionSystem))]
     [BurstCompile]
     public partial struct CatMovementSystem : ISystem {
         const float friction = 2;
@@ -29,13 +31,13 @@ namespace OMC.ECS {
             state.RequireForUpdate<BoardTransform>();
             state.RequireForUpdate<WeightSnapshot>();
             catQuery = SystemAPI.QueryBuilder().WithAll<CatData>().Build();
+            state.EntityManager.CreateSingleton<CatMovementHold>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             BoardTransform board = SystemAPI.GetSingleton<BoardTransform>();
             DynamicBuffer<WeightSnapshot> weights = SystemAPI.GetSingletonBuffer<WeightSnapshot>();
-            DynamicBuffer<WeightContactPulse> pulses = SystemAPI.GetSingletonBuffer<WeightContactPulse>();
             float deltaTime = SystemAPI.Time.DeltaTime;
 
             float3 gravityWorld = new(0, -9.81f, 0);
@@ -64,15 +66,8 @@ namespace OMC.ECS {
             };
 
             state.Dependency = job.ScheduleParallel(state.Dependency);
-            state.Dependency.Complete();
 
-            while (catnipHits.TryDequeue(out int index)) {
-                pulses.ElementAt(index).count++;
-            }
-            catnipHits.Dispose();
-
-            ecb.Playback(state.EntityManager);
-            ecb.Dispose();
+            SystemAPI.SetSingleton(new CatMovementHold{ecb = ecb, catnipHits = catnipHits, pending = true});
         }
 
         [WithDisabled(typeof(IsInitialFalling))]
@@ -203,6 +198,43 @@ namespace OMC.ECS {
                     ecb.SetComponent(sortKey, entity, new FallingCatData { velocity = worldVel });
                 }
             }
+        }
+    }
+
+    public struct CatMovementHold : IComponentData
+    {
+        public EntityCommandBuffer ecb;
+        public NativeQueue<int> catnipHits;
+        public bool pending;
+    }
+
+    [UpdateAfter(typeof(CatMovementSystem))]
+    [UpdateBefore(typeof(CatProjectionSystem))]
+    public partial struct CatMovementResolveSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state)
+        {
+            state.RequireForUpdate<CatMovementHold>();
+        }
+
+        public void OnUpdate(ref SystemState state)
+        {
+            var hold = SystemAPI.GetSingleton<CatMovementHold>();
+            if (!hold.pending){return;}
+
+            state.Dependency.Complete();
+
+            DynamicBuffer<WeightContactPulse> pulses = SystemAPI.GetSingletonBuffer<WeightContactPulse>();
+            while (hold.catnipHits.TryDequeue(out int index)) {
+            pulses.ElementAt(index).count++;
+            }
+            hold.catnipHits.Dispose();
+
+            hold.ecb.Playback(state.EntityManager);
+            hold.ecb.Dispose();
+
+            hold.pending = false;
+            SystemAPI.SetSingleton(hold);
         }
     }
 }
