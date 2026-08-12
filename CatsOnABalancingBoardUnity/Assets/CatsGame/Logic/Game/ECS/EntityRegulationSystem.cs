@@ -6,14 +6,14 @@ using Unity.Rendering;
 using UnityEngine;
 
 namespace OMC.ECS {
-    [UpdateAfter(typeof(StackingGridSystem))]
+    [UpdateAfter(typeof(CatMassSystem))]
     [BurstCompile]
     public partial struct EntityRegulationSystem : ISystem
     {
         const int catCountSplitThreshold = 20000;
         bool hasSplit;
 
-        const int entityCountCombineThreshold = 150000;
+        const int entitiesOverTargetCombineThreshold = 20000;
         const int targetEntityCount = 100000; // should be the same as in CatSpawnSystem
         EntityQuery query;
         
@@ -27,18 +27,22 @@ namespace OMC.ECS {
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            CheckSplit(ref state);
-            CheckCombine(ref state);
-        }
-
-        void CheckSplit(ref SystemState state)
-        {
             int catCount = 0;
             foreach (var catVal in SystemAPI.Query<RefRO<CatValue>>().WithAll<MaterialMeshInfo>().WithDisabled<FallingCatData,FallenCatData>())
             {
                 catCount += catVal.ValueRO.value;
             }
+            int entityCount = query.CalculateEntityCount();
+            
+            //Debug.Log($"cat count {catCount} ::: entity count {entityCount}");
 
+            CheckSplit(ref state, catCount);
+            
+            CheckCombine(ref state, entityCount);
+        }
+
+        void CheckSplit(ref SystemState state, int catCount)
+        {
             if (catCount >= catCountSplitThreshold){hasSplit = false; return;}
             if (hasSplit){return;}
             hasSplit = true;
@@ -64,27 +68,38 @@ namespace OMC.ECS {
             //Debug.Log("split");
         }
 
-        void CheckCombine(ref SystemState state)
+        void CheckCombine(ref SystemState state, int entityCount)
         {
-            int entityCount = query.CalculateEntityCount();
-            if (entityCount > entityCountCombineThreshold)
+            if (entityCount > targetEntityCount + entitiesOverTargetCombineThreshold)
             {
                 NativeArray<Entity> entities = query.ToEntityArray(Allocator.Temp);
-                int excess = entityCount -  targetEntityCount;
+
+                int cullableCount = 0;
+                for (int i = 0; i < entities.Length; i++)
+                {
+                    if (SystemAPI.IsComponentEnabled<CanCull>(entities[i]))
+                    {
+                        (entities[cullableCount],entities[i]) = (entities[i],entities[cullableCount]);
+                        cullableCount++;
+                    }
+                }
+
+                int excess = math.min(entityCount -  targetEntityCount,cullableCount);
+                int survivors = entityCount - excess;
 
                 EntityCommandBuffer ecb = new(Allocator.Temp);
 
                 for (int i=0; i < excess; i++)
                 {
                     Entity food = entities[i];
-                    Entity hungry = entities[excess + (i % targetEntityCount)];
+                    Entity hungry = entities[excess + (i % survivors)];
 
                     CatValue foodVal = SystemAPI.GetComponent<CatValue>(food);
                     CatValue hungryVal = SystemAPI.GetComponent<CatValue>(hungry);
                     hungryVal.value += foodVal.value;
                     SystemAPI.SetComponent(hungry,hungryVal);
 
-                    ecb.DestroyEntity(food);
+                    SystemAPI.SetComponentEnabled<MaterialMeshInfo>(food,false); // cat cleanup should get this
                 }
 
                 ecb.Playback(state.EntityManager);

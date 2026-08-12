@@ -61,6 +61,7 @@ namespace OMC.ECS {
     }
 
     [BurstCompile]
+    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)] // needed for setting CanCulls
     public partial struct StackingGridJob : IJobEntity {
         public float widthMult;
 
@@ -81,7 +82,7 @@ namespace OMC.ECS {
         const float SmoothingRate = 5f;
 
         [BurstCompile]
-        void Execute(ref CatStack catStack, ref CatValue catValue, ref LocalTransform localTransform) {
+        void Execute(ref CatStack catStack, ref CatValue catValue, EnabledRefRW<CanCull> canCull, ref LocalTransform localTransform) {
             float x = (localTransform.Position.x + board.radius) * widthMult;
             float y = (localTransform.Position.z + board.radius) * heightMult;
             int index = (int)(y * StackingGridSystem.width + x);
@@ -108,9 +109,12 @@ namespace OMC.ECS {
 
             // increment the current cell
             ushort valueBefore = stackingGrid[index];
-            stackingGrid[index] += (ushort)math.min(catValue.value, 107); // intensity of stacking effect stops at 10mil
+            ushort addition = (ushort)math.min(catValue.value, 107); // intensity of stacking effect stops at 10mil
+            stackingGrid[index] += (ushort)math.min(addition,ushort.MaxValue - stackingGrid[index]);
 
             float targetOffset = valueBefore * StackingGridSystem.stackingHeight;
+            canCull.ValueRW = targetOffset > 0.5f;
+
             float t = 1 - math.exp(-SmoothingRate * deltaTime);
             catStack.smoothStackOffset = math.lerp(catStack.smoothStackOffset, targetOffset, t);
 
