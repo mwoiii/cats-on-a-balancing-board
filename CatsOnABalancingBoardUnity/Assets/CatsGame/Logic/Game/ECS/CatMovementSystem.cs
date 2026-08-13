@@ -99,11 +99,11 @@ namespace OMC.ECS {
                 int nearestCatnipIndex = -1;
                 bool hasCatnip = false;
 
-                float nearestLemonDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f); ;
+                float nearestLemonDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
                 float2 nearestLemonPos = float2.zero;
                 bool hasLemon = false;
 
-                float nearestWhirlpoolDist = float.MaxValue;
+                float nearestWhirlpoolDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
                 float2 nearestWhirlpoolPos = float2.zero;
                 bool hasWhirlpool = false;
 

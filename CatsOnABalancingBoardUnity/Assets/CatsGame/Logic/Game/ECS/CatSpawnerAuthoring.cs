@@ -22,7 +22,8 @@ namespace OMC.ECS {
                     radius = authoring.radius,
                     dropHeight = authoring.dropHeight,
                     scale = authoring.scale,
-                    finished = false
+                    finished = false,
+                    batchEntityTarget = 100000
                 });
                 AddComponent(entity, new InitialFallData { height = 0, velocity = 0 });
             }
@@ -36,8 +37,8 @@ namespace OMC.ECS {
         public float dropHeight;
         public float scale;
         public bool finished;
-
         public int pendingSpawn;
         public int spawnedThisUpdate;
+        public int batchEntityTarget;
     }
 }

@@ -41,7 +41,7 @@ namespace OMC.ECS {
             catCount.ValueRW.gained += countToSpawn;
 
             
-            const int totalEntityTarget = 100000;
+            int totalEntityTarget = config.batchEntityTarget;
             
             int topTier = 0;
             while(countToSpawn/TomNumber(topTier) > totalEntityTarget)
@@ -109,7 +109,7 @@ namespace OMC.ECS {
                 value.value = TomNumber(currentValueIndex);
                 SystemAPI.SetComponent(cat, value);
 
-                float2 offset = randomSauce.NextFloat2Direction() * randomSauce.NextFloat(0f, config.radius);
+                float2 offset = config.radius * math.sqrt(randomSauce.NextFloat(0,1)) * randomSauce.NextFloat2Direction();
                 CatData data = SystemAPI.GetComponent<CatData>(cat);
                 data.position = offset;
                 state.EntityManager.SetComponentData(cat, data);

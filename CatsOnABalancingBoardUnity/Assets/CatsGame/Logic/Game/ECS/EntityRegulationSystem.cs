@@ -15,7 +15,8 @@ namespace OMC.ECS {
         bool hasSplit;
 
         const int entitiesOverTargetCombineThreshold = 20000;
-        const int targetEntityCount = 100000; // should be the same as in CatSpawnSystem
+        const int targetEntityCount = 100000;
+        const int batchEntityMinimum = 17000;
         EntityQuery query;
         
         public void OnCreate(ref SystemState state)
@@ -34,8 +35,12 @@ namespace OMC.ECS {
                 catCount += catVal.ValueRO.value;
             }
             int entityCount = query.CalculateEntityCount();
+
+            CatSpawnerConfig config = SystemAPI.GetSingleton<CatSpawnerConfig>();
+            config.batchEntityTarget = math.max(batchEntityMinimum,targetEntityCount - entityCount);
+            SystemAPI.SetSingleton(config);
             
-            //Debug.Log($"cat count {catCount} ::: entity count {entityCount}");
+            //Debug.Log($"cat count {catCount} ::: entity count {entityCount} ::: next batch entity target {config.batchEntityTarget}");
 
             CheckSplit(ref state, catCount);
             

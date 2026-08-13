@@ -19,6 +19,7 @@ namespace OMC.ECS {
         public const int maxIndex = width * height - 1;
 
         public const float stackingHeight = 0.04f;
+        public const int maxContribution = 107;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BoardTransform>();
@@ -109,7 +110,7 @@ namespace OMC.ECS {
 
             // increment the current cell
             ushort valueBefore = stackingGrid[index];
-            ushort addition = (ushort)math.min(catValue.value, 107); // intensity of stacking effect stops at 10mil
+            ushort addition = (ushort)math.min(catValue.value, StackingGridSystem.maxContribution);
             stackingGrid[index] += (ushort)math.min(addition,ushort.MaxValue - stackingGrid[index]);
 
             float targetOffset = valueBefore * StackingGridSystem.stackingHeight;
