@@ -84,7 +84,11 @@ namespace OMC.ECS {
         const float SmoothingRate = 5f;
 
         [BurstCompile]
-        void Execute(ref CatStack catStack, in CatValue catValue, EnabledRefRW<CanCull> canCull, ref LocalTransform localTransform) {
+        void Execute(ref CatStack catStack, in CatValue catValue, EnabledRefRW<CanCull> canCull, EnabledRefRO<CatData> enabled, ref LocalTransform localTransform) {
+            if (!enabled.ValueRO) {
+                return;
+            }
+
             float x = math.floor((localTransform.Position.x + board.radius) * widthMult);
             float y = math.floor((localTransform.Position.z + board.radius) * heightMult);
             int index = (int)(y * StackingGridSystem.Width + x);

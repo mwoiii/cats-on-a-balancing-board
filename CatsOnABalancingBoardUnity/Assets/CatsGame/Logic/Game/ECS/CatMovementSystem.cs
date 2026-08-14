@@ -182,8 +182,7 @@ namespace OMC.ECS {
                 catVelocity.value *= math.max(0, 1 - frictionWithGrip * deltaTime);
                 catData.position += catVelocity.value * deltaTime;
 
-                if (math.length(catData.position) > board.radius) // if cat fallen off...
-                {
+                if (math.length(catData.position) > board.radius) {  // if cat fallen off...
                     float3 lastLocalPos = new(catData.position.x, 0.1f, catData.position.y);
 
                     float3 lastLocalVel = new(catVelocity.value.x, 0, catVelocity.value.y);
