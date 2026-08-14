@@ -1,12 +1,10 @@
-using System.Collections.Generic;
 using OMC;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
 
-public class MrPunch : WeightSubBehaviourBase
-{
+public class MrPunch : WeightSubBehaviourBase {
     GameObject target = null;
     List<GameObject> punched = new();
 
@@ -20,63 +18,51 @@ public class MrPunch : WeightSubBehaviourBase
     public AudioClip[] clips = new AudioClip[3];
     public AudioClip punch;
     public float volume = 0.5f;
-    
-    new void Start()
-    {
+
+    new void Start() {
         base.Start();
         body = gameObject.GetComponent<Rigidbody>();
-        
-        if (source)
-        {
+
+        if (source) {
             source.volume = volume;
-            source.clip = clips[UnityEngine.Random.Range(0,clips.Length)];
+            source.clip = clips[UnityEngine.Random.Range(0, clips.Length)];
             source.Play();
         }
     }
 
-    void FixedUpdate()
-    {
-        if (target == null || target.IsDestroyed())
-        {
+    void FixedUpdate() {
+        if (target == null || target.IsDestroyed()) {
             FindTarget();
-        } else
-        {
-            Vector3 toTarget = target.transform.position-transform.position;
-            if (math.length(toTarget) > 0)
-            {
-                body.AddForce(math.normalize(toTarget) * approachForce,ForceMode.Force);
+        } else {
+            Vector3 toTarget = target.transform.position - transform.position;
+            if (math.length(toTarget) > 0) {
+                body.AddForce(math.normalize(toTarget) * approachForce, ForceMode.Force);
             }
         }
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
+    void OnCollisionEnter(Collision collision) {
         if (!collision.collider.gameObject.CompareTag("Board") && collision.collider.attachedRigidbody) // yeah they can punch stuff that isn't the target
         {
             body.linearVelocity = Vector3.zero;
-            collision.collider.attachedRigidbody.AddExplosionForce(punchForce,transform.position,10);
+            collision.collider.attachedRigidbody.AddExplosionForce(punchForce, transform.position, 10);
             punched.Add(collision.collider.gameObject);
             target = null;
-            if (source && punch)
-            {
+            if (source && punch) {
                 source.clip = punch;
                 source.Play();
             }
         }
     }
 
-    void FindTarget()
-    {
+    void FindTarget() {
         float dist = Mathf.Infinity;
-        foreach (var obj in WeightDropper.weightBehaviourDict.Keys)
-        {
-            if (obj == gameObject || punched.Contains(obj))
-            {
+        foreach (var obj in WeightDropper.weightBehaviourDict.Keys) {
+            if (obj == gameObject || punched.Contains(obj)) {
                 continue;
             }
-            float a = math.length(transform.position-obj.transform.position);
-            if (a < dist)
-            {
+            float a = math.length(transform.position - obj.transform.position);
+            if (a < dist) {
                 dist = a;
                 target = obj;
 

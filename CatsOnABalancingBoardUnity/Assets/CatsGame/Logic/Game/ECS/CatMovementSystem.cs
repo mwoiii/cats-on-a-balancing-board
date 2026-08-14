@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using static OMC.WeightBehaviour;
 
 namespace OMC.ECS {
@@ -10,19 +9,19 @@ namespace OMC.ECS {
     [UpdateAfter(typeof(CatExplosionSystem))]
     [BurstCompile]
     public partial struct CatMovementSystem : ISystem {
-        const float friction = 2;
+        const float Friction = 2;
 
-        const float gripStrength = 2;
+        const float GripStrength = 2;
 
-        const float moveForce = 1.2f;
+        const float MoveForce = 1.2f;
 
-        const float reactDistance = 1.5f;
+        const float ReactDistance = 1.5f;
 
-        const float dispersionPerCat = 0.0002f;
+        const float DispersionPerCat = 0.0002f;
 
-        const float maxDispersion = 1f;
+        const float MaxDispersion = 1f;
 
-        const float catnipContactRadius = 0.05f;
+        const float CatnipContactRadius = 0.05f;
 
         EntityQuery catQuery;
         uint frameCounter; // new random every frame
@@ -44,10 +43,10 @@ namespace OMC.ECS {
             float3 gravityLocal = math.mul(math.inverse(board.rotation), gravityWorld); // Imagine rotating a cube by thirty degrees
             float2 down = new(gravityLocal.x, gravityLocal.z);
 
-            float frictionWithGrip = friction + gripStrength * math.length(down);
+            float frictionWithGrip = Friction + GripStrength * math.length(down);
 
             int catCount = catQuery.CalculateEntityCount();
-            float dispersionStrength = math.min(catCount * dispersionPerCat, maxDispersion);
+            float dispersionStrength = math.min(catCount * DispersionPerCat, MaxDispersion);
             frameCounter++;
 
             EntityCommandBuffer ecb = new(Allocator.TempJob);
@@ -67,7 +66,7 @@ namespace OMC.ECS {
 
             state.Dependency = job.ScheduleParallel(state.Dependency);
 
-            SystemAPI.SetSingleton(new CatMovementHold{ecb = ecb, catnipHits = catnipHits, pending = true});
+            SystemAPI.SetSingleton(new CatMovementHold { ecb = ecb, catnipHits = catnipHits, pending = true });
         }
 
         [WithDisabled(typeof(IsInitialFalling))]
@@ -90,7 +89,7 @@ namespace OMC.ECS {
                 // weight reactive behaviour
                 float2 catPos = catData.position;
 
-                float nearestNoneDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
+                float nearestNoneDist = ReactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
                 float2 nearestNonePos = float2.zero;
                 bool hasNone = false;
 
@@ -99,11 +98,11 @@ namespace OMC.ECS {
                 int nearestCatnipIndex = -1;
                 bool hasCatnip = false;
 
-                float nearestLemonDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
+                float nearestLemonDist = ReactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
                 float2 nearestLemonPos = float2.zero;
                 bool hasLemon = false;
 
-                float nearestWhirlpoolDist = reactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
+                float nearestWhirlpoolDist = ReactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
                 float2 nearestWhirlpoolPos = float2.zero;
                 bool hasWhirlpool = false;
 
@@ -149,29 +148,29 @@ namespace OMC.ECS {
                 {
                     float2 toTarget = nearestNonePos - catPos;
                     if (math.lengthsq(toTarget) > 0) {
-                        weightForce -= math.normalize(toTarget) * moveForce;
+                        weightForce -= math.normalize(toTarget) * MoveForce;
                     }
                 }
                 if (hasCatnip) {
                     float2 toTarget = nearestCatnipPos - catPos;
                     if (math.lengthsq(toTarget) > 0) {
-                        weightForce += math.normalize(toTarget) * moveForce;
+                        weightForce += math.normalize(toTarget) * MoveForce;
                     }
 
-                    if (nearestCatnipDist < catnipContactRadius && weights[nearestCatnipIndex].state == WeightBehaviour.WeightState.Landed) {
+                    if (nearestCatnipDist < CatnipContactRadius && weights[nearestCatnipIndex].state == WeightBehaviour.WeightState.Landed) {
                         catnipHits.Enqueue(nearestCatnipIndex);
                     }
                 }
                 if (hasLemon) {
                     float2 toTarget = nearestLemonPos - catPos;
-                    if (math.lengthsq(toTarget) > 0) { weightForce -= math.normalize(toTarget) * moveForce; }
+                    if (math.lengthsq(toTarget) > 0) { weightForce -= math.normalize(toTarget) * MoveForce; }
                 }
                 if (hasWhirlpool) {
                     float2 toTarget = nearestWhirlpoolPos - catPos;
                     if (math.lengthsq(toTarget) > 0) {
                         float2 dir = math.normalize(toTarget);
                         float2 tangent = new float2(-dir.y, dir.x);
-                        weightForce += (dir + tangent) * moveForce;
+                        weightForce += (dir + tangent) * MoveForce;
                     }
                 }
 
@@ -201,8 +200,7 @@ namespace OMC.ECS {
         }
     }
 
-    public struct CatMovementHold : IComponentData
-    {
+    public struct CatMovementHold : IComponentData {
         public EntityCommandBuffer ecb;
         public NativeQueue<int> catnipHits;
         public bool pending;
@@ -210,23 +208,20 @@ namespace OMC.ECS {
 
     [UpdateAfter(typeof(CatMovementSystem))]
     [UpdateBefore(typeof(CatProjectionSystem))]
-    public partial struct CatMovementResolveSystem : ISystem
-    {
-        public void OnCreate(ref SystemState state)
-        {
+    public partial struct CatMovementResolveSystem : ISystem {
+        public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<CatMovementHold>();
         }
 
-        public void OnUpdate(ref SystemState state)
-        {
+        public void OnUpdate(ref SystemState state) {
             var hold = SystemAPI.GetSingleton<CatMovementHold>();
-            if (!hold.pending){return;}
+            if (!hold.pending) { return; }
 
             state.Dependency.Complete();
 
             DynamicBuffer<WeightContactPulse> pulses = SystemAPI.GetSingletonBuffer<WeightContactPulse>();
             while (hold.catnipHits.TryDequeue(out int index)) {
-            pulses.ElementAt(index).count++;
+                pulses.ElementAt(index).count++;
             }
             hold.catnipHits.Dispose();
 

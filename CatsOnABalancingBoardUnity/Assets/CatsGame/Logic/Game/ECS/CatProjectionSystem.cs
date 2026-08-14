@@ -8,7 +8,7 @@ namespace OMC.ECS {
     [UpdateAfter(typeof(InitialFallSystem))]
     [BurstCompile]
     public partial struct CatProjectionSystem : ISystem {
-        const float projHeight = 0.1f;
+        const float ProjHeight = 0.1f;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BoardTransform>();
@@ -40,7 +40,7 @@ namespace OMC.ECS {
             public BoardTransform board;
 
             void Execute(in CatData catData, ref LocalTransform localTransform) {
-                float3 localOffset = new(catData.position.x, projHeight, catData.position.y);
+                float3 localOffset = new(catData.position.x, ProjHeight, catData.position.y);
 
                 localTransform.Position = board.position + math.mul(board.rotation, localOffset);
             }
@@ -53,11 +53,11 @@ namespace OMC.ECS {
             public float height;
 
             void Execute(in CatData catData, ref LocalTransform localTransform) {
-                float3 landedLocalOffset = new(catData.position.x, projHeight, catData.position.y);
+                float3 landedLocalOffset = new(catData.position.x, ProjHeight, catData.position.y);
                 float3 landedWorldPos = board.position + math.mul(board.rotation, landedLocalOffset);
                 float3 worldPos = landedWorldPos;
 
-                worldPos.y += height - projHeight;
+                worldPos.y += height - ProjHeight;
                 localTransform.Position = worldPos;
             }
         }

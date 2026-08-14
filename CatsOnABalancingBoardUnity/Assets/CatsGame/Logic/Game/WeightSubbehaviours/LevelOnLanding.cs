@@ -28,8 +28,7 @@ namespace OMC {
             }
 
             if (correcting) {
-                if (!collision.collider.CompareTag("Board"))
-                {
+                if (!collision.collider.CompareTag("Board")) {
                     correcting = false;
                     correctingLock = true;
                     return;
@@ -39,19 +38,16 @@ namespace OMC {
 
             boardBody.angularVelocity = Vector3.zero;
             correcting = true;
-            
-            if (source && clip)
-            {
+
+            if (source && clip) {
                 source.clip = clip;
                 source.volume = volume;
                 source.Play();
             }
         }
 
-        void OnCollisionExit(Collision collision)
-        {
-            if (collision.collider.CompareTag("Board"))
-            {
+        void OnCollisionExit(Collision collision) {
+            if (collision.collider.CompareTag("Board")) {
                 correcting = false;
                 correctingLock = true;
                 return;

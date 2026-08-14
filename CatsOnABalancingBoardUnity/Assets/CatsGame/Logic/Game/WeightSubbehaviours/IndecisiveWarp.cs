@@ -22,8 +22,7 @@ namespace OMC {
         }
 
         void OnCollisionEnter(Collision collision) {
-            if (collision.gameObject.CompareTag("Board"))
-            {
+            if (collision.gameObject.CompareTag("Board")) {
                 StartCoroutine(Warp());
             }
         }

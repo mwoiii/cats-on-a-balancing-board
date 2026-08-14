@@ -9,7 +9,7 @@ namespace OMC.ECS {
             public override void Bake(StackingMatrixAuthoring authoring) {
                 var entity = GetEntity(TransformUsageFlags.None);
                 var buffer = AddBuffer<StackingMatrixData>(entity);
-                buffer.Resize(width * height, NativeArrayOptions.ClearMemory);
+                buffer.Resize(Width * Height, NativeArrayOptions.ClearMemory);
             }
         }
     }

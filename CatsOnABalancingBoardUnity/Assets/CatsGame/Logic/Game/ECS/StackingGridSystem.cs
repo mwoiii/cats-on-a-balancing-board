@@ -12,14 +12,15 @@ namespace OMC.ECS {
         // if the board is always circular then approximately 22% of the array is wasted space
         // who up designing a circular array
 
-        public const int width = 400;
+        public const int Width = 400;
 
-        public const int height = 400;
+        public const int Height = 400;
 
-        public const int maxIndex = width * height - 1;
+        public const int MaxIndex = Width * Height - 1;
 
-        public const float stackingHeight = 0.04f;
-        public const int maxContribution = 107;
+        public const float StackingHeight = 0.04f;
+
+        public const int MaxContribution = 107;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BoardTransform>();
@@ -43,8 +44,8 @@ namespace OMC.ECS {
             refreshGridValue.ValueRW.value += 1;
 
             float rDiameter = 1f / (board.radius * 2f);
-            float widthMult = rDiameter * width;
-            float heightMult = rDiameter * height;
+            float widthMult = rDiameter * Width;
+            float heightMult = rDiameter * Height;
 
             StackingGridJob job = new StackingGridJob() {
                 widthMult = widthMult,
@@ -84,18 +85,18 @@ namespace OMC.ECS {
 
         [BurstCompile]
         void Execute(ref CatStack catStack, in CatValue catValue, EnabledRefRW<CanCull> canCull, ref LocalTransform localTransform) {
-            float x = (localTransform.Position.x + board.radius) * widthMult;
-            float y = (localTransform.Position.z + board.radius) * heightMult;
-            int index = (int)(y * StackingGridSystem.width + x);
+            float x = math.floor((localTransform.Position.x + board.radius) * widthMult);
+            float y = math.floor((localTransform.Position.z + board.radius) * heightMult);
+            int index = (int)(y * StackingGridSystem.Width + x);
 
-            if (index < 0 || index > StackingGridSystem.maxIndex) {
+            if (index < 0 || index > StackingGridSystem.MaxIndex) {
                 return;
             }
 
             int prevStackIndex = catStack.prevStackIndex;
 
             // if entered a new cell and the cell hasn't already been updated
-            if (index != prevStackIndex && prevStackIndex >= 0 && prevStackIndex <= StackingGridSystem.maxIndex && refreshGrid[prevStackIndex] != refreshValue) {
+            if (index != prevStackIndex && prevStackIndex >= 0 && prevStackIndex <= StackingGridSystem.MaxIndex && refreshGrid[prevStackIndex] != refreshValue) {
                 refreshGrid[prevStackIndex] = refreshValue;
                 stackingGrid[prevStackIndex] = 0;
             }
@@ -110,10 +111,10 @@ namespace OMC.ECS {
 
             // increment the current cell
             ushort valueBefore = stackingGrid[index];
-            ushort addition = (ushort)math.min(catValue.value, StackingGridSystem.maxContribution);
-            stackingGrid[index] += (ushort)math.min(addition,ushort.MaxValue - stackingGrid[index]);
+            ushort addition = (ushort)math.min(catValue.value, StackingGridSystem.MaxContribution);
+            stackingGrid[index] += (ushort)math.min(addition, ushort.MaxValue - stackingGrid[index]);
 
-            float targetOffset = valueBefore * StackingGridSystem.stackingHeight;
+            float targetOffset = valueBefore * StackingGridSystem.StackingHeight;
             canCull.ValueRW = targetOffset > 0.5f;
 
             float t = 1 - math.exp(-SmoothingRate * deltaTime);

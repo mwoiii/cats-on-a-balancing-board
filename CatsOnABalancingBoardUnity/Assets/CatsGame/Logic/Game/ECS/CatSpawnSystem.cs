@@ -4,10 +4,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
-using Unity.VisualScripting;
-using UnityEngine.Rendering;
-using UnityEngine;
-using System.Linq;
 
 namespace OMC.ECS {
     [BurstCompile]
@@ -36,16 +32,15 @@ namespace OMC.ECS {
 
             config.spawnedThisUpdate = countToSpawn;
 
-            if (countToSpawn == 0){return;}
+            if (countToSpawn == 0) { return; }
 
             catCount.ValueRW.gained += countToSpawn;
 
-            
+
             int totalEntityTarget = config.batchEntityTarget;
-            
+
             int topTier = 0;
-            while(countToSpawn/TomNumber(topTier) > totalEntityTarget)
-            {
+            while (countToSpawn / TomNumber(topTier) > totalEntityTarget) {
                 topTier++;
             }
 
@@ -53,31 +48,28 @@ namespace OMC.ECS {
             NativeArray<int> valuedEntityCounts = new(tierCount, Allocator.Temp);
             int remaining = countToSpawn;
 
-            if (topTier > 0) // we newtons method
-            {
+            if (topTier > 0) { // we newtons method
                 int first = TomNumber(topTier);
-                int second = TomNumber(topTier-1);
+                int second = TomNumber(topTier - 1);
 
                 int h = (int)((long)countToSpawn - (long)totalEntityTarget * second) / (first - second);
-                h = math.clamp(h, 0, countToSpawn/first);
+                h = math.clamp(h, 0, countToSpawn / first);
 
                 valuedEntityCounts[topTier] = h;
                 remaining -= h * first;
             }
 
-            for (int i = topTier > 0 ? topTier - 1 : topTier; i >= 0; i--) // I love programming!!!!!!!!
-            {
+            for (int i = topTier > 0 ? topTier - 1 : topTier; i >= 0; i--) { // I love programming!!!!!!!!
                 int t = TomNumber(i);
-                valuedEntityCounts[i] = remaining/t;
+                valuedEntityCounts[i] = remaining / t;
                 remaining %= t;
             }
 
             int entitiesToSpawn = 0;
-            for (int i = 0; i < tierCount; i++)
-            {
+            for (int i = 0; i < tierCount; i++) {
                 entitiesToSpawn += valuedEntityCounts[i];
             }
-            
+
             // kills burst but useful
             //string debugstring = "";
             //for (int i = 0; i < valuedEntityCounts.Length; i++)
@@ -98,9 +90,8 @@ namespace OMC.ECS {
             int cum = valuedEntityCounts[0];
             for (int i = 0; i < cats.Length; i++) {
                 Entity cat = cats[i];
-                    
-                while (i >= cum && currentValueIndex < valuedEntityCounts.Length)
-                {
+
+                while (i >= cum && currentValueIndex < valuedEntityCounts.Length) {
                     currentValueIndex++;
                     cum += valuedEntityCounts[currentValueIndex];
                 }
@@ -109,14 +100,13 @@ namespace OMC.ECS {
                 value.value = TomNumber(currentValueIndex);
                 SystemAPI.SetComponent(cat, value);
 
-                float2 offset = config.radius * math.sqrt(randomSauce.NextFloat(0,1)) * randomSauce.NextFloat2Direction();
+                float2 offset = config.radius * math.sqrt(randomSauce.NextFloat(0, 1)) * randomSauce.NextFloat2Direction();
                 CatData data = SystemAPI.GetComponent<CatData>(cat);
                 data.position = offset;
                 state.EntityManager.SetComponentData(cat, data);
 
                 LocalTransform catTransform = LocalTransform.FromPositionRotationScale(
-                new float3(offset.x, config.dropHeight, offset.y), quaternion.identity, config.scale
-                );
+                new float3(offset.x, config.dropHeight, offset.y), quaternion.identity, config.scale);
                 state.EntityManager.SetComponentData(cat, catTransform);
 
                 // Spribnkes...
@@ -135,25 +125,19 @@ namespace OMC.ECS {
             return v * math.lerp(new float3(1f), rgb, s);
         }
 
-        static int TomNumber(int a)
-        {
-            if (a <= 0){return 1;}
-            else if (a == 1){return 7;} 
-            else
-            {
+        static int TomNumber(int a) {
+            if (a <= 0) { return 1; } else if (a == 1) { return 7; } else {
                 int t = 1;
-                for (int i = 0; i<a-1;i++){t*=10;}
+                for (int i = 0; i < a - 1; i++) { t *= 10; }
                 return t + 7;
             }
         }
 
-        static int CountDigitsBurstable(int value)
-        {
-            if (value == 0){return 1;}
+        static int CountDigitsBurstable(int value) {
+            if (value == 0) { return 1; }
             value = math.abs(value);
             int digits = 0;
-            while (value > 0)
-            {
+            while (value > 0) {
                 digits++;
                 value /= 10;
             }

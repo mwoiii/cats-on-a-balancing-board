@@ -9,9 +9,9 @@ namespace OMC.ECS {
             public override void Bake(StackingGridAuthoring authoring) {
                 var entity = GetEntity(TransformUsageFlags.None);
                 var stackingBuffer = AddBuffer<StackingGridData>(entity);
-                stackingBuffer.Resize(width * height, NativeArrayOptions.ClearMemory);
+                stackingBuffer.Resize(Width * Height, NativeArrayOptions.ClearMemory);
                 var refreshBuffer = AddBuffer<RefreshGridData>(entity);
-                refreshBuffer.Resize(width * height, NativeArrayOptions.ClearMemory);
+                refreshBuffer.Resize(Width * Height, NativeArrayOptions.ClearMemory);
                 AddComponent<RefreshGridValue>(entity);
             }
         }

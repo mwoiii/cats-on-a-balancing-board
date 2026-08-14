@@ -34,13 +34,12 @@ namespace OMC {
             }
 
             Vector3 currentUp = board.transform.up;
-            targetUp = new Vector3(-currentUp.x,currentUp.y,-currentUp.z);
+            targetUp = new Vector3(-currentUp.x, currentUp.y, -currentUp.z);
 
             boardBody.angularVelocity = Vector3.zero;
             correcting = true;
-            
-            if (source && clip)
-            {
+
+            if (source && clip) {
                 source.clip = clip;
                 source.volume = volume;
                 source.Play();

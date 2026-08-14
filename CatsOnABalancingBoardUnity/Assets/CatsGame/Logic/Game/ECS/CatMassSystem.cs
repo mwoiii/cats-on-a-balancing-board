@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -18,9 +16,9 @@ namespace OMC.ECS {
             float2 weightedSum = float2.zero;
             float totalMass = 0;
 
-            foreach (var (catData,catValue) in SystemAPI.Query<RefRO<CatData>,RefRO<CatValue>>().WithDisabled<IsInitialFalling>()) {
+            foreach (var (catData, catValue) in SystemAPI.Query<RefRO<CatData>, RefRO<CatValue>>().WithDisabled<IsInitialFalling>()) {
                 weightedSum += catData.ValueRO.position;
-                totalMass +=  catValue.ValueRO.value;
+                totalMass += catValue.ValueRO.value;
             }
 
             float2 center = totalMass > 0 ? weightedSum / totalMass : float2.zero;
