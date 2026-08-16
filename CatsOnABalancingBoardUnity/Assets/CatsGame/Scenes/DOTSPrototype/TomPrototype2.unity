@@ -2282,7 +2282,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &611446743
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2314,8 +2314,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c922e922ea27243a69c5a06b76a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OMC.UI.DialogueController
+  writeDelay: 0.05
+  animationDelay: 0.02
   textInput: {fileID: 611446747}
-  defaultDelay: 0.05
 --- !u!223 &611446746
 Canvas:
   m_ObjectHideFlags: 0
@@ -2360,7 +2361,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <style="shake">DUDE</style> IT'S SO OVER IT'S SO OVER MAN I MESSED UP <style="shake">BAD</style>
+  m_text: <size=+100><style="shake">DUDE<style="pause">.</style></size></style> <style="shake">IT'S
+    SO OVER<style="pause">.</style></style> IT'S SO OVER MAN<style="pause">.</style>
+    I MESSED UP<style="pause">.</style> <size=+100><style="shake"><style="pause">BAD</style>.</style></style>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b3a2008dc0ced154cb0c8a9dfcda440a, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: de500ccce29c08445877a6783c68c52b, type: 2}
@@ -2387,8 +2390,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 136.4
-  m_fontSizeBase: 136.4
+  m_fontSize: 96.2
+  m_fontSizeBase: 96.2
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6939,7 +6942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1487391733314737045
 RectTransform:
   m_ObjectHideFlags: 0

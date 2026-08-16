@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -10,22 +9,34 @@ using UnityEngine;
 namespace OMC.UI {
     public class DialogueController : MonoBehaviour {
 
-        public float defaultDelay = 0.05f;
+        public float writeDelay = 0.05f;
+
+        public float animationDelay = 0.05f;
 
         [SerializeField]
         private TextMeshProUGUI textInput;
 
+        private int maxVisibleCharacters;
+
         private int visibleCharacters;
 
-        private bool ready;
+        private float writeCooldown;
+
+        private float animateCooldown;
+
+        private bool parsed;
+
+        private Vector3[] animatedVertices;
 
         private List<int> shakeVertices = new List<int>();
-
         private List<int> shakeBreaks = new List<int>();
 
-        private static Regex startRegex = new Regex("<style=\"(\\w*)\">");
+        private Dictionary<int, int> pauseCharacters = new Dictionary<int, int>();
 
+        private static Regex startRegex = new Regex("<style=\"(\\w*)\">");
         private static Regex endRegex = new Regex("</style>");
+
+        private const float PauseDelay = 1f;
 
         private struct StyleInfo {
             public bool isStart;
@@ -33,10 +44,9 @@ namespace OMC.UI {
             public string styleName;
         }
 
-
         private void OnEnable() {
-            if (textInput && ready) {
-                RunDialogue();
+            if (textInput && parsed) {
+                ResetDialogue();
             }
         }
 
@@ -46,32 +56,53 @@ namespace OMC.UI {
             }
 
             if (textInput) {
-
-                //foreach (var x in styleStack) {
-                //    Debug.Log($"{x.pushMode}, {x.styleName}, {x.index}");
-                //}
-                ready = true;
-                RunDialogue();
+                ParseText();
+                ResetDialogue();
             }
         }
 
-        private void RunDialogue() {
-            ParseStyleTags();
+        private void ResetDialogue() {
             textInput.maxVisibleCharacters = 0;
-            StartCoroutine(WriteText());
-            StartCoroutine(AnimateText());
+            visibleCharacters = 0;
+            animateCooldown = 0f;
+            writeCooldown = 0f;
         }
 
-        private IEnumerator WriteText() {
-            for (visibleCharacters = 0; visibleCharacters < textInput.text.Length; visibleCharacters++) {
-                if (textInput) {
+        private void Update() {
+            UpdateWriteText();
+            UpdateAnimateText();
+        }
+
+        private void UpdateWriteText() {
+            if (visibleCharacters < maxVisibleCharacters) {
+                writeCooldown -= Time.deltaTime;
+                if (writeCooldown <= 0) {
+                    visibleCharacters++;
                     textInput.maxVisibleCharacters = visibleCharacters;
-                    yield return new WaitForSeconds(defaultDelay);
+                    if (pauseCharacters.TryGetValue(visibleCharacters, out int pauseValue)) {
+                        writeCooldown = PauseDelay * pauseValue;
+                    } else {
+                        writeCooldown = writeDelay;
+                    }
                 }
             }
         }
 
-        private void ParseStyleTags() {
+        private void UpdateAnimateText() {
+            animateCooldown -= Time.deltaTime;
+            if (animateCooldown <= 0) {
+                textInput.ForceMeshUpdate(false, false);
+                animatedVertices = textInput.textInfo.meshInfo[0].vertices;
+                int lastVisible = visibleCharacters * 4 - 1;
+                ApplyShake(animatedVertices, lastVisible);
+                animateCooldown = animationDelay;
+            }
+
+            textInput.textInfo.meshInfo[0].vertices = animatedVertices;
+            textInput.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
+        }
+
+        private void ParseText() {
             // get queue of style starts and ends, in order
             Queue<StyleInfo> styleQueue = new Queue<StyleInfo>();
             MatchCollection startMatches = startRegex.Matches(textInput.text);
@@ -85,18 +116,22 @@ namespace OMC.UI {
                 });
             }
 
-            // run through the process of recording which vertices fall between tags
+            // helpers
             Stack<string> styleStack = new Stack<string>();
             Dictionary<string, int> styleActive = new Dictionary<string, int>();
+            HashSet<string> styleBreaks = new HashSet<string>();
+            int characterIndex = -1;
 
-            bool shakeWasActive = false; // to make it such that each shake block is separate
-
+            // run through the process of recording which vertices fall between tags
             textInput.ForceMeshUpdate(false, false);
             foreach (var character in textInput.textInfo.characterInfo) {
+                characterIndex++;
                 if (!character.isVisible) {
                     continue;
                 }
 
+                // update values for every tag that appeared before the current character but after the last
+                styleBreaks.Clear();
                 while (styleQueue.TryPeek(out StyleInfo result)) {
                     if (result.index < character.index) {
                         styleQueue.Dequeue();
@@ -110,6 +145,9 @@ namespace OMC.UI {
                             }
                             string styleName = styleStack.Pop();
                             styleActive.TryGetValue(styleName, out int active);
+                            if (active == 1) {
+                                styleBreaks.Add(styleName);
+                            }
                             styleActive[styleName] = math.max(active - 1, 0);
                         }
                     } else {
@@ -117,30 +155,21 @@ namespace OMC.UI {
                     }
                 }
 
-                if (styleActive.TryGetValue("shake", out int value) && value > 0) {
-                    shakeWasActive = true;
+                // handling the individual style cases depending on if they are active or not
+                if (styleActive.TryGetValue("shake", out int shakeValue) && shakeValue > 0) {
                     AddVertices(shakeVertices, character.vertexIndex);
-                } else if (value <= 0 && shakeWasActive) {
-                    shakeWasActive = false;
-                    shakeBreaks.Add(character.vertexIndex + 3);
+                }
+                if (styleBreaks.Contains("shake")) {
+                    shakeBreaks.Add(character.vertexIndex - 1);
+                }
+
+                if (styleActive.TryGetValue("pause", out int pauseValue) && pauseValue > 0) {
+                    pauseCharacters[characterIndex + 1] = pauseValue;
                 }
             }
-        }
 
-        private IEnumerator AnimateText() {
-            while (true) {
-                textInput.ForceMeshUpdate(false, false);
-                var vertices = textInput.textInfo.meshInfo[0].vertices;
-
-                int lastVisible = visibleCharacters * 4 - 1;
-
-                ApplyShake(vertices, lastVisible);
-
-                textInput.textInfo.meshInfo[0].vertices = vertices;
-                textInput.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
-
-                yield return new WaitForSeconds(defaultDelay);
-            }
+            maxVisibleCharacters = characterIndex + 1;
+            parsed = true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
