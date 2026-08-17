@@ -182,6 +182,7 @@ MonoBehaviour:
   baseColor: {r: 1, g: 0.3537736, b: 0.5777499, a: 1}
   multColor: {r: 0.3066038, g: 0.54873097, b: 1, a: 1}
   fufuColor: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+  cooldownDuration: 60
   rotationSelectPanel: {fileID: 2066981229}
   rotationButtonPrefab: {fileID: 2813600167592615761, guid: d01c6aceebc931b4c8884c4482154dc8, type: 3}
 --- !u!1 &91855992
@@ -452,11 +453,11 @@ CharacterJoint:
     spring: 0
     damper: 0
   m_Swing1Limit:
-    limit: 10
+    limit: 15
     bounciness: 0
     contactDistance: 0
   m_Swing2Limit:
-    limit: 10
+    limit: 15
     bounciness: 0
     contactDistance: 0
   m_EnableProjection: 0

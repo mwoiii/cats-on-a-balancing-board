@@ -29,15 +29,22 @@ public class ShopBehaviour : MonoBehaviour
     public Color multColor;
     public Color fufuColor;
 
+    public float cooldownDuration = 60;
+    float cooldownEnd = -1;
+
     void Start()
     {
         instance = this;
-
-        //OpenShop();
     }
 
     public void OpenShop()
     {
+        if (Time.unscaledTime < cooldownEnd)
+        {
+            Debug.Log("Shop refused, on cooldown"); 
+            return;
+        }
+
         masterObject.SetActive(true);
         rotationSelectPanel.SetActive(false);
 
@@ -51,11 +58,13 @@ public class ShopBehaviour : MonoBehaviour
         masterObject.SetActive(false);
 
         Time.timeScale = GlobalTimescale.timeScale;
+
+        cooldownEnd = Time.unscaledTime + cooldownDuration;
     }
 
     void SetupChoices()
     {
-        choices = WeightTypeRegistry.GetRandomWeightDefs(choiceCount);
+        choices = WeightTypeRegistry.GetRandomWeightDefs(choiceCount, WeightDropper.instance.GetCurrentRotation());
         
         for(int i = 0; i < choiceCount; i++)
         {
@@ -67,7 +76,7 @@ public class ShopBehaviour : MonoBehaviour
 
     void SetAura(Image image, WeightDef def)
     {
-        Debug.Log($"{def.name}");
+        Debug.Log($"{def.name} ::: mult {def.multAdd} ::: base {def.baseAdd}");
         float multSign = math.sign(def.multAdd);
         float baseSign = math.sign(def.baseAdd);
         float signDiff = math.abs(multSign - baseSign);
@@ -109,6 +118,8 @@ public class ShopBehaviour : MonoBehaviour
         List<WeightDef> rotatoin = WeightDropper.instance.GetCurrentRotation();
         foreach (WeightDef def in rotatoin)
         {
+            Debug.Log($"{def.name} ::: mult {def.multAdd} ::: base {def.baseAdd}");
+
             GameObject button = Instantiate(rotationButtonPrefab,rotationSelectPanel.transform);
             button.GetComponent<Image>().sprite = def.sprite;
 

@@ -71,9 +71,13 @@ namespace OMC {
             return selection[^1];
         }
 
-        public static WeightDef[] GetRandomWeightDefs(int amount) // currently has nothing to do with rarity
+        public static WeightDef[] GetRandomWeightDefs(int amount, List<WeightDef> without = null) // currently has nothing to do with rarity
         {
             List<WeightDef> temp = new(weightDefs);
+            if (without != null)
+            {
+                temp.RemoveAll(x => without.Contains(x));
+            }
             WeightDef[] defs = new WeightDef[amount];
             for (int i = 0; i < amount; i++)
             {

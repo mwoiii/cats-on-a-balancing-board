@@ -59,7 +59,7 @@ namespace OMC {
                     PlayCountdown();
                 }
                 if (currentSecond == 0) {
-                    PlayComplete();
+                    if (!TomCheckShop()){PlayComplete();} // tom trigger
 
                     if (CatSpawnerScript.instance) {
                         StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
@@ -68,8 +68,6 @@ namespace OMC {
                         ResetTimer();
                     } else {
                         CatSpawnRequest.Enqueue(math.min(litterBonus,int.MaxValue-GameLogicScript.instance.catCount));
-
-                        TomCheckShop(); // tom trigger
 
                         IncrementLitterBonus();
                         ResetTimer();
@@ -86,6 +84,28 @@ namespace OMC {
         }
 
         private void ResetLitterBonus() {
+            EvaluateFormula();
+
+            comboCounter = 0;
+
+            litterBonus = (int)Mathf.Floor(bonusMult);
+
+            OnLitterBonusChanged?.Invoke(litterBonus);
+        }
+
+        private void IncrementLitterBonus() {
+            EvaluateFormula();
+
+            comboCounter++;
+            prevComboCounter = comboCounter; // tom trigger
+
+            litterBonus = (int)Mathf.Ceil(bonusMult * Mathf.Pow(bonusBase, comboCounter));
+            
+            OnLitterBonusChanged?.Invoke(litterBonus);
+        }
+
+        private void EvaluateFormula()
+        {
             bonusMult = 10;
             bonusBase = 1;
             foreach (WeightDef def in WeightDropper.instance.GetCurrentRotation()) {
@@ -95,21 +115,6 @@ namespace OMC {
             bonusMult = Mathf.Max(bonusMult, 1);
             bonusBase = Mathf.Max(bonusBase, 1);
             //Debug.Log($"{bonusMult} * {bonusBase} ^ k");
-
-            litterBonus = (int)Mathf.Floor(bonusMult);
-            
-            comboCounter = 0;
-
-            OnLitterBonusChanged?.Invoke(litterBonus);
-        }
-
-        private void IncrementLitterBonus() {
-            litterBonus = (int)Mathf.Ceil(bonusMult * Mathf.Pow(bonusBase, comboCounter));
-
-            comboCounter++;
-            prevComboCounter = comboCounter; // tom trigger
-            
-            OnLitterBonusChanged?.Invoke(litterBonus);
         }
 
         private void ResetTimer() {
@@ -144,13 +149,15 @@ namespace OMC {
             }
         }
 
-        private int prevComboCounter = -1;
-        private void TomCheckShop()
+        private int prevComboCounter = -1; // tom trigger
+        private bool TomCheckShop() // tom trigger
         {
             if (comboCounter == 0 && comboCounter < prevComboCounter)
             {
                 ShopBehaviour.instance.OpenShop();
+                return true;
             }
+            return false;
         }
     }
 }
