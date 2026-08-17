@@ -69,6 +69,8 @@ namespace OMC {
                     } else {
                         CatSpawnRequest.Enqueue(math.min(litterBonus,int.MaxValue-GameLogicScript.instance.catCount));
 
+                        TomCheckShop(); // tom trigger
+
                         IncrementLitterBonus();
                         ResetTimer();
                     }
@@ -86,7 +88,7 @@ namespace OMC {
         private void ResetLitterBonus() {
             bonusMult = 10;
             bonusBase = 1;
-            foreach (WeightDef def in WeightDropper.instance.currentWeightRotation) {
+            foreach (WeightDef def in WeightDropper.instance.GetCurrentRotation()) {
                 bonusMult += def.multAdd;
                 bonusBase += def.baseAdd;
             }
@@ -105,6 +107,7 @@ namespace OMC {
             litterBonus = (int)Mathf.Ceil(bonusMult * Mathf.Pow(bonusBase, comboCounter));
 
             comboCounter++;
+            prevComboCounter = comboCounter; // tom trigger
             
             OnLitterBonusChanged?.Invoke(litterBonus);
         }
@@ -138,6 +141,15 @@ namespace OMC {
             if (completeSound && completeSource) {
                 completeSource.PlayOneShot(completeSound);
                 completeSource.pitch = Mathf.Min(completeSource.pitch + pitchStep, maxPitch);
+            }
+        }
+
+        private int prevComboCounter = -1;
+        private void TomCheckShop()
+        {
+            if (comboCounter == 0 && comboCounter < prevComboCounter)
+            {
+                ShopBehaviour.instance.OpenShop();
             }
         }
     }

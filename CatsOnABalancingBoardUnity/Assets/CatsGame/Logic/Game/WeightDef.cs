@@ -22,6 +22,8 @@ namespace OMC {
 
         public GameObject spherePrefab;
 
+        public Sprite sprite;
+
         [HideInInspector]
         public GameObject[] shapePrefabs;
 

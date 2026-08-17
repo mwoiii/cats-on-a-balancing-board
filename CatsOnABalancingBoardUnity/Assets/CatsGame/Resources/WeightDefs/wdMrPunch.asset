@@ -20,5 +20,6 @@ MonoBehaviour:
   baseAdd: 0
   blockPrefab: {fileID: 0}
   spherePrefab: {fileID: 6982464574026435089, guid: 910d9a262b0029346a77f5761c76d6b7, type: 3}
+  sprite: {fileID: 21300000, guid: 536bc8ba39f4bdb46971ebb92baddf0e, type: 3}
   shapePrefabs:
   - {fileID: 6982464574026435089, guid: 910d9a262b0029346a77f5761c76d6b7, type: 3}

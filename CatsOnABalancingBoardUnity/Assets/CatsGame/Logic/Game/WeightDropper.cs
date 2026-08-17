@@ -34,7 +34,8 @@ namespace OMC {
 
         public GameObject nextPrefab { get; private set; }
 
-        public List<WeightDef> currentWeightRotation = new();
+        [SerializeField]
+        private List<WeightDef> currentWeightRotation = new();
 
         public static event System.Action FirstWeightDropped;
 
@@ -117,6 +118,20 @@ namespace OMC {
             prevPicked = picked;
             nextPrefab = picked.GetRandomShapePrefab();
             OnNextPrefab?.Invoke(nextPrefab);
+        }
+
+        public void SubstituteInRotation(WeightDef outgoing, WeightDef incoming)
+        {
+            if (!currentWeightRotation.Contains(outgoing))
+            {
+                Debug.LogWarning($"tried to substitute {outgoing.name} in rotation, but the rotation did not contain it");
+            }
+            currentWeightRotation[currentWeightRotation.IndexOf(outgoing)] = incoming;
+        }
+
+        public List<WeightDef> GetCurrentRotation()
+        {
+            return currentWeightRotation;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static OMC.WeightBehaviour;
 
@@ -68,6 +69,19 @@ namespace OMC {
             }
 
             return selection[^1];
+        }
+
+        public static WeightDef[] GetRandomWeightDefs(int amount) // currently has nothing to do with rarity
+        {
+            List<WeightDef> temp = new(weightDefs);
+            WeightDef[] defs = new WeightDef[amount];
+            for (int i = 0; i < amount; i++)
+            {
+                int j = UnityEngine.Random.Range(0,temp.Count);
+                defs[i] = temp[j];
+                temp.RemoveAt(j);
+            }
+            return defs;
         }
     }
 }
