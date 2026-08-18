@@ -17,6 +17,7 @@ namespace OMC {
         public const double scoreScaleFactor = 0.05d;
 
         public int catCount { get; private set; }
+        public long catCountAllTime { get; private set;}
 
         private void Update() {
             if (gameRunning) {
@@ -36,6 +37,7 @@ namespace OMC {
 
         private void CheckGameOver(int difference) {
             catCount += math.min(difference, int.MaxValue - catCount);
+            catCountAllTime += math.max(difference, 0);
             if (catCount <= 0 && gameRunning) {
                 GameOver();
             }

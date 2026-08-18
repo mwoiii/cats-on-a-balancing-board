@@ -32,11 +32,13 @@ public class ShopBehaviour : MonoBehaviour
     public Color multColor;
     public Color fufuColor;
 
+    public static event System.Action OnShopClosed;
+
     void Start()
     {
         instance = this;
 
-        ActivateShopPrompt(); // temporary, in absence of a system that activates it
+        //ActivateShopPrompt(); // in absence of a system that activates it
     }
 
     void Update()
@@ -74,6 +76,8 @@ public class ShopBehaviour : MonoBehaviour
         masterObject.SetActive(false);
 
         Time.timeScale = GlobalTimescale.timeScale;
+
+        OnShopClosed?.Invoke();
     }
 
     void SetupChoices()
