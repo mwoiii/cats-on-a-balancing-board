@@ -59,7 +59,7 @@ namespace OMC {
                     PlayCountdown();
                 }
                 if (currentSecond == 0) {
-                    if (!TomCheckShop()){PlayComplete();} // tom trigger
+                    PlayComplete();
 
                     if (CatSpawnerScript.instance) {
                         StartCoroutine(CatSpawnerScript.instance.PopulateBoard(litterBonus));
@@ -97,9 +97,11 @@ namespace OMC {
             EvaluateFormula();
 
             comboCounter++;
-            prevComboCounter = comboCounter; // tom trigger
 
-            litterBonus = (int)Mathf.Ceil(bonusMult * Mathf.Pow(bonusBase, comboCounter));
+            litterBonus = (int)Mathf.Ceil(Mathf.Max(
+                bonusMult * Mathf.Pow(bonusBase, comboCounter),
+                litterBonus * bonusBase
+            ));
             
             OnLitterBonusChanged?.Invoke(litterBonus);
         }
@@ -147,17 +149,6 @@ namespace OMC {
                 completeSource.PlayOneShot(completeSound);
                 completeSource.pitch = Mathf.Min(completeSource.pitch + pitchStep, maxPitch);
             }
-        }
-
-        private int prevComboCounter = -1; // tom trigger
-        private bool TomCheckShop() // tom trigger
-        {
-            if (comboCounter == 0 && comboCounter < prevComboCounter)
-            {
-                ShopBehaviour.instance.OpenShop();
-                return true;
-            }
-            return false;
         }
     }
 }

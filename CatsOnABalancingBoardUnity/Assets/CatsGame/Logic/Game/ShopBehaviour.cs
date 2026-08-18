@@ -8,6 +8,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ShopBehaviour : MonoBehaviour
@@ -21,6 +22,8 @@ public class ShopBehaviour : MonoBehaviour
     public GameObject[] choiceSlotObjects = new GameObject[choiceCount];
     public WeightPreviewSpinner[] spinners = new WeightPreviewSpinner[choiceCount];
     WeightDef[] choices;
+
+    public GameObject shopPrompt;
     
     public Sprite kikiAura;
     public Sprite boboAura;
@@ -29,21 +32,34 @@ public class ShopBehaviour : MonoBehaviour
     public Color multColor;
     public Color fufuColor;
 
-    public float cooldownDuration = 60;
-    float cooldownEnd = -1;
-
     void Start()
     {
         instance = this;
+
+        ActivateShopPrompt(); // temporary, in absence of a system that activates it
     }
 
-    public void OpenShop()
+    void Update()
     {
-        if (Time.unscaledTime < cooldownEnd)
+        if (Keyboard.current.oKey.wasPressedThisFrame)
         {
-            Debug.Log("Shop refused, on cooldown"); 
+            OpenShop();
+        }
+    }
+
+    public void ActivateShopPrompt()
+    {
+        shopPrompt.SetActive(true);
+    }
+
+    void OpenShop()
+    {
+        if (!shopPrompt.activeSelf)
+        {
+            Debug.Log("shop prompt not active");
             return;
         }
+        shopPrompt.SetActive(false);
 
         masterObject.SetActive(true);
         rotationSelectPanel.SetActive(false);
@@ -53,13 +69,11 @@ public class ShopBehaviour : MonoBehaviour
         SetupChoices();
     }
 
-    public void CloseShop()
+    void CloseShop()
     {
         masterObject.SetActive(false);
 
         Time.timeScale = GlobalTimescale.timeScale;
-
-        cooldownEnd = Time.unscaledTime + cooldownDuration;
     }
 
     void SetupChoices()

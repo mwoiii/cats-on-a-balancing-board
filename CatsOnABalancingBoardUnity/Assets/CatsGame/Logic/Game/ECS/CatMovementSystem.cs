@@ -102,7 +102,7 @@ namespace OMC.ECS {
                 float2 nearestLemonPos = float2.zero;
                 bool hasLemon = false;
 
-                float nearestWhirlpoolDist = ReactDistance + randomSauce.NextFloat(-0.2f, 0.2f);
+                float nearestWhirlpoolDist = float.MaxValue;
                 float2 nearestWhirlpoolPos = float2.zero;
                 bool hasWhirlpool = false;
 
