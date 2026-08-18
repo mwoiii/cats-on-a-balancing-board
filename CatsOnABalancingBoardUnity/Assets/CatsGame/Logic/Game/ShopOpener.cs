@@ -29,7 +29,7 @@ public class ShopOpener : MonoBehaviour
     void GetStartedWithIt()
     {
         catCountAllTimePrevious = gameLogic.catCountAllTime;
-        diffThreshold = 0;
+        diffThreshold = (long)Mathf.Ceil(thresholdScaler * gameLogic.catCount);
         StartCoroutine(CheckOpenShop());
     }
 

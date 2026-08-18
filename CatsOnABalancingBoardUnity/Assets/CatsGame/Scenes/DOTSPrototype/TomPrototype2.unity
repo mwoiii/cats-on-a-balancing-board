@@ -198,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a584ffb66d10d248a3db225e7ac9b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopOpener
-  timeToNextCheck: 27
+  timeToNextCheck: 23
   thresholdScaler: 0.1
   shopOnThisManyThresholdsMet: 3
 --- !u!1 &91855992
