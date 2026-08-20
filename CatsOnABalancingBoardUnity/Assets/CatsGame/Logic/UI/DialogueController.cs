@@ -159,8 +159,11 @@ namespace OMC.UI {
             if (visibleCharacters < maxVisibleCharacters) {
                 writeCooldown -= Time.deltaTime;
                 if (writeCooldown <= 0) {
-                    visibleCharacters++;
-                    textInput.maxVisibleCharacters = visibleCharacters;
+                    while (writeCooldown < 0 && visibleCharacters < maxVisibleCharacters) {
+                        visibleCharacters++;
+                        textInput.maxVisibleCharacters = visibleCharacters;
+                        writeCooldown += writeDelay;
+                    }
                     if (pauseCharacters.TryGetValue(visibleCharacters, out int pauseValue)) {
                         writeCooldown = 0.3333f * pauseValue;
                     } else {
