@@ -79,14 +79,56 @@ MonoBehaviour:
     m_ClosingDefinition: </color></b>
     m_OpeningTagArray: 3c000000630000006f0000006c0000006f000000720000003d000000230000003800000030000000410000003000000046000000460000003e0000003c000000620000003e000000
     m_ClosingTagArray: 3c0000002f000000630000006f0000006c0000006f000000720000003e0000003c0000002f000000620000003e000000
-  - m_Name: Shake
-    m_HashCode: 100945780
+  - m_Name: Shake1
+    m_HashCode: -963756603
     m_OpeningDefinition: 
     m_ClosingDefinition: 
     m_OpeningTagArray: 
     m_ClosingTagArray: 
-  - m_Name: Pause
-    m_HashCode: 92663762
+  - m_Name: Shake2
+    m_HashCode: -963756602
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: Shake3
+    m_HashCode: -963756601
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: ShakeGroup1
+    m_HashCode: -22322534
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: ShakeGroup2
+    m_HashCode: -22322535
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: ShakeGroup3
+    m_HashCode: -22322536
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: Pause1
+    m_HashCode: -1237063133
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: Pause2
+    m_HashCode: -1237063136
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: Pause3
+    m_HashCode: -1237063135
     m_OpeningDefinition: 
     m_ClosingDefinition: 
     m_OpeningTagArray: 
