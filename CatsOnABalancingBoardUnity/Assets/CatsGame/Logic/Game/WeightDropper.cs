@@ -133,5 +133,19 @@ namespace OMC {
         {
             return currentWeightRotation;
         }
+
+        public static (float multVal, float baseVal) ComputeBonusFormula(WeightDef outgoing = null, WeightDef incoming = null)
+        {
+            float multVal = 10;
+            float baseVal = 1;
+            foreach (WeightDef def in instance.GetCurrentRotation()) {
+                WeightDef a = (outgoing != null && def == outgoing) ? incoming : def;
+                multVal += a.multAdd;
+                baseVal += a.baseAdd;
+            }
+            multVal = Mathf.Max(multVal, 1);
+            baseVal = Mathf.Max(baseVal, 1);
+            return (multVal,baseVal);
+        }
     }
 }

@@ -21,5 +21,7 @@ MonoBehaviour:
   blockPrefab: {fileID: 6982464574026435089, guid: 2f9b20b6c2da8994e827bffa167cc291, type: 3}
   spherePrefab: {fileID: 0}
   sprite: {fileID: 21300000, guid: c8a732e7dffd36a4aa5537963fba04f1, type: 3}
+  description: 'Attracts other weights, repels other magnets. (Tom note: doesn''t
+    work well right now)'
   shapePrefabs:
   - {fileID: 6982464574026435089, guid: 2f9b20b6c2da8994e827bffa167cc291, type: 3}

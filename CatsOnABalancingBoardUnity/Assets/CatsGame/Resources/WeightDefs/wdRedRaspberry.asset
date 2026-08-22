@@ -21,5 +21,6 @@ MonoBehaviour:
   blockPrefab: {fileID: 0}
   spherePrefab: {fileID: 6982464574026435089, guid: c38ede7f02a7d3549a4e761aa95f9e6d, type: 3}
   sprite: {fileID: 21300000, guid: d1fc2bb38a773ba478d64e6785e65656, type: 3}
+  description: Reverses the board tilt on landing.
   shapePrefabs:
   - {fileID: 6982464574026435089, guid: c38ede7f02a7d3549a4e761aa95f9e6d, type: 3}

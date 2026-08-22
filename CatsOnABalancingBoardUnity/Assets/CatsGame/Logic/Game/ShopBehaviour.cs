@@ -4,6 +4,7 @@ using System.Net.NetworkInformation;
 using Assets.CatsGame.Logic.Game;
 using OMC;
 using OMC.UI;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
@@ -24,6 +25,8 @@ public class ShopBehaviour : MonoBehaviour
     WeightDef[] choices;
 
     public GameObject shopPrompt;
+
+    public TextMeshProUGUI formulaText;
     
     public Sprite kikiAura;
     public Sprite boboAura;
@@ -38,7 +41,7 @@ public class ShopBehaviour : MonoBehaviour
     {
         instance = this;
 
-        //ActivateShopPrompt(); // in absence of a system that activates it
+        //ActivateShopPrompt();
     }
 
     void Update()
@@ -66,12 +69,14 @@ public class ShopBehaviour : MonoBehaviour
         masterObject.SetActive(true);
         rotationSelectPanel.SetActive(false);
 
+        ShowCurrentFormula();
+
         Time.timeScale = 0;
 
         SetupChoices();
     }
 
-    void CloseShop()
+    public void CloseShop()
     {
         masterObject.SetActive(false);
 
@@ -89,6 +94,8 @@ public class ShopBehaviour : MonoBehaviour
             SetAura(choiceSlotObjects[i].GetComponent<Image>(), choices[i]);
 
             spinners[i].TrySetPreview(choices[i].shapePrefabs[0]);
+
+            choiceSlotObjects[i].GetComponent<WeightTooltipHoverTrigger>().def = choices[i];
         }
     }
 
@@ -141,6 +148,11 @@ public class ShopBehaviour : MonoBehaviour
             GameObject button = Instantiate(rotationButtonPrefab,rotationSelectPanel.transform);
             button.GetComponent<Image>().sprite = def.sprite;
 
+            var trigger = button.GetComponent<WeightTooltipHoverTrigger>();
+            trigger.def = def;
+            trigger.OnHoverEnter += PreviewFormula;
+            trigger.OnHoverExit += ShowCurrentFormula;
+
             button.GetComponent<Button>().onClick.AddListener(() => OnRotationSlotSelected(def));
         }
 
@@ -150,6 +162,26 @@ public class ShopBehaviour : MonoBehaviour
     void OnRotationSlotSelected(WeightDef outgoing)
     {
         WeightDropper.instance.SubstituteInRotation(outgoing, pendingIncoming);
+        WeightTooltip.instance.Hide();
         CloseShop();
+    }
+
+    void ShowCurrentFormula(WeightDef unused = null)
+    {
+        var (multVal, baseVal) = WeightDropper.ComputeBonusFormula();
+        formulaText.text = FormatFormula(multVal, baseVal);
+    }
+
+    void PreviewFormula(WeightDef outgoing)
+    {
+        var (multVal, baseVal) = WeightDropper.ComputeBonusFormula(outgoing, pendingIncoming);
+        formulaText.text = FormatFormula(multVal, baseVal);
+    }
+
+    string FormatFormula(float multVal, float baseVal)
+    {
+        string multHex = UnityEngine.ColorUtility.ToHtmlStringRGB(multColor);
+        string baseHex = UnityEngine.ColorUtility.ToHtmlStringRGB(baseColor);
+        return $"<color=#{multHex}>{multVal}</color> * <color=#{baseHex}>{baseVal}</color><sup><i>COMBO</i></sup>";
     }
 }

@@ -21,4 +21,5 @@ MonoBehaviour:
   blockPrefab: {fileID: 6982464574026435089, guid: 5757ece8752aa7040896971bacaad9a2, type: 3}
   spherePrefab: {fileID: 6982464574026435089, guid: 21e86da228ce44d4e9d182ca33e7f7b5, type: 3}
   sprite: {fileID: 21300000, guid: 40ad2265c6a79a74ebfd0d5c55cf1cc8, type: 3}
+  description: Has no mass, and destroys other weight types.
   shapePrefabs: []

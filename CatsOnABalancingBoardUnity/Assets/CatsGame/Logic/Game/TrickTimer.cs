@@ -108,14 +108,7 @@ namespace OMC {
 
         private void EvaluateFormula()
         {
-            bonusMult = 10;
-            bonusBase = 1;
-            foreach (WeightDef def in WeightDropper.instance.GetCurrentRotation()) {
-                bonusMult += def.multAdd;
-                bonusBase += def.baseAdd;
-            }
-            bonusMult = Mathf.Max(bonusMult, 1);
-            bonusBase = Mathf.Max(bonusBase, 1);
+            (bonusMult, bonusBase) = WeightDropper.ComputeBonusFormula();
             //Debug.Log($"{bonusMult} * {bonusBase} ^ k");
         }
 
