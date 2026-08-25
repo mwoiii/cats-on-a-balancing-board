@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace OMC {
     public class TrickTimer : MonoBehaviour {
+        public static TrickTimer instance;
+
         public int trickLength;
 
         float bonusBase;
@@ -38,6 +40,7 @@ namespace OMC {
         public static event Action<int> OnLitterBonusChanged;
 
         private void Start() {
+            instance = this;
             ResetTimerAndCombo(0);
             WeightDropper.FirstWeightDropped += GetStartedWithIt;
             CatManagerScript.LostCat += ResetTimerAndCombo;

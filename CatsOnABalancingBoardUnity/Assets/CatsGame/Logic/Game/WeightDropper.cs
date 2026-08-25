@@ -89,6 +89,10 @@ namespace OMC {
             pos.z = posXZ.y;
             shadow.transform.localPosition = pos;
 
+            // drop indicator constant size fix
+            Vector3 boardScale = board.lossyScale;
+            shadow.transform.localScale = new(shadowScale/boardScale.x,shadowScale/boardScale.z,shadowScale);
+
             spinAngle += spinSpeed * Time.deltaTime;
             shadow.transform.localRotation = Quaternion.Euler(90f, spinAngle, 0f);
 

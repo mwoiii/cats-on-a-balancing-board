@@ -10,6 +10,8 @@ namespace OMC.ECS {
 
         float boardRadius;
 
+        Mesh mesh;
+
         void Start() {
             boss = World.DefaultGameObjectInjectionWorld.EntityManager;
 
@@ -18,11 +20,13 @@ namespace OMC.ECS {
                 boardEntity = boss.CreateEntity(typeof(BoardTransform));
             }
 
-            Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
+            mesh = GetComponent<MeshFilter>().sharedMesh;
             boardRadius = mesh.bounds.extents.x * transform.localScale.x;
         }
 
         void FixedUpdate() {
+            boardRadius = mesh.bounds.extents.x * transform.localScale.x;
+
             boss.SetComponentData(boardEntity, new BoardTransform {
                 rotation = transform.rotation,
                 position = transform.position,
