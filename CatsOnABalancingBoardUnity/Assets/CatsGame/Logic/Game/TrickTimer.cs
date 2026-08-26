@@ -8,7 +8,9 @@ namespace OMC {
     public class TrickTimer : MonoBehaviour {
         public static TrickTimer instance;
 
-        public int trickLength;
+        public int trickLength {get; private set;} = 10;
+
+        public int shorterTricksPoints = 0;
 
         float bonusBase;
         float bonusMult;
@@ -51,6 +53,7 @@ namespace OMC {
         }
 
         private void GetStartedWithIt() {
+            ResetTimerAndCombo(0);
             StartCoroutine(Timer());
         }
 
@@ -116,7 +119,7 @@ namespace OMC {
         }
 
         private void ResetTimer() {
-            currentSecond = trickLength;
+            currentSecond = trickLength - shorterTricksPoints;
             OnTimerChanged?.Invoke(currentSecond);
 
             countdownSource.Stop();

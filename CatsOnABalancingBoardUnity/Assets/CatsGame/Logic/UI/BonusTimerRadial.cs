@@ -7,12 +7,10 @@ public class BonusTimerRadial : MonoBehaviour
 {
     public Image radialImage;
     float cycleStartTime;
-    bool started = false;
 
     void Start()
     {
         TrickTimer.OnTimerChanged += OnTimerChanged;
-        WeightDropper.FirstWeightDropped += () => {started = true; OnTimerChanged(TrickTimer.instance.trickLength);};
         cycleStartTime = Time.time;
     }
 
@@ -23,7 +21,7 @@ public class BonusTimerRadial : MonoBehaviour
 
     void OnTimerChanged(int seconds)
     {
-        if (TrickTimer.instance && seconds == TrickTimer.instance.trickLength)
+        if (TrickTimer.instance && seconds == TrickTimer.instance.trickLength - TrickTimer.instance.shorterTricksPoints)
         {
             cycleStartTime = Time.time;
         }
@@ -31,7 +29,7 @@ public class BonusTimerRadial : MonoBehaviour
 
     void Update()
     {
-        if (!radialImage || !TrickTimer.instance || !started)
+        if (!radialImage || !TrickTimer.instance || !GameLogicScript.firstWeightDropped)
         {
             return;
         }

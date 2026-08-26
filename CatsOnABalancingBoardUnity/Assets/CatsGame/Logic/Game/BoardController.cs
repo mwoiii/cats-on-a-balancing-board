@@ -54,7 +54,7 @@ namespace OMC {
             Vector3 targetCamPos = new(relativeCamera.localPosition.x,relativeCamera.localPosition.y,-(1.8f*r-5.4f));
 
             float t = 0;
-            while (t < duration)
+            while (t < duration && transform)
             {
                 t += Time.deltaTime;
                 transform.localScale = Vector3.Lerp(startScale, targetScale, Mathf.SmoothStep(0,1,t/duration));

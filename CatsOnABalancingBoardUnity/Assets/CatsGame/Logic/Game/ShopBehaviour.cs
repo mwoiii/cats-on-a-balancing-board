@@ -71,6 +71,7 @@ public class ShopBehaviour : MonoBehaviour
         masterObject.SetActive(true);
         weightExchangeObject.SetActive(true);
         rotationSelectPanel.SetActive(false);
+        skillPointSpecObject.SetActive(false);
 
         ShowCurrentFormula();
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   weightType: 0
   force: 25
   probabilityBias: 2
-  rarity: 0
+  shopProbabilityBias: 0
   multAdd: 0
   baseAdd: 0
   blockPrefab: {fileID: 6982464574026435089, guid: 148f5b15533b0d54baf61a7888fd0a5e, type: 3}

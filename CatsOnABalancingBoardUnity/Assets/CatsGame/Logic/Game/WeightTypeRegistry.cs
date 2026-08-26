@@ -48,21 +48,21 @@ namespace OMC {
             return typeToDef[type];
         }
 
-        public static WeightDef GetRandomWeight(List<WeightDef> selection) {
+        public static WeightDef GetRandomWeight(List<WeightDef> selection, bool useShopBias = false) {
             if (selection.Count == 0) {
                 return null;
             }
 
             float total = 0f;
             foreach (var weight in selection) {
-                total += weight.probabilityBias;
+                total += useShopBias ? weight.shopProbabilityBias : weight.probabilityBias;
             }
 
             float roll = UnityEngine.Random.Range(0, total);
             float cum = 0f;
 
             foreach (var weight in selection) {
-                cum += weight.probabilityBias;
+                cum += useShopBias ? weight.shopProbabilityBias : weight.probabilityBias;;
                 if (roll < cum) {
                     return weight;
                 }
@@ -81,9 +81,8 @@ namespace OMC {
             WeightDef[] defs = new WeightDef[amount];
             for (int i = 0; i < amount; i++)
             {
-                int j = UnityEngine.Random.Range(0,temp.Count);
-                defs[i] = temp[j];
-                temp.RemoveAt(j);
+                defs[i] = GetRandomWeight(temp,true);
+                temp.Remove(defs[i]);
             }
             return defs;
         }

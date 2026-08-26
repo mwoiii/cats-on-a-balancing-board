@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using OMC;
+using OMC.ECS;
 using TMPro;
 using UnityEngine;
 
@@ -104,7 +105,13 @@ public class SkillPanelController : MonoBehaviour
             switch (def.name)
             {
                 case "sdBoardSize":
-                    BoardController.instance.ChangeRadius(3 + spread[def]);
+                    BoardController.instance.ChangeRadius(3 + 0.5f*spread[def]);
+                    break;
+                case"sdLighterCats":
+                    CatMassBridge.instance.lighterCatsPoints = spread[def];
+                    break;
+                case "sdShorterTricks":
+                    TrickTimer.instance.shorterTricksPoints = spread[def];
                     break;
             }
         }

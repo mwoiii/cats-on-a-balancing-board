@@ -12,7 +12,7 @@ namespace OMC {
 
         public float probabilityBias = 1;
 
-        public float rarity = 0f;
+        public float shopProbabilityBias = 1;
 
         public float multAdd = 0f;
 
