@@ -11,8 +11,9 @@ namespace OMC {
         public static float gameTime = 0.0f;
 
         public static bool gameRunning = true;
+        public static bool firstWeightDropped = false;
 
-        public static double score;
+        public static double score {get; private set;}
 
         public const double scoreScaleFactor = 0.05d;
 
@@ -27,7 +28,9 @@ namespace OMC {
 
         void Start() {
             gameRunning = true;
+            firstWeightDropped = false;
             score = 0d;
+            WeightDropper.FirstWeightDropped += () => {firstWeightDropped = true;};
         }
 
         void Awake() {
@@ -59,6 +62,11 @@ namespace OMC {
             gameRunning = true;
             HUDController.instance.TerminatePause();
             Debug.Log($"unpaused at gameTime: {gameTime}");
+        }
+
+        public void AddToScore(double amount)
+        {
+            if (firstWeightDropped){score += amount;}
         }
     }
 }

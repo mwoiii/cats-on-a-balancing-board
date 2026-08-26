@@ -5,17 +5,35 @@ using OMC;
 
 public class XPBar : MonoBehaviour
 {
+    public static XPBar instance;
+    public int level {get; private set;} = 0;
+
     public Image fillImage;
     public TextMeshProUGUI text;
 
     public double level1Requirement = 100;
     public double levelUpRequirementMarkiplier = 1.2d;
-    
+    public double initialXP = 0;
+
+    void Start()
+    {
+        instance = this;
+
+        if (text)
+        {
+            text.text = $"lvl.0";
+        }
+        if (fillImage)
+        {
+            fillImage.fillAmount = 0;
+        }
+    }
+
     void Update()
     {
-        double xp = GameLogicScript.score;
+        double xp = initialXP + GameLogicScript.score;
 
-        int level = 0;
+        level = 0;
         double xpIn = xp;
         double xpReq = level1Requirement;
 
@@ -28,7 +46,7 @@ public class XPBar : MonoBehaviour
 
         if (text)
         {
-            text.text = $"level {level}";
+            text.text = $"lvl.{level}";
         }
         if (fillImage)
         {

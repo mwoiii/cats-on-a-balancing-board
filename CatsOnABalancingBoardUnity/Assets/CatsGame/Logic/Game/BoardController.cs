@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace OMC {
     public class BoardController : MonoBehaviour {
+        public static BoardController instance;
         public static GameObject boardInstance;
 
         public float slope { get; private set; }
@@ -17,6 +19,7 @@ namespace OMC {
         public Transform relativeCamera;
 
         private void Awake() {
+            instance = this;
             boardInstance = gameObject;
             collider = GetComponent<Collider>();
         }
@@ -30,21 +33,14 @@ namespace OMC {
             radius = collider.bounds.extents.x;
         }
 
-        void Update() // TEMPORARY
+        Coroutine resizeBoard;
+        public void ChangeRadius(float r, float duration = 1)
         {
-            if (Keyboard.current.yKey.wasPressedThisFrame)
+            if (resizeBoard != null)
             {
-                ChangeRadius(10);
+                StopCoroutine(resizeBoard);
             }
-            if (Keyboard.current.hKey.wasPressedThisFrame)
-            {
-                ChangeRadius(3);
-            }
-        }
-
-        void ChangeRadius(float r, float duration = 1)
-        {
-            StartCoroutine(ResizeBoard(r,duration));
+            resizeBoard = StartCoroutine(ResizeBoard(r,duration));
         }
 
         IEnumerator ResizeBoard(float r, float duration)

@@ -19,6 +19,8 @@ public class ShopBehaviour : MonoBehaviour
     const int choiceCount = 3;
 
     public GameObject masterObject;
+    public GameObject weightExchangeObject;
+    public GameObject skillPointSpecObject;
     
     public GameObject[] choiceSlotObjects = new GameObject[choiceCount];
     public WeightPreviewSpinner[] spinners = new WeightPreviewSpinner[choiceCount];
@@ -67,6 +69,7 @@ public class ShopBehaviour : MonoBehaviour
         shopPrompt.SetActive(false);
 
         masterObject.SetActive(true);
+        weightExchangeObject.SetActive(true);
         rotationSelectPanel.SetActive(false);
 
         ShowCurrentFormula();
@@ -74,6 +77,12 @@ public class ShopBehaviour : MonoBehaviour
         Time.timeScale = 0;
 
         SetupChoices();
+    }
+
+    public void GoToSkillSpecScreen()
+    {
+        weightExchangeObject.SetActive(false);
+        skillPointSpecObject.SetActive(true);
     }
 
     public void CloseShop()
@@ -163,7 +172,7 @@ public class ShopBehaviour : MonoBehaviour
     {
         WeightDropper.instance.SubstituteInRotation(outgoing, pendingIncoming);
         WeightTooltip.instance.Hide();
-        CloseShop();
+        GoToSkillSpecScreen();
     }
 
     void ShowCurrentFormula(WeightDef unused = null)

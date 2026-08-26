@@ -9,7 +9,7 @@ namespace OMC.ECS {
             }
 
             double deltaTime = SystemAPI.Time.DeltaTime;
-            GameLogicScript.score += GameLogicScript.instance.catCount * deltaTime * GameLogicScript.scoreScaleFactor;
+            GameLogicScript.instance.AddToScore(GameLogicScript.instance.catCount * deltaTime * GameLogicScript.scoreScaleFactor);
         }
     }
 }
