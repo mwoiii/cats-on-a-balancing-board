@@ -6,8 +6,6 @@ public class ErrorSceneDirector {
 
     static bool redirecting;
 
-    // I love this but killing the game on logerror is a bad idea
-    // e.g. dogcheck doesn't happen on error it's in specific circumstances like invalid scene or invalid save data I think
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void Init() {
         //Application.logMessageReceived += HandleLog;

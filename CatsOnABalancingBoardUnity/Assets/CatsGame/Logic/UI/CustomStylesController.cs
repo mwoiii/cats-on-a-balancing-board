@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using OMC.UI.CustomStyles;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using static OMC.Util.Helpers;
 
 namespace OMC.UI {
-    public class DialogueController : MonoBehaviour {
+    public class CustomStylesController : MonoBehaviour {
 
         public float writeDelay = 0.05f;
 
@@ -28,12 +31,23 @@ namespace OMC.UI {
 
         private Vector3[] animatedVertices;
 
-        private Dictionary<int, int> shakeCharacters = new Dictionary<int, int>(); // start vert -> value
+
+
+        private static Dictionary<string, Type> stylePrefixToType = new Dictionary<string, Type>();
+
+        private Dictionary<string, IStyle> styleInstances = new Dictionary<string, IStyle>();
 
         private Dictionary<int, int> shakeGroupVertices = new Dictionary<int, int>(); // start vert -> value
         private List<int> shakeGroupBreaks = new List<int>();
 
         private Dictionary<int, int> pauseCharacters = new Dictionary<int, int>(); // character index to stop before -> value
+
+        private Dictionary<int, int> waveCharacters = new Dictionary<int, int>(); // start vert -> value
+
+
+
+
+
 
         private static Regex startRegex = new Regex("<style=\"(\\D*)(\\d)\">");
         private static Regex endRegex = new Regex("</style>");
@@ -43,6 +57,26 @@ namespace OMC.UI {
             public int index;
             public string styleName;
             public int styleValue;
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void StylesInit() {
+            var styles = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(domainAssembly => domainAssembly.GetTypes())
+                .Where(type => typeof(IStyle).IsAssignableFrom(type)
+                && !type.IsInterface
+                && !type.IsAbstract
+            );
+
+            foreach (var style in styles) {
+                IStyle styleInstance = (IStyle)Activator.CreateInstance(style);
+                if (!stylePrefixToType.ContainsKey(styleInstance.prefix)) {
+                    stylePrefixToType[styleInstance.prefix] = styleInstance.GetType();
+                    Debug.Log(stylePrefixToType[styleInstance.prefix].ToString());
+                } else {
+                    Debug.LogError($"Duplicate custom style of name {styleInstance.prefix}! Skipping...");
+                }
+            }
         }
 
         private void OnEnable() {
@@ -55,7 +89,6 @@ namespace OMC.UI {
             if (!textInput) {
                 textInput = GetComponent<TextMeshProUGUI>();
             }
-
             if (textInput) {
                 ParseText();
                 ResetDialogue();
@@ -103,6 +136,8 @@ namespace OMC.UI {
                     continue;
                 }
 
+                maxVisibleCharacters = characterIndex + 1;
+
                 // update values for every tag that appeared before the current character but after the last
                 styleBreaks.Clear();
                 while (styleQueue.TryPeek(out StyleInfo result)) {
@@ -129,8 +164,24 @@ namespace OMC.UI {
                     }
                 }
 
-
-                // handling the individual style cases depending on if they are active or not
+                foreach (string prefix in styleActive.Keys) {
+                    int value = styleActive[prefix];
+                    if (value > 0) {
+                        if (stylePrefixToType.ContainsKey(prefix)) {
+                            IStyle styleInstance;
+                            if (!styleInstances.ContainsKey(prefix)) {
+                                styleInstance = styleInstances[prefix] = (IStyle)Activator.CreateInstance(stylePrefixToType[prefix]);
+                            } else {
+                                styleInstance = styleInstances[prefix];
+                            }
+                            if (styleInstance is IVertexStyle vStyleInstance) {
+                                vStyleInstance.ReceiveStartVertex(character.vertexIndex, value, styleBreaks.Contains(prefix));
+                            }
+                        } else {
+                            Debug.Log($"Got custom style \"{prefix}\" but found no respective class!");
+                        }
+                    }
+                }
 
                 const string shakeGroupPrefix = "shakegroup";
                 if (styleActive.TryGetValue(shakeGroupPrefix, out int shakeGroupValue) && shakeGroupValue > 0) {
@@ -140,18 +191,16 @@ namespace OMC.UI {
                     shakeGroupBreaks.Add(character.vertexIndex - 1);
                 }
 
-                const string shakePrefix = "shake";
-                if (styleActive.TryGetValue(shakePrefix, out int shakeValue) && shakeValue > 0) {
-                    shakeCharacters[character.vertexIndex] = shakeValue;
-                }
-
                 const string pausePrefix = "pause";
                 if (styleActive.TryGetValue(pausePrefix, out int pauseValue) && pauseValue > 0) {
                     pauseCharacters[characterIndex + 1] = pauseValue;
                 }
-            }
 
-            maxVisibleCharacters = characterIndex + 1;
+                const string wavePrefix = "wave";
+                if (styleActive.TryGetValue(wavePrefix, out int waveValue) && waveValue > 0) {
+                    waveCharacters[character.vertexIndex] = waveValue;
+                }
+            }
             parsed = true;
         }
 
@@ -178,9 +227,15 @@ namespace OMC.UI {
             if (animateCooldown <= 0) {
                 textInput.ForceMeshUpdate(false, false);
                 animatedVertices = textInput.textInfo.meshInfo[0].vertices;
-                int lastVertex = visibleCharacters * 4 - 1;
-                ApplyShake(animatedVertices, lastVertex);
-                ApplyShakeGroup(animatedVertices, lastVertex);
+                int lastVisible = visibleCharacters * 4 - 1;
+                foreach (IStyle style in styleInstances.Values) {
+                    if (style is IVertexStyle vStyle) {
+                        vStyle.UpdateValues(lastVisible);
+                        vStyle.ApplyValues(animatedVertices, lastVisible);
+                    }
+                }
+                ApplyShakeGroup(animatedVertices, lastVisible);
+                ApplyWave(animatedVertices, lastVisible);
                 animateCooldown = animationDelay;
             }
 
@@ -208,27 +263,23 @@ namespace OMC.UI {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ApplyShake(Vector3[] vertices, int lastVertex) {
-            foreach (int vertex in shakeCharacters.Keys) {
+        private void ApplyWave(Vector3[] vertices, int lastVertex) {
+            foreach (int vertex in waveCharacters.Keys) {
                 if (vertex >= lastVertex) {
                     break;
                 }
-                Vector3 randomShake = GetRandomShake(shakeCharacters[vertex] * 4f);
-                vertices[vertex] += randomShake;
-                vertices[vertex + 1] += randomShake;
-                vertices[vertex + 2] += randomShake;
-                vertices[vertex + 3] += randomShake;
+                Vector3 offset = Vector3.up * math.sin(20f * (Time.time + vertex)) * waveCharacters[vertex] * 30f;
+                vertices[vertex] += offset;
+                vertices[vertex + 1] += offset;
+                vertices[vertex + 2] += offset;
+                vertices[vertex + 3] += offset;
             }
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int GetScaledValue(int value) {
             return math.max(0, (value * 2) - 1);  // goes up as 1, 3, 5, etc. can combine tags to reach values in between
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Vector3 GetRandomShake(float intensity) {
-            return (Vector3.up * UnityEngine.Random.Range(-1f, 1f) + Vector3.right * UnityEngine.Random.Range(-1f, 1f)) * intensity;
         }
     }
 }

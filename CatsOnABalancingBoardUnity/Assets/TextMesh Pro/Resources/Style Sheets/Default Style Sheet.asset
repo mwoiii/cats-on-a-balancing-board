@@ -133,3 +133,21 @@ MonoBehaviour:
     m_ClosingDefinition: 
     m_OpeningTagArray: 
     m_ClosingTagArray: 
+  - m_Name: Wave1
+    m_HashCode: 105482996
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: Wave2
+    m_HashCode: 105482999
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
+  - m_Name: Wave3
+    m_HashCode: 105482998
+    m_OpeningDefinition: 
+    m_ClosingDefinition: 
+    m_OpeningTagArray: 
+    m_ClosingTagArray: 
