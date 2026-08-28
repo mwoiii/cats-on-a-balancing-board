@@ -3204,7 +3204,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <style="wave1"><size=+100>DUDE<style="pause2">.</style></size></style>
+  m_text: <style="shakegroup1"><style="wave3"><size=+100>DUDE<style="pause2">.</style></style></size></style>
     <style="shakegroup1">IT'S SO OVER<style="pause2">.</style></style> IT'S SO OVER
     MAN<style="pause2">.</style> <style="shake1">I MESSED UP<style="pause2">.</style></style>
     <size=+100><style="shake3"><style="shakegroup3"><style="pause1">BAD</style>.</style></style></style></style>

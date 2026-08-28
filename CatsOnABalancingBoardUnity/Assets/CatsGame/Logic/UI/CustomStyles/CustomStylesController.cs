@@ -1,5 +1,4 @@
-﻿using OMC.UI.CustomStyles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,9 +6,8 @@ using System.Text.RegularExpressions;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
-using static OMC.Util.Helpers;
 
-namespace OMC.UI {
+namespace OMC.UI.CustomStyles {
     public class CustomStylesController : MonoBehaviour {
 
         public float writeDelay = 0.05f;
@@ -19,9 +17,11 @@ namespace OMC.UI {
         [SerializeField]
         private TextMeshProUGUI textInput;
 
-        private int maxVisibleCharacters;
+        private int lastVisibleVertex => visibleCharacters * 4 - 1;
 
         private int visibleCharacters;
+
+        private int maxVisibleCharacters;
 
         private float writeCooldown;
 
@@ -29,28 +29,17 @@ namespace OMC.UI {
 
         private bool parsed;
 
-        private Vector3[] animatedVertices;
+        private Vector3[] visibleVertices;
 
+        private static Regex startRegex = new Regex("<style=\"(\\D*)(\\d)\">");
 
+        private static Regex endRegex = new Regex("</style>");
 
         private static Dictionary<string, Type> stylePrefixToType = new Dictionary<string, Type>();
 
-        private Dictionary<string, IStyle> styleInstances = new Dictionary<string, IStyle>();
+        private Dictionary<string, IVertexStyle> vertexStyles = new Dictionary<string, IVertexStyle>();
 
-        private Dictionary<int, int> shakeGroupVertices = new Dictionary<int, int>(); // start vert -> value
-        private List<int> shakeGroupBreaks = new List<int>();
-
-        private Dictionary<int, int> pauseCharacters = new Dictionary<int, int>(); // character index to stop before -> value
-
-        private Dictionary<int, int> waveCharacters = new Dictionary<int, int>(); // start vert -> value
-
-
-
-
-
-
-        private static Regex startRegex = new Regex("<style=\"(\\D*)(\\d)\">");
-        private static Regex endRegex = new Regex("</style>");
+        private Dictionary<string, IDelayStyle> delayStyles = new Dictionary<string, IDelayStyle>();
 
         private struct StyleInfo {
             public bool isStart;
@@ -60,7 +49,7 @@ namespace OMC.UI {
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void StylesInit() {
+        private static void Init() {
             var styles = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(domainAssembly => domainAssembly.GetTypes())
                 .Where(type => typeof(IStyle).IsAssignableFrom(type)
@@ -126,6 +115,7 @@ namespace OMC.UI {
             Stack<StyleInfo> styleStack = new Stack<StyleInfo>();
             Dictionary<string, int> styleActive = new Dictionary<string, int>();
             HashSet<string> styleBreaks = new HashSet<string>();
+            Dictionary<string, IStyle> styleInstances = new Dictionary<string, IStyle>();
             int characterIndex = -1;
 
             // run through the process of recording which vertices fall between tags
@@ -164,41 +154,35 @@ namespace OMC.UI {
                     }
                 }
 
+                // generating style instances if not in existence, and proving them with the relevant data
                 foreach (string prefix in styleActive.Keys) {
                     int value = styleActive[prefix];
-                    if (value > 0) {
-                        if (stylePrefixToType.ContainsKey(prefix)) {
-                            IStyle styleInstance;
-                            if (!styleInstances.ContainsKey(prefix)) {
-                                styleInstance = styleInstances[prefix] = (IStyle)Activator.CreateInstance(stylePrefixToType[prefix]);
-                            } else {
-                                styleInstance = styleInstances[prefix];
+                    if (value <= 0) {
+                        continue;
+                    }
+                    if (stylePrefixToType.ContainsKey(prefix)) {
+                        IStyle style;
+                        if (!styleInstances.ContainsKey(prefix)) {
+                            style = styleInstances[prefix] = (IStyle)Activator.CreateInstance(stylePrefixToType[prefix]);
+                            if (style is IVertexStyle v1Style) {
+                                vertexStyles[prefix] = v1Style;
                             }
-                            if (styleInstance is IVertexStyle vStyleInstance) {
-                                vStyleInstance.ReceiveStartVertex(character.vertexIndex, value, styleBreaks.Contains(prefix));
+                            if (style is IDelayStyle d1Style) {
+                                delayStyles[prefix] = d1Style;
                             }
                         } else {
-                            Debug.Log($"Got custom style \"{prefix}\" but found no respective class!");
+                            style = styleInstances[prefix];
                         }
+                        bool broken = styleBreaks.Contains(prefix);
+                        if (style is IVertexStyle v2Style) {
+                            v2Style.ReceiveStartVertex(character.vertexIndex, value, broken);
+                        }
+                        if (style is IDelayStyle d2Style) {
+                            d2Style.ReceiveStartCharacter(characterIndex, value, broken);
+                        }
+                    } else {
+                        Debug.Log($"Got custom style \"{prefix}\" but found no respective class!");
                     }
-                }
-
-                const string shakeGroupPrefix = "shakegroup";
-                if (styleActive.TryGetValue(shakeGroupPrefix, out int shakeGroupValue) && shakeGroupValue > 0) {
-                    shakeGroupVertices[character.vertexIndex] = shakeGroupValue;
-                }
-                if (styleBreaks.Contains(shakeGroupPrefix)) {
-                    shakeGroupBreaks.Add(character.vertexIndex - 1);
-                }
-
-                const string pausePrefix = "pause";
-                if (styleActive.TryGetValue(pausePrefix, out int pauseValue) && pauseValue > 0) {
-                    pauseCharacters[characterIndex + 1] = pauseValue;
-                }
-
-                const string wavePrefix = "wave";
-                if (styleActive.TryGetValue(wavePrefix, out int waveValue) && waveValue > 0) {
-                    waveCharacters[character.vertexIndex] = waveValue;
                 }
             }
             parsed = true;
@@ -213,11 +197,10 @@ namespace OMC.UI {
                         textInput.maxVisibleCharacters = visibleCharacters;
                         writeCooldown += writeDelay;
                     }
-                    if (pauseCharacters.TryGetValue(visibleCharacters, out int pauseValue)) {
-                        writeCooldown = 0.3333f * pauseValue;
-                    } else {
-                        writeCooldown = writeDelay;
-                    }
+                    textInput.ForceMeshUpdate(false, false);
+                    ApplyVertexStyles();
+                    writeCooldown = writeDelay;
+                    ApplyDelayStyles(ref writeCooldown);
                 }
             }
         }
@@ -226,56 +209,33 @@ namespace OMC.UI {
             animateCooldown -= Time.deltaTime;
             if (animateCooldown <= 0) {
                 textInput.ForceMeshUpdate(false, false);
-                animatedVertices = textInput.textInfo.meshInfo[0].vertices;
-                int lastVisible = visibleCharacters * 4 - 1;
-                foreach (IStyle style in styleInstances.Values) {
-                    if (style is IVertexStyle vStyle) {
-                        vStyle.UpdateValues(lastVisible);
-                        vStyle.ApplyValues(animatedVertices, lastVisible);
-                    }
-                }
-                ApplyShakeGroup(animatedVertices, lastVisible);
-                ApplyWave(animatedVertices, lastVisible);
+                visibleVertices = textInput.textInfo.meshInfo[0].vertices;
+                UpdateAndApplyVertexStyles();
                 animateCooldown = animationDelay;
             }
 
-            textInput.textInfo.meshInfo[0].vertices = animatedVertices;
+            textInput.textInfo.meshInfo[0].vertices = visibleVertices;
             textInput.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ApplyShakeGroup(Vector3[] vertices, int lastVertex) {
-            int nextBreak = 0;
-            Vector3 randomShake = GetRandomShake(shakeGroupVertices.Values.First() * 4f);
-            foreach (int vertex in shakeGroupVertices.Keys) {
-                if (vertex > lastVertex) {
-                    break;
-                }
-                if (nextBreak < shakeGroupBreaks.Count && vertex > shakeGroupBreaks[nextBreak]) {
-                    randomShake = GetRandomShake(shakeGroupVertices[vertex] * 4f);
-                    nextBreak++;
-                }
-                vertices[vertex] += randomShake;
-                vertices[vertex + 1] += randomShake;
-                vertices[vertex + 2] += randomShake;
-                vertices[vertex + 3] += randomShake;
+        private void ApplyVertexStyles() {
+            foreach (IVertexStyle style in vertexStyles.Values) {
+                style.ApplyVertices(visibleVertices, lastVisibleVertex);
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ApplyWave(Vector3[] vertices, int lastVertex) {
-            foreach (int vertex in waveCharacters.Keys) {
-                if (vertex >= lastVertex) {
-                    break;
-                }
-                Vector3 offset = Vector3.up * math.sin(20f * (Time.time + vertex)) * waveCharacters[vertex] * 30f;
-                vertices[vertex] += offset;
-                vertices[vertex + 1] += offset;
-                vertices[vertex + 2] += offset;
-                vertices[vertex + 3] += offset;
+        private void UpdateAndApplyVertexStyles() {
+            foreach (IVertexStyle style in vertexStyles.Values) {
+                style.UpdateVertices(lastVisibleVertex);
+                style.ApplyVertices(visibleVertices, lastVisibleVertex);
             }
         }
 
+        private void ApplyDelayStyles(ref float cooldown) {
+            foreach (IDelayStyle style in delayStyles.Values) {
+                style.ApplyDelay(visibleCharacters, ref cooldown);
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int GetScaledValue(int value) {

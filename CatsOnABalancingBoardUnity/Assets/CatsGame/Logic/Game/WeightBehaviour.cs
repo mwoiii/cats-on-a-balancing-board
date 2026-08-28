@@ -3,7 +3,6 @@ using UnityEngine;
 namespace OMC {
     public class WeightBehaviour : MonoBehaviour {
 
-        // we could probably do Something to make this kind of dynamic but for another time // The Burst Compiler forbids it my liege // Weak mindset it would just Fucking Suck because we would lose switch statements and visual clarity with enums so actually Strong mindset Fuck that
         public enum WeightType {
             None,
             Catnip,
@@ -60,10 +59,8 @@ namespace OMC {
             shrinkTimer = shrinkInterval;
         }
 
-        void OnCollisionExit(Collision collision)
-        {
-            if (collision.collider.gameObject.CompareTag("Board") && state == WeightState.Landed)
-            {
+        void OnCollisionExit(Collision collision) {
+            if (collision.collider.gameObject.CompareTag("Board") && state == WeightState.Landed) {
                 state = WeightState.Falling;
             }
         }

@@ -1,30 +1,26 @@
-﻿using OMC.UI.CustomStyles;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using static OMC.Util.Helpers;
 
-namespace Assets.CatsGame.Logic.UI.CustomStyles {
+namespace OMC.UI.CustomStyles {
     internal class Shake : IVertexStyle {
         public string prefix => "shake";
 
-        private Dictionary<int, int> shakeCharacters = new Dictionary<int, int>();
+        private Dictionary<int, int> shakeVertices = new Dictionary<int, int>();
 
         private Dictionary<int, Vector3> shakeVectors = new Dictionary<int, Vector3>();
 
         public void ReceiveStartVertex(int index, int value, bool broken) {
-            shakeCharacters[index] = value;
+            shakeVertices[index] = value;
         }
 
-        public void UpdateValues(int lastVisible) {
-            foreach (int vertex in shakeCharacters.Keys) {
-                if (vertex >= lastVisible) {
-                    break;
-                }
-                shakeVectors[vertex] = GetRandomShake(shakeCharacters[vertex] * 4f);
+        public void UpdateVertices(int lastVisible) {
+            foreach (int vertex in shakeVertices.Keys) {
+                shakeVectors[vertex] = GetRandomShake(shakeVertices[vertex] * 4f);
             }
         }
 
-        public void ApplyValues(Vector3[] vertices, int lastVisible) {
+        public void ApplyVertices(Vector3[] vertices, int lastVisible) {
             foreach (int vertex in shakeVectors.Keys) {
                 if (vertex >= lastVisible) {
                     break;
