@@ -104,10 +104,7 @@ namespace OMC {
 
             comboCounter++;
 
-            litterBonus = (int)Mathf.Ceil(Mathf.Max(
-                bonusMult * Mathf.Pow(bonusBase, comboCounter),
-                litterBonus * bonusBase
-            ));
+            litterBonus = (int)Mathf.Ceil(bonusMult * Mathf.Pow(bonusBase, comboCounter));
             
             OnLitterBonusChanged?.Invoke(litterBonus);
         }

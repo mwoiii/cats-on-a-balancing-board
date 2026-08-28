@@ -140,7 +140,7 @@ namespace OMC {
 
         public static (float multVal, float baseVal) ComputeBonusFormula(WeightDef outgoing = null, WeightDef incoming = null)
         {
-            float multVal = 10;
+            float multVal = 0;
             float baseVal = 1;
             foreach (WeightDef def in instance.GetCurrentRotation()) {
                 WeightDef a = (outgoing != null && def == outgoing) ? incoming : def;

@@ -110,9 +110,13 @@ namespace OMC.ECS {
                 state.EntityManager.SetComponentData(cat, catTransform);
 
                 // Spribnkes...
-                float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
+                //float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
+                
+                // Realistic cat colouring
+                float3 hugh = RandomRealCatColour(randomSauce);
+                
                 state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh, 1f) });
-
+                
                 SystemAPI.SetSingleton(new InitialFallData { height = config.dropHeight, velocity = 0 });
             }
 
@@ -142,6 +146,27 @@ namespace OMC.ECS {
                 value /= 10;
             }
             return digits;
+        }
+
+        static float3 RandomRealCatColour(Unity.Mathematics.Random randomSauce)
+        {
+            float a = randomSauce.NextFloat(0,68.8f);
+            if (a < 26.5f)
+            {
+                return new float3(0,0,0);
+            }
+            else if (a < 45.9)
+            {
+                return new float3(100,100,100)/255;
+            }
+            else if (a < 58.2)
+            {
+                return new float3(90,45,0)/255;
+            }
+            else
+            {
+                return new float3(240,120,0)/255;
+            }
         }
     }
 }

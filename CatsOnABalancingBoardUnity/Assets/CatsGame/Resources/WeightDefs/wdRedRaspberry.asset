@@ -16,7 +16,7 @@ MonoBehaviour:
   force: 10
   probabilityBias: 0.8
   shopProbabilityBias: 0.5
-  multAdd: -100
+  multAdd: -10
   baseAdd: 0
   blockPrefab: {fileID: 0}
   spherePrefab: {fileID: 6982464574026435089, guid: c38ede7f02a7d3549a4e761aa95f9e6d, type: 3}

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5300005081292084640}
   - component: {fileID: 8847935656710571486}
   - component: {fileID: 4308695665570095935}
+  - component: {fileID: -5758208873148459686}
   m_Layer: 0
   m_Name: BasicWeightSphere
   m_TagString: Weight
@@ -132,12 +133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e9bc78931afd1f4db8f0a428593b9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightBehaviour
-  Type: 0
-  shrinkAmount: 0.01
-  minScale: 0.01
-  catTag: Cat
-  shrinkInterval: 0.5
-  shrinkIntervalLemon: 0.8
+  type: 0
+  state: 0
+  displayPrefab: {fileID: 0}
 --- !u!135 &4308695665570095935
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -159,3 +157,18 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-5758208873148459686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982464574026435089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac96c774238913f4a9a1bd8b8e6261df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OMC.DecayOverTime
+  weightBehaviour: {fileID: 0}
+  shrinkDelay: 10
+  shrinkInterval: 0.1
