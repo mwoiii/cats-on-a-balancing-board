@@ -10,6 +10,7 @@ namespace OMC {
 
         public int trickLength {get; private set;} = 10;
 
+        [HideInInspector]
         public int shorterTricksPoints = 0;
 
         float bonusBase;

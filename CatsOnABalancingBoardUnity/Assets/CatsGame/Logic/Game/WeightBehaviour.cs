@@ -15,7 +15,9 @@ namespace OMC {
             Whirlpool,
             RedRaspberry,
             Magnet,
-            MrPunch
+            MrPunch,
+            Scales,
+            Temporal
         }
 
         [HideInInspector]

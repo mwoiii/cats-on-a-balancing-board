@@ -642,6 +642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CatMassBridge
   board: {fileID: 150362991}
   lighterCatsPoints: 0
+  catMassMarkiplier: 5
 --- !u!114 &150362997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2078,7 +2079,7 @@ MonoBehaviour:
   shadowPrefab: {fileID: 7780811838851100883, guid: 7b985053e1319574b91ece88847d71d3, type: 3}
   board: {fileID: 150362994}
   moveSpeed: 0.5
-  sprintModifier: 2
+  sprintModifier: 2.5
   surfaceOffset: 0.1
   dropHeight: 3
   shadowBoundRadius: 0.5
@@ -2086,10 +2087,11 @@ MonoBehaviour:
   spinSpeed: 22.1
   shadowScale: 0.5
   currentWeightRotation:
-  - {fileID: 11400000, guid: 539ac9f01e0703647a96e62997395711, type: 2}
+  - {fileID: 11400000, guid: 696a9d6af3280074c85263e5ad9e9798, type: 2}
   - {fileID: 11400000, guid: 4ee38616e81014d4d8a126385556a62c, type: 2}
   - {fileID: 11400000, guid: e3481513bc6ccab43ba2ff13016c367c, type: 2}
-  - {fileID: 11400000, guid: af1163e0cd39cfc4c95075d2a992f703, type: 2}
+  - {fileID: 11400000, guid: a71062f301ddeff42accdaedfd571293, type: 2}
+  shadow: {fileID: 0}
 --- !u!114 &473563221
 MonoBehaviour:
   m_ObjectHideFlags: 0

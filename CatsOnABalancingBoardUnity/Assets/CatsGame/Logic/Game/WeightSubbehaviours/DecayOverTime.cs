@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,21 +8,25 @@ namespace OMC {
 
         public float shrinkInterval = 0.8f;
 
-        bool decaying = false;
+        public bool useRealTime = false;
+
+        public event System.Action DecayStart;
+
+        Coroutine delay;
 
         void OnCollisionEnter(Collision collision) {
-            StartCoroutine(Decay());
+            if (delay == null)
+            {
+                delay = StartCoroutine(Decay());
+            }
         }
 
         IEnumerator Decay() {
-            if (!decaying) {
-                decaying = true;
-                yield return new WaitForSeconds(shrinkDelay);
-                while (gameObject) {
-                    weightBehaviour.ShrinkAndCheck();
-                    yield return new WaitForSeconds(shrinkInterval);
-                }
-                decaying = false;
+            yield return useRealTime ? new WaitForSecondsRealtime(shrinkDelay) : new WaitForSeconds(shrinkDelay);
+            DecayStart?.Invoke();
+            while (gameObject) {
+                weightBehaviour.ShrinkAndCheck();
+                yield return useRealTime ? new WaitForSecondsRealtime(shrinkInterval) : new WaitForSeconds(shrinkInterval);
             }
         }
     }

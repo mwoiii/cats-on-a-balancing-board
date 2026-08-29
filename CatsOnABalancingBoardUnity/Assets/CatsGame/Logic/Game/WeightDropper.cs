@@ -43,7 +43,9 @@ namespace OMC {
 
         float spinAngle;
 
-        GameObject shadow;
+        public GameObject shadow;
+
+        public Vector3 shadowPos => shadow.transform.position;
 
         public event System.Action<GameObject> OnNextPrefab;
 
@@ -75,9 +77,9 @@ namespace OMC {
             if (Keyboard.current.aKey.isPressed) input.x -= 1f;
             if (input.sqrMagnitude > 0f) {
                 if (Keyboard.current.shiftKey.isPressed) {
-                    shadow.transform.localPosition += moveSpeed * sprintModifier * Time.deltaTime * new Vector3(input.x, 0f, input.y).normalized;
+                    shadow.transform.localPosition += moveSpeed * sprintModifier * Time.unscaledDeltaTime * new Vector3(input.x, 0f, input.y).normalized;
                 } else {
-                    shadow.transform.localPosition += moveSpeed * Time.deltaTime * new Vector3(input.x, 0f, input.y).normalized;
+                    shadow.transform.localPosition += moveSpeed * Time.unscaledDeltaTime * new Vector3(input.x, 0f, input.y).normalized;
                 }
             }
 
@@ -140,15 +142,15 @@ namespace OMC {
 
         public static (float multVal, float baseVal) ComputeBonusFormula(WeightDef outgoing = null, WeightDef incoming = null)
         {
-            float multVal = 0;
-            float baseVal = 1;
+            float multVal = 1;
+            float baseVal = 1.1f;
             foreach (WeightDef def in instance.GetCurrentRotation()) {
                 WeightDef a = (outgoing != null && def == outgoing) ? incoming : def;
                 multVal += a.multAdd;
                 baseVal += a.baseAdd;
             }
             multVal = Mathf.Max(multVal, 1);
-            baseVal = Mathf.Max(baseVal, 1);
+            baseVal = Mathf.Max(baseVal, 1.1f);
             return (multVal,baseVal);
         }
     }

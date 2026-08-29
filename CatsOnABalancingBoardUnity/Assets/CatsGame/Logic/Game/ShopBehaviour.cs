@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using Assets.CatsGame.Logic.Game;
 using OMC;
 using OMC.UI;
@@ -8,6 +9,7 @@ using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -112,24 +114,23 @@ public class ShopBehaviour : MonoBehaviour
     void SetAura(Image image, WeightDef def)
     {
         Debug.Log($"{def.name} ::: mult {def.multAdd} ::: base {def.baseAdd}");
-        float multSign = math.sign(def.multAdd);
-        float baseSign = math.sign(def.baseAdd);
-        float signDiff = math.abs(multSign - baseSign);
         
-        if (signDiff == 2)
+        float sum = def.multAdd + def.baseAdd;
+        if (!(sum == def.multAdd || sum == def.baseAdd))
         {
-            Debug.LogError($"{def.name} is both kiki and bobo");
+            Debug.LogWarning("no aura logic for type with both mult and base contributions");
+            image.color = Color.clear;
         }
-        else if (multSign == 0 && baseSign == 0)
+        else if (def.multAdd == 10 || def.baseAdd == 0.1)
         {
             image.sprite = fufuAura;
             image.color = fufuColor;
         }
         else
         {
-            image.sprite = multSign + baseSign > 0 ? kikiAura : boboAura;
-            image.color = baseSign != 0 ? baseColor : multColor; // in a def with contribution to base&mult, the base color appears (this could be changed later)
-        } 
+            image.sprite = def.multAdd < 10 || def.baseAdd < 0.1 ? boboAura : kikiAura;
+            image.color = def.multAdd > 0 || def.baseAdd > 0 ? multColor : baseColor;
+        }
     }
 
     public GameObject rotationSelectPanel;
