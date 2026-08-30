@@ -4,8 +4,10 @@ namespace OMC {
     public class DestroyBothOnContact : WeightSubBehaviourBase {
         void OnCollisionEnter(Collision collision) {
             WeightBehaviour colliderBehaviour = collision.collider.gameObject.GetComponent<WeightBehaviour>();
-            if (colliderBehaviour && colliderBehaviour.type != WeightBehaviour.WeightType.Antimatter && weightBehaviour.type == WeightBehaviour.WeightType.Antimatter) {
-                Destroy(colliderBehaviour.gameObject);
+            if (colliderBehaviour && colliderBehaviour.type != weightBehaviour.type) {
+                if(colliderBehaviour.type != WeightBehaviour.WeightType.Matter){ // unique matter interaction
+                    Destroy(colliderBehaviour.gameObject);
+                }
                 Destroy(transform.gameObject);
                 OMCEffectSpawner.PlaySupernovaAtPosition(transform.position);
             }

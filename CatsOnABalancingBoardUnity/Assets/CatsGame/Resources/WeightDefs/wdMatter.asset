@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564a725aafc5b8443bcc6cb484a60114, type: 3}
+  m_Name: wdMatter
+  m_EditorClassIdentifier: Assembly-CSharp::OMC.WeightDef
+  weightType: 14
+  force: 0
+  probabilityBias: 1
+  shopProbabilityBias: 1
+  multAdd: 1
+  baseAdd: 0
+  blockPrefab: {fileID: 6982464574026435089, guid: d92a2a74a1143ac4599d0c25d4dc18f0, type: 3}
+  spherePrefab: {fileID: 6982464574026435089, guid: 715009aaa817d7e4693c54cb34e492c5, type: 3}
+  sprite: {fileID: 21300000, guid: 6108d7594e5b1414390247326727c0ef, type: 3}
+  description: Has no mass, and becomes other weight types.
+  shapePrefabs: []

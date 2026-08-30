@@ -17,7 +17,9 @@ namespace OMC {
             Magnet,
             MrPunch,
             Scales,
-            Temporal
+            Temporal,
+            Matter,
+            XP
         }
 
         [HideInInspector]

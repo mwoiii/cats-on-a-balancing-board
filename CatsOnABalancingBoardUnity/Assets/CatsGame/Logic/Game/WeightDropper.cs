@@ -116,7 +116,7 @@ namespace OMC {
 
         void PickNext() {
             WeightDef picked = WeightTypeRegistry.GetRandomWeight(currentWeightRotation);
-            if (WeightTypeRegistry.weightDefs.Length > 1) {
+            if (WeightTypeRegistry.weightDefs.Length > 1 && currentWeightRotation.Count > 1) {
                 while (picked == prevPicked) {
                     picked = WeightTypeRegistry.GetRandomWeight(currentWeightRotation);
                 }

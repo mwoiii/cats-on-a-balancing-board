@@ -113,9 +113,9 @@ namespace OMC.ECS {
                 //float3 hugh = HSVToRGBBurstable(randomSauce.NextFloat(), 1f, 1f);
                 
                 // Realistic cat colouring
-                float3 hugh = RandomRealCatColour(randomSauce);
+                //float3 hugh = RandomRealCatColour(randomSauce);
                 
-                state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh, 1f) });
+                //state.EntityManager.SetComponentData(cat, new URPMaterialPropertyBaseColor { Value = new float4(hugh, 1f) });
                 
                 SystemAPI.SetSingleton(new InitialFallData { height = config.dropHeight, velocity = 0 });
             }
