@@ -1,6 +1,6 @@
-using System.IO;
 using OMC;
 using OMC.ECS;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class OpposeCatMass : WeightSubBehaviourBase
@@ -9,8 +9,10 @@ public class OpposeCatMass : WeightSubBehaviourBase
     public float dampingFactor = 2f;
     public float relativeMassFactor = 2;
     public float relativeMassMinimum = 10;
+    public float relativeDistanceFactor = 1.5f;
     public float maxRadiusOffset = 0.1f;
-    public float boardSlopeTolerance = 0.05f;
+
+    public Texture altTexture;
 
     Rigidbody body;
 
@@ -26,25 +28,25 @@ public class OpposeCatMass : WeightSubBehaviourBase
         boardController = BoardController.instance;
         boardOrigin = boardController.transform.position;
         catMassBridge = CatMassBridge.instance;
+
+        if (Random.Range(0,1f) > 0.99f && TryGetComponent<MeshRenderer>(out var a) && altTexture)
+        {
+            a.material.SetTexture("_BaseMap",altTexture);
+        }
     }
 
     void FixedUpdate()
     {
-        if (weightBehaviour.state != OMC.WeightBehaviour.WeightState.Landed || !catMassBridge || !boardController || catMassBridge.mass == 0 || boardSlopeTolerance < 0.05f)
+        if (weightBehaviour.state == OMC.WeightBehaviour.WeightState.Falling || !catMassBridge || !boardController || catMassBridge.mass == 0)
         {
             return;
         }
 
-        body.mass = Mathf.Min(relativeMassMinimum,relativeMassFactor * catMassBridge.mass);
+        body.mass = Mathf.Max(relativeMassMinimum,relativeMassFactor * catMassBridge.mass);
 
-        Vector3 tangentDir = Vector3.Cross(boardController.slopeDir,boardController.transform.up).normalized;
 
-        Vector3 toCOM = catMassBridge.worldPoint - boardOrigin;
-
-        float slopeComponent = Vector3.Dot(toCOM,boardController.slopeDir);
-        float tangentComponent = Vector3.Dot(toCOM, tangentDir);
-
-        Vector3 target = boardOrigin + tangentDir * tangentComponent - boardController.slopeDir * slopeComponent;
+        float r = relativeDistanceFactor * (catMassBridge.worldPoint - boardOrigin).magnitude;
+        Vector3 target = r * -boardController.slopeDir;
         Vector3 toTarget = Vector3.ProjectOnPlane(target-transform.position,boardController.transform.up);
 
         Vector3 gravity = 9.81f * boardController.slope * boardController.slopeDir;
@@ -55,11 +57,11 @@ public class OpposeCatMass : WeightSubBehaviourBase
 
         // board radius clamping
         Vector3 fromBoardOrigin = Vector3.ProjectOnPlane(transform.position - boardOrigin, boardController.transform.up);
-        float r = boardController.radius - maxRadiusOffset;
-        if (fromBoardOrigin.magnitude > r)
+        float R = boardController.radius - maxRadiusOffset;
+        if (fromBoardOrigin.magnitude > R)
         {
-            Vector3 clamped = boardOrigin + fromBoardOrigin.normalized * r;
-            transform.position = new Vector3(clamped.x,transform.position.y,clamped.z);
+            Vector3 clamped = boardOrigin + fromBoardOrigin.normalized * R;
+            body.MovePosition(new Vector3(clamped.x,transform.position.y,clamped.z));
             body.linearVelocity = Vector3.ProjectOnPlane(body.linearVelocity, fromBoardOrigin.normalized);
         }
     }

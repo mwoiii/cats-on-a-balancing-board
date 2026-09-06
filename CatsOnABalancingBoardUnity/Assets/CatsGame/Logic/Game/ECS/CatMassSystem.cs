@@ -17,7 +17,7 @@ namespace OMC.ECS {
             float totalMass = 0;
 
             foreach (var (catData, catValue) in SystemAPI.Query<RefRO<CatData>, RefRO<CatValue>>().WithDisabled<IsInitialFalling>()) {
-                weightedSum += catData.ValueRO.position;
+                weightedSum += catValue.ValueRO.value * catData.ValueRO.position;
                 totalMass += catValue.ValueRO.value;
             }
 

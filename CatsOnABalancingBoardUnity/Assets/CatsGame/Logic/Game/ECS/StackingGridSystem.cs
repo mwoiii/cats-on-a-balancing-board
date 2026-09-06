@@ -20,7 +20,7 @@ namespace OMC.ECS {
 
         public const float StackingHeight = 0.04f;
 
-        public const int MaxContribution = 107;
+        public const int MaxContribution = 2;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BoardTransform>();

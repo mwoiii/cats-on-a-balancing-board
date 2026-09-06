@@ -16,10 +16,12 @@ MonoBehaviour:
   force: 0
   probabilityBias: 1
   shopProbabilityBias: 1
-  multAdd: 1
-  baseAdd: 0
+  multAdd: 0
+  baseAdd: 0.1
   blockPrefab: {fileID: 6982464574026435089, guid: d92a2a74a1143ac4599d0c25d4dc18f0, type: 3}
   spherePrefab: {fileID: 6982464574026435089, guid: 715009aaa817d7e4693c54cb34e492c5, type: 3}
   sprite: {fileID: 21300000, guid: 6108d7594e5b1414390247326727c0ef, type: 3}
   description: Has no mass, and becomes other weight types.
-  shapePrefabs: []
+  shapePrefabs:
+  - {fileID: 6982464574026435089, guid: d92a2a74a1143ac4599d0c25d4dc18f0, type: 3}
+  - {fileID: 6982464574026435089, guid: 715009aaa817d7e4693c54cb34e492c5, type: 3}

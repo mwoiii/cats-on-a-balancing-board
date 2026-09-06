@@ -41,7 +41,7 @@ namespace OMC.ECS {
             }
 
             Vector3 localPoint = new Vector3(snapshot.centerOfMass.x, 0, snapshot.centerOfMass.y);
-            worldPoint = board.transform.TransformPoint(localPoint);
+            worldPoint = board.transform.position + board.transform.rotation * localPoint;
 
             mass = Mathf.Max(catMassMarkiplier * Mathf.Log10(snapshot.totalMass / 100), 1e-7f);
             float force =  mass * 9.81f * (0.1f * Mathf.Max(0,10 - lighterCatsPoints)); // log mass scaling

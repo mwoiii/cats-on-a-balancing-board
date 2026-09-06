@@ -187,9 +187,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpposeCatMass
   weightBehaviour: {fileID: 0}
-  force: 1
+  force: 2
   dampingFactor: 3
-  relativeMassFactor: 3
+  relativeMassFactor: 1.5
   relativeMassMinimum: 10
+  relativeDistanceFactor: 2
   maxRadiusOffset: 0.1
-  boardSlopeTolerance: 0.1
+  altTexture: {fileID: 2800000, guid: f6250311b0f102d429481bc542d32d42, type: 3}

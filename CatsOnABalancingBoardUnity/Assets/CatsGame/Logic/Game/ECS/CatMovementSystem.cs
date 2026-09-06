@@ -133,6 +133,10 @@ namespace OMC.ECS {
                                 hasWhirlpool = true;
                             }
                             break;
+                        case WeightType.Antimatter:
+                        case WeightType.Matter:
+                            // nothing
+                            break;
                         default:
                             if (w.state == WeightState.Falling && dist < nearestNoneDist) {
                                 nearestNoneDist = dist;
