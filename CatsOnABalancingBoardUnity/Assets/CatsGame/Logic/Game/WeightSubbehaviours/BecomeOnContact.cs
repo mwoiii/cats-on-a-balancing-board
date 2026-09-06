@@ -60,6 +60,13 @@ public class BecomeOnContact : WeightSubBehaviourBase
                 if (toDestroy != gameObject) 
                 {
                     AddToCharges(incomingCharges);
+
+                    if (TryGetComponent<AudioSource>(out var source))
+                    {
+                        source = this.AddComponent<AudioSource>();
+                    }
+                    source.clip = clip;
+                    source.Play(); 
                 }
             }
             else

@@ -2087,9 +2087,9 @@ MonoBehaviour:
   spinSpeed: 22.1
   shadowScale: 0.5
   currentWeightRotation:
-  - {fileID: 11400000, guid: 44683e99c8144a84fa9abb80236ad98e, type: 2}
+  - {fileID: 11400000, guid: b5f785e4e3e15ad4aa3f8594f8d13693, type: 2}
   - {fileID: 11400000, guid: 4ee38616e81014d4d8a126385556a62c, type: 2}
-  - {fileID: 11400000, guid: 36def06dee9b78b4fbb877186b59d178, type: 2}
+  - {fileID: 11400000, guid: e3481513bc6ccab43ba2ff13016c367c, type: 2}
   - {fileID: 11400000, guid: af1163e0cd39cfc4c95075d2a992f703, type: 2}
   shadow: {fileID: 0}
 --- !u!114 &473563221

@@ -19,7 +19,8 @@ namespace OMC {
             Scales,
             Temporal,
             Matter,
-            XP
+            XP,
+            TheIntelligentMarble
         }
 
         [HideInInspector]
