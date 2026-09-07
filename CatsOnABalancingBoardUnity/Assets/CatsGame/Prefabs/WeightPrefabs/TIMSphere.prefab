@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 4308695665570095935}
   - component: {fileID: -5758208873148459686}
   - component: {fileID: -7879493619752040884}
+  - component: {fileID: -8469537748312005750}
+  - component: {fileID: -2363115744209035452}
   m_Layer: 0
   m_Name: TIMSphere
   m_TagString: Weight
@@ -187,10 +189,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpposeCatMass
   weightBehaviour: {fileID: 0}
-  force: 2
-  dampingFactor: 3
-  relativeMassFactor: 1.5
-  relativeMassMinimum: 10
-  relativeDistanceFactor: 2
-  maxRadiusOffset: 0.1
+  force: 3
+  dampingFactor: 2
+  relativeDistanceFactor: 2.5
+  slopeTolerance: 0.03
   altTexture: {fileID: 2800000, guid: f6250311b0f102d429481bc542d32d42, type: 3}
+--- !u!114 &-8469537748312005750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982464574026435089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37e57cd93733bb647876d7568f7c5f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoNotLeaveBoard
+  weightBehaviour: {fileID: 0}
+  maxRadiusOffset: 0.1
+--- !u!114 &-2363115744209035452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982464574026435089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53b2af0be21506c43bbb6cc56cbab614, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MatchCatMass
+  weightBehaviour: {fileID: 0}
+  relativeMassFactor: 1.5
+  minimumMass: 10
+  numbers: []

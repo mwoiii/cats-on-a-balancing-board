@@ -720,6 +720,7 @@ MonoBehaviour:
   weightBehaviour: {fileID: 0}
   shrinkDelay: 10
   shrinkInterval: 0.1
+  useRealTime: 0
 --- !u!114 &-6099883191391761970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,6 +734,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MatchCatWeight
   weightBehaviour: {fileID: 0}
+  relativeMassFactor: 2
+  minimumMass: 0
   numbers:
   - {fileID: 1372424362123817460}
   - {fileID: 5968368363360052293}
