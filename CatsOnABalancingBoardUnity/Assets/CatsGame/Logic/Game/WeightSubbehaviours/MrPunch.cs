@@ -9,9 +9,11 @@ public class MrPunch : WeightSubBehaviourBase {
     List<GameObject> punched = new();
 
     Rigidbody body;
+    BoardController boardController;
 
     public float punchForce = 100f;
-    public float approachForce = 1f;
+    public float force = 5f;
+    public float dampingFactor = 2f;
 
     public AudioSource source;
 
@@ -22,6 +24,7 @@ public class MrPunch : WeightSubBehaviourBase {
     new void Start() {
         base.Start();
         body = gameObject.GetComponent<Rigidbody>();
+        boardController = BoardController.instance;
 
         if (source) {
             source.volume = volume;
@@ -33,11 +36,14 @@ public class MrPunch : WeightSubBehaviourBase {
     void FixedUpdate() {
         if (target == null || target.IsDestroyed()) {
             FindTarget();
-        } else {
-            Vector3 toTarget = target.transform.position - transform.position;
-            if (math.length(toTarget) > 0) {
-                body.AddForce(math.normalize(toTarget) * approachForce, ForceMode.Force);
-            }
+        } else if (weightBehaviour.state == WeightBehaviour.WeightState.Landed) {
+            Vector3 toTarget = Vector3.ProjectOnPlane(target.transform.position-transform.position,boardController.transform.up);
+
+            Vector3 gravity = 9.81f * boardController.slope * boardController.slopeDir;
+            Vector3 pull = toTarget * force;
+            Vector3 damping = Vector3.ProjectOnPlane(body.linearVelocity,boardController.transform.up) * dampingFactor;
+
+            body.AddForce(pull - damping - gravity, ForceMode.Acceleration);
         }
     }
 

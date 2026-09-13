@@ -2088,7 +2088,9 @@ MonoBehaviour:
   shadowScale: 0.5
   currentWeightRotation:
   - {fileID: 11400000, guid: b5f785e4e3e15ad4aa3f8594f8d13693, type: 2}
-  - {fileID: 11400000, guid: 4ee38616e81014d4d8a126385556a62c, type: 2}
+  - {fileID: 11400000, guid: 28d02244dbf947240bb8191fc0e414b8, type: 2}
+  - {fileID: 11400000, guid: e6941b79fc80aef4997f67d212046b9d, type: 2}
+  - {fileID: 11400000, guid: eab3a7daf73a535459161c6855b7429e, type: 2}
   shadow: {fileID: 0}
 --- !u!114 &473563221
 MonoBehaviour:

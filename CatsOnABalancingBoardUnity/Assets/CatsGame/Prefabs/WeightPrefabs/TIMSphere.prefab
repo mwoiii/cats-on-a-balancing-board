@@ -189,7 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpposeCatMass
   weightBehaviour: {fileID: 0}
-  force: 3
+  force: 2
   dampingFactor: 2
   relativeDistanceFactor: 2.5
   slopeTolerance: 0.03

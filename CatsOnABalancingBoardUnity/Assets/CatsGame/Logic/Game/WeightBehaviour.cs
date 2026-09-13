@@ -20,7 +20,9 @@ namespace OMC {
             Temporal,
             Matter,
             XP,
-            TheIntelligentMarble
+            TheIntelligentMarble,
+            Campfire,
+            Jester
         }
 
         [HideInInspector]

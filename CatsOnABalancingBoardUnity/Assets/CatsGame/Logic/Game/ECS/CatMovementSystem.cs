@@ -22,6 +22,10 @@ namespace OMC.ECS {
         const float MaxDispersion = 1f;
 
         const float CatnipContactRadius = 0.05f;
+        
+        const float CampfireCautionDistance = 0.5f;
+
+        const float WhirlpoolStrength = 2f;
 
         EntityQuery catQuery;
         uint frameCounter; // new random every frame
@@ -106,6 +110,10 @@ namespace OMC.ECS {
                 float2 nearestWhirlpoolPos = float2.zero;
                 bool hasWhirlpool = false;
 
+                float nearestCampfireDist = float.MaxValue;
+                float2 nearestCampfirePos = float2.zero;
+                bool hasCampfire = false;
+
                 for (int i = 0; i < weights.Length; i++) {
                     WeightSnapshot w = weights[i];
                     float dist = math.distancesq(catPos, w.localPosition); // distance squared saves a square root operation but i maybe should be more precise with variable names
@@ -131,6 +139,13 @@ namespace OMC.ECS {
                                 nearestWhirlpoolDist = dist;
                                 nearestWhirlpoolPos = w.localPosition;
                                 hasWhirlpool = true;
+                            }
+                            break;
+                        case WeightType.Campfire:
+                            if (dist < nearestWhirlpoolDist) {
+                                nearestCampfireDist = dist;
+                                nearestCampfirePos = w.localPosition;
+                                hasCampfire = true;
                             }
                             break;
                         case WeightType.Antimatter:
@@ -174,7 +189,15 @@ namespace OMC.ECS {
                     if (math.lengthsq(toTarget) > 0) {
                         float2 dir = math.normalize(toTarget);
                         float2 tangent = new float2(-dir.y, dir.x);
-                        weightForce += (dir + tangent) * MoveForce;
+                        weightForce += (dir + tangent) * MoveForce * WhirlpoolStrength;
+                    }
+                }
+                if (hasCampfire)
+                {
+                    float2 toTarget = nearestCampfirePos - catPos;
+                    float hamburger = math.lengthsq(toTarget);
+                    if (hamburger > 0) {
+                        weightForce += math.normalize(toTarget) * MoveForce * (hamburger < CampfireCautionDistance ? -1 : 1);
                     }
                 }
 
