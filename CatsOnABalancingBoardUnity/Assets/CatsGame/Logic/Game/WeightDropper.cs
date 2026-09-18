@@ -121,10 +121,6 @@ namespace OMC {
                     picked = WeightTypeRegistry.GetRandomWeight(currentWeightRotation);
                 }
             }
-            while (picked.weightType == WeightBehaviour.WeightType.Jester) // jester special behaviour
-            {
-                picked = WeightTypeRegistry.TrueRandomWeight();
-            }
             prevPicked = picked;
             nextPrefab = picked.GetRandomShapePrefab();
             OnNextPrefab?.Invoke(nextPrefab);

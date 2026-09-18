@@ -1,6 +1,8 @@
 using OMC.ECS;
 using System;
 using System.Collections;
+using System.Linq;
+using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -93,9 +95,15 @@ namespace OMC {
         private void ResetLitterBonus() {
             EvaluateFormula();
 
-            comboCounter = 0;
+            if (Fairy.fairyExists) // unique fairy interaction
+            {
+                Fairy.Respond();
+            } else
+            {
+                comboCounter = 0;
 
-            litterBonus = (int)Mathf.Floor(bonusMult);
+                litterBonus = (int)Mathf.Floor(bonusMult);
+            }
 
             OnLitterBonusChanged?.Invoke(litterBonus);
         }

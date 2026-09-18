@@ -25,7 +25,7 @@ namespace OMC.ECS {
         
         const float CampfireCautionDistance = 0.5f;
 
-        const float WhirlpoolStrength = 2f;
+        const float WhirlpoolStrength = 1.6f;
 
         EntityQuery catQuery;
         uint frameCounter; // new random every frame
@@ -142,7 +142,7 @@ namespace OMC.ECS {
                             }
                             break;
                         case WeightType.Campfire:
-                            if (dist < nearestWhirlpoolDist) {
+                            if (dist < nearestCampfireDist) {
                                 nearestCampfireDist = dist;
                                 nearestCampfirePos = w.localPosition;
                                 hasCampfire = true;

@@ -19,7 +19,7 @@ MonoBehaviour:
   multAdd: 0
   baseAdd: 0.3
   blockPrefab: {fileID: 6982464574026435089, guid: f2a930e1c93ec9a4b8dfce4fbf1d49bc, type: 3}
-  spherePrefab: {fileID: 0}
+  spherePrefab: {fileID: 6982464574026435089, guid: b4827e99716f5fd4cbd36864649ae166, type: 3}
   sprite: {fileID: 21300000, guid: 6108d7594e5b1414390247326727c0ef, type: 3}
   description: I can do anything!
   shapePrefabs:

@@ -128,8 +128,8 @@ public class ShopBehaviour : MonoBehaviour
         }
         else
         {
-            image.sprite = def.multAdd < 10 || def.baseAdd < 0.1 ? boboAura : kikiAura;
-            image.color = def.multAdd > 0 || def.baseAdd > 0 ? multColor : baseColor;
+            image.sprite = def.multAdd < 10 && def.baseAdd < 0.1 ? boboAura : kikiAura;
+            image.color = def.multAdd != 0 ? multColor : baseColor;
         }
     }
 

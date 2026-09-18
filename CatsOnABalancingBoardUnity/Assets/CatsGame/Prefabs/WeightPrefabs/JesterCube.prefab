@@ -289,8 +289,10 @@ GameObject:
   - component: {fileID: 6770715883964672761}
   - component: {fileID: 5300005081292084640}
   - component: {fileID: 8847935656710571486}
+  - component: {fileID: -5406534489014326945}
+  - component: {fileID: -3442592560767130039}
   m_Layer: 0
-  m_Name: BasicJester
+  m_Name: JesterCube
   m_TagString: Weight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -414,6 +416,43 @@ MonoBehaviour:
   type: 0
   state: 0
   displayPrefab: {fileID: 0}
+--- !u!65 &-5406534489014326945
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982464574026435089}
+  m_Material: {fileID: 13400000, guid: d6d807541273c46408ae52ae656d3fca, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-3442592560767130039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6982464574026435089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e37b6615cf756048a21a281c7f42f0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Jester
+  weightBehaviour: {fileID: 0}
+  shapeIndex: 0
+  exclude:
+  - {fileID: 11400000, guid: a71062f301ddeff42accdaedfd571293, type: 2}
 --- !u!1 &8733849922016747663
 GameObject:
   m_ObjectHideFlags: 0

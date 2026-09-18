@@ -22,7 +22,9 @@ namespace OMC {
             XP,
             TheIntelligentMarble,
             Campfire,
-            Jester
+            Jester,
+            Extinction,
+            Fairy
         }
 
         [HideInInspector]

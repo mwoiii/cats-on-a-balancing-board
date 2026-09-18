@@ -72,6 +72,7 @@ public class BecomeOnContact : WeightSubBehaviourBase
             else
             {
                 Transform temp = transform;
+                collision.thisCollider.enabled = false;
                 Destroy(gameObject);
             
                 GameObject butterfly = null;

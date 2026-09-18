@@ -71,16 +71,6 @@ namespace OMC {
             return selection[^1];
         }
 
-        public static WeightDef TrueRandomWeight()
-        {
-            WeightDef picked = weightDefs[UnityEngine.Random.Range(0,weightDefs.Length)];
-            while (picked.shopProbabilityBias == 0)
-            {
-                picked = weightDefs[UnityEngine.Random.Range(0,weightDefs.Length)];
-            }
-            return picked;
-        }
-
         public static WeightDef[] GetRandomWeightDefs(int amount, List<WeightDef> without = null) // currently has nothing to do with rarity
         {
             List<WeightDef> temp = new(weightDefs);
